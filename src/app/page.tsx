@@ -6,20 +6,7 @@ export default function Home() {
       <HeroSection />
 
       {/* Placeholder for next sections */}
-      <section
-        id="experience"
-        style={{
-          minHeight: "100vh",
-          background: "var(--bg-secondary)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "var(--text-muted)",
-          fontSize: "0.85rem",
-          letterSpacing: "0.15em",
-          textTransform: "uppercase",
-        }}
-      >
+      <section id="experience" className="next-section">
         — Next Section Coming Soon —
       </section>
     </main>
