@@ -34,11 +34,13 @@ export default function Navbar() {
         ))}
       </nav>
 
-      <div className="navbar-actions">
-        <Link href="#contact" className="btn-luxury">
-          Start Project
-        </Link>
-      </div>
+      <Link href="`#contact`" className="navbar-cta">
+        Start Project
+      </Link>
+
+      <button className="nav-hamburger" aria-label="Open menu">
+        <span /><span /><span />
+      </button>
     </header>
   );
 }
