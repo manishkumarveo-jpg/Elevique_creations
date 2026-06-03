@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Inter, Syne } from "next/font/google";
+import { Inter, Syne, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import DotBackground from "@/components/DotBackground";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -15,6 +16,13 @@ const syne = Syne({
   display: "swap",
 });
 
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
+  weight: ["300", "400", "500", "600", "700"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Elevique | Creative AI Visuals Studio",
   description: "High-end AI visuals for premium brands.",
@@ -26,8 +34,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${syne.variable}`}>
-      <body className="antialiased">{children}</body>
+    <html lang="en" className={`${inter.variable} ${syne.variable} ${spaceGrotesk.variable}`}>
+      <body className="antialiased">
+        <DotBackground />
+        {children}
+      </body>
     </html>
   );
 }
