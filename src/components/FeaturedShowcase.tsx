@@ -342,24 +342,31 @@ export default function FeaturedShowcase() {
 
       {/* ══ POPUP ═══════════════════════════════════════════════ */}
       {popup && (
-        <div ref={popupRef} className="portfolio-popup" onMouseEnter={cancelHide} onMouseLeave={scheduleHide}>
+        <div
+          ref={popupRef}
+          className="portfolio-popup"
+          onMouseEnter={cancelHide}
+          onMouseLeave={scheduleHide}
+          onClick={() => { hidePopup(); openVideoOverlay(popup.project); }}
+          style={{ cursor: "pointer" }}
+        >
           <video src={VIDEO_SRC} autoPlay loop muted={popupMuted} playsInline className="portfolio-popup-video" />
           <div className="portfolio-popup-scanline" aria-hidden="true" />
           <div className="portfolio-popup-fade" aria-hidden="true" />
-          <button className="portfolio-popup-mute" onClick={() => setPopupMuted((m) => !m)} aria-label={popupMuted ? "Unmute" : "Mute"}>
+          <button className="portfolio-popup-mute" onClick={(e) => { e.stopPropagation(); setPopupMuted((m) => !m); }} aria-label={popupMuted ? "Unmute" : "Mute"}>
             {popupMuted ? <VolumeX size={12} /> : <Volume2 size={12} />}
           </button>
           <div className="portfolio-popup-overlay">
             <div className="portfolio-popup-actions">
-              <button className="portfolio-popup-play" onClick={() => { hidePopup(); openVideoOverlay(popup.project); }} aria-label="Play">
+              <button className="portfolio-popup-play" onClick={(e) => { e.stopPropagation(); hidePopup(); openVideoOverlay(popup.project); }} aria-label="Play">
                 <Play size={13} fill="currentColor" />
               </button>
-              <button className="portfolio-popup-icon-btn" aria-label="Add"><Plus size={13} /></button>
-              <button className="portfolio-popup-icon-btn" aria-label="Like"><ThumbsUp size={12} /></button>
+              <button className="portfolio-popup-icon-btn" onClick={(e) => e.stopPropagation()} aria-label="Add"><Plus size={13} /></button>
+              <button className="portfolio-popup-icon-btn" onClick={(e) => e.stopPropagation()} aria-label="Like"><ThumbsUp size={12} /></button>
               <button
                 className="portfolio-popup-icon-btn portfolio-popup-icon-btn--right"
                 aria-label="Preview"
-                onClick={() => { hidePopup(); openBottomSheet(popup.project); }}
+                onClick={(e) => { e.stopPropagation(); hidePopup(); openBottomSheet(popup.project); }}
               >
                 <ChevronDown size={13} />
               </button>
