@@ -1,11 +1,11 @@
 import HeroSection from "@/components/HeroSection";
-import FeaturedShowcase from "@/components/FeaturedShowcase";
+import ServicesSection from "@/components/ServicesSection";
 
 export default function Home() {
   return (
     <main>
       <HeroSection />
-      <FeaturedShowcase />
+      <ServicesSection />
     </main>
   );
 }

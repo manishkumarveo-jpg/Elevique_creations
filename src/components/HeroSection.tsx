@@ -9,26 +9,107 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import Navbar from "./Navbar";
-import SoundToggle from "./SoundToggle";
 
 /* ─── Data ──────────────────────────────────────────────────── */
 const VIDEO_SRC =
   "https://res.cloudinary.com/dpaoerbde/video/upload/v1780379272/hero-video_pxivlu.mp4";
 
 const TITLE_LINES = [
-  { text: "AI Visuals",    em: false },
-  { text: "That Don't",   em: false },
-  { text: "Look Like AI", em: true  },
+  { text: "AI Visuals",  em: false },
+  { text: "That Don't", em: false },
 ];
 
-const STATS = [
-  { value: "500+",  label: "Videos Created"  },
-  { value: "50+",   label: "Brands Served"   },
-  { value: "100M+", label: "Views Generated" },
+const LOOP_PHRASES = ["Look Like AI", "Cost a Fortune", "Take Weeks"];
+
+const STAT_DATA = [
+  { count: 500, suffix: "+",  label: "Videos Created"  },
+  { count: 50,  suffix: "+",  label: "Brands Served"   },
+  { count: 100, suffix: "M+", label: "Views Generated" },
 ];
 
 const EASE_CINEMA = [0.77, 0, 0.175, 1] as const;
 const EASE_OUT    = [0.16, 1, 0.3,   1] as const;
+
+/* ─── Count-up hook ─────────────────────────────────────────── */
+function useCountUp(target: number, duration = 1.8, delay = 0) {
+  const [val, setVal] = useState(0);
+
+  useEffect(() => {
+    let raf: number;
+    const timeout = setTimeout(() => {
+      const start = performance.now();
+      const tick = (now: number) => {
+        const p = Math.min((now - start) / (duration * 1000), 1);
+        const eased = 1 - Math.pow(1 - p, 3);
+        setVal(Math.floor(eased * target));
+        if (p < 1) raf = requestAnimationFrame(tick);
+        else setVal(target);
+      };
+      raf = requestAnimationFrame(tick);
+    }, delay * 1000);
+
+    return () => { clearTimeout(timeout); cancelAnimationFrame(raf); };
+  }, [target, duration, delay]);
+
+  return val;
+}
+
+/* ─── CountStat ─────────────────────────────────────────────── */
+function CountStat({ count, suffix, label }: { count: number; suffix: string; label: string }) {
+  const val = useCountUp(count, 1.8, 1.6);
+  return (
+    <div className="trust-stat">
+      <span className="trust-stat-value">{val}{suffix}</span>
+      <span className="trust-stat-label">{label}</span>
+    </div>
+  );
+}
+
+/* ─── LoopingPhrase ─────────────────────────────────────────── */
+function LoopingPhrase() {
+  const [index,   setIndex]   = useState(0);
+  const [cycling, setCycling] = useState(false);
+
+  /* Wait for entrance animation to finish + brief hold, then start cycling */
+  useEffect(() => {
+    const t = setTimeout(() => setCycling(true), 4200);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    if (!cycling) return;
+    const id = setInterval(() => setIndex((i) => (i + 1) % LOOP_PHRASES.length), 3000);
+    return () => clearInterval(id);
+  }, [cycling]);
+
+  if (!cycling) {
+    return (
+      <motion.em
+        style={{ display: "block" }}
+        initial={{ y: "100%" }}
+        animate={{ y: "0%" }}
+        transition={{ duration: 1.15, delay: 0.75, ease: EASE_CINEMA }}
+      >
+        {LOOP_PHRASES[0]}
+      </motion.em>
+    );
+  }
+
+  return (
+    <AnimatePresence mode="wait" initial={false}>
+      <motion.em
+        key={index}
+        style={{ display: "block" }}
+        initial={{ y: "100%" }}
+        animate={{ y: "0%" }}
+        exit={{ y: "-100%" }}
+        transition={{ duration: 0.55, ease: EASE_CINEMA }}
+      >
+        {LOOP_PHRASES[index]}
+      </motion.em>
+    </AnimatePresence>
+  );
+}
 
 /* ════════════════════════════════════════════════════════════ */
 export default function HeroSection() {
@@ -37,7 +118,7 @@ export default function HeroSection() {
 
   const [showReel, setShowReel] = useState(false);
 
-  /* ── Cursor glow parallax ───────────────────────────────── */
+  /* ── Cursor glow parallax (desktop only via CSS) ────────── */
   const glowX = useSpring(0, { damping: 60, stiffness: 120 });
   const glowY = useSpring(0, { damping: 60, stiffness: 120 });
 
@@ -54,13 +135,9 @@ export default function HeroSection() {
     v.muted = true;
     v.play().catch(() => {});
 
-    const onMute = (e: Event) => {
-      const ev = e as CustomEvent<{ muted: boolean }>;
-      v.muted = ev.detail.muted;
-      if (!ev.detail.muted) v.volume = 0.4;
-    };
-    window.addEventListener("hero:toggleMute", onMute);
-    return () => window.removeEventListener("hero:toggleMute", onMute);
+    const onPause = () => v.play().catch(() => {});
+    v.addEventListener("pause", onPause);
+    return () => v.removeEventListener("pause", onPause);
   }, []);
 
   /* ── Scroll parallax ────────────────────────────────────── */
@@ -89,7 +166,7 @@ export default function HeroSection() {
       {/* Film grain */}
       <div className="noise-overlay" aria-hidden="true" />
 
-      {/* Cursor glow — desktop only */}
+      {/* Cursor glow — hidden on touch devices via CSS */}
       <motion.div
         className="cursor-glow"
         style={{ left: glowX, top: glowY }}
@@ -128,10 +205,15 @@ export default function HeroSection() {
             transition={{ delay: 0.3, duration: 0.8, ease: EASE_OUT }}
           >
             <span className="hero-eyebrow-line" aria-hidden="true" />
+            {/* Pulsing live-indicator dot */}
+            <span className="relative inline-flex h-1.5 w-1.5 shrink-0" aria-hidden="true">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-green-500" />
+            </span>
             AI Commercial Studio
           </motion.div>
 
-          {/* Headline — staggered reveal per line */}
+          {/* Headline — staggered reveal; last line loops */}
           <h1 className="hero-title" aria-label="AI Visuals That Don't Look Like AI">
             {TITLE_LINES.map((line, i) => (
               <span
@@ -148,10 +230,15 @@ export default function HeroSection() {
                     ease: EASE_CINEMA,
                   }}
                 >
-                  {line.em ? <em>{line.text}</em> : line.text}
+                  {line.text}
                 </motion.span>
               </span>
             ))}
+
+            {/* Looping last line */}
+            <span className="reveal-clip">
+              <LoopingPhrase />
+            </span>
           </h1>
 
           {/* Description */}
@@ -177,10 +264,14 @@ export default function HeroSection() {
               <span className="arrow" aria-hidden="true">→</span>
             </a>
 
-            <a href="#work" className="btn-secondary" id="hero-cta-secondary">
+            <button
+              className="btn-secondary"
+              onClick={scrollDown}
+              id="hero-cta-secondary"
+            >
               View Work
               <span aria-hidden="true">↗</span>
-            </a>
+            </button>
           </motion.div>
         </motion.div>
 
@@ -192,11 +283,8 @@ export default function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.4, duration: 0.9, ease: EASE_OUT }}
           >
-            {STATS.map((s, i) => (
-              <div key={i} className="trust-stat">
-                <span className="trust-stat-value">{s.value}</span>
-                <span className="trust-stat-label">{s.label}</span>
-              </div>
+            {STAT_DATA.map((s, i) => (
+              <CountStat key={i} count={s.count} suffix={s.suffix} label={s.label} />
             ))}
           </motion.div>
 
@@ -235,7 +323,6 @@ export default function HeroSection() {
           </div>
         </motion.button>
 
-        <SoundToggle />
       </section>
 
       {/* ══ Showreel Lightbox ════════════════════════════════ */}
@@ -262,7 +349,7 @@ export default function HeroSection() {
             >
               <video
                 src={VIDEO_SRC}
-                autoPlay loop playsInline controls
+                autoPlay loop muted playsInline
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
             </motion.div>

@@ -7,8 +7,6 @@ import {
   X,
   Plus,
   ThumbsUp,
-  VolumeX,
-  Volume2,
   ChevronDown,
   ExternalLink,
 } from "lucide-react";
@@ -131,9 +129,6 @@ export default function FeaturedShowcase() {
   const [videoOverlay, setVideoOverlay] = useState<Project | null>(null);
   const [bottomSheet, setBottomSheet]   = useState<Project | null>(null);
   const [popup, setPopup]             = useState<PopupState | null>(null);
-  const [popupMuted, setPopupMuted]   = useState(true);
-  const [overlayMuted, setOverlayMuted] = useState(false);
-  const [sheetMuted, setSheetMuted]   = useState(false);
 
   const heroVideoRef  = useRef<HTMLVideoElement>(null);
   const popupRef      = useRef<HTMLDivElement>(null);
@@ -350,12 +345,9 @@ export default function FeaturedShowcase() {
           onClick={() => { hidePopup(); openVideoOverlay(popup.project); }}
           style={{ cursor: "pointer" }}
         >
-          <video src={VIDEO_SRC} autoPlay loop muted={popupMuted} playsInline className="portfolio-popup-video" />
+          <video src={VIDEO_SRC} autoPlay loop muted playsInline className="portfolio-popup-video" />
           <div className="portfolio-popup-scanline" aria-hidden="true" />
           <div className="portfolio-popup-fade" aria-hidden="true" />
-          <button className="portfolio-popup-mute" onClick={(e) => { e.stopPropagation(); setPopupMuted((m) => !m); }} aria-label={popupMuted ? "Unmute" : "Mute"}>
-            {popupMuted ? <VolumeX size={12} /> : <Volume2 size={12} />}
-          </button>
           <div className="portfolio-popup-overlay">
             <div className="portfolio-popup-actions">
               <button className="portfolio-popup-play" onClick={(e) => { e.stopPropagation(); hidePopup(); openVideoOverlay(popup.project); }} aria-label="Play">
@@ -394,7 +386,7 @@ export default function FeaturedShowcase() {
               src={VIDEO_SRC}
               autoPlay
               loop
-              muted={overlayMuted}
+              muted
               playsInline
               className="vo-video"
             />
@@ -405,11 +397,6 @@ export default function FeaturedShowcase() {
                 <span className="vo-category" style={{ color: videoOverlay.colorFrom }}>{videoOverlay.category}</span>
                 <h2 className="vo-title">{videoOverlay.title}</h2>
                 <p className="vo-role">{videoOverlay.role}</p>
-              </div>
-              <div className="vo-info-right">
-                <button className="vo-mute" onClick={() => setOverlayMuted((m) => !m)} aria-label={overlayMuted ? "Unmute" : "Mute"}>
-                  {overlayMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-                </button>
               </div>
             </div>
 
@@ -434,7 +421,7 @@ export default function FeaturedShowcase() {
 
             {/* ── video (full width, 16:9) ── */}
             <div className="bs-video-col">
-              <video src={VIDEO_SRC} autoPlay loop muted={sheetMuted} playsInline className="bs-video" />
+              <video src={VIDEO_SRC} autoPlay loop muted playsInline className="bs-video" />
               <div className="bs-video-overlay" />
 
               {/* title + action btns float over gradient */}
@@ -451,11 +438,6 @@ export default function FeaturedShowcase() {
                   </button>
                 </div>
               </div>
-
-              {/* mute sits bottom-right, above footer */}
-              <button className="bs-mute" onClick={() => setSheetMuted((m) => !m)} aria-label={sheetMuted ? "Unmute" : "Mute"}>
-                {sheetMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
-              </button>
             </div>
 
             {/* ── details below video ── */}
@@ -493,8 +475,15 @@ export default function FeaturedShowcase() {
 /* ─── Featured Card ─────────────────────────────────────────── */
 function FeaturedCard({ project, isActive, onClick }: { project: Project; isActive: boolean; onClick: () => void }) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const onEnter = () => { if (!isActive) gsap.to(cardRef.current, { scale: 1.04, duration: 0.22, ease: "power4.out" }); };
-  const onLeave = () => { gsap.to(cardRef.current, { scale: 1, duration: 0.22, ease: "power4.out" }); };
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const onEnter = () => {
+    if (!isActive) gsap.to(cardRef.current, { scale: 1.04, duration: 0.22, ease: "power4.out" });
+    videoRef.current?.play().catch(() => {});
+  };
+  const onLeave = () => {
+    gsap.to(cardRef.current, { scale: 1, duration: 0.22, ease: "power4.out" });
+    videoRef.current?.pause();
+  };
   return (
     <div
       ref={cardRef}
@@ -507,7 +496,7 @@ function FeaturedCard({ project, isActive, onClick }: { project: Project; isActi
       tabIndex={0}
       aria-label={`Switch to ${project.title}`}
     >
-      <video src={VIDEO_SRC} autoPlay loop muted playsInline className="portfolio-feat-video" aria-hidden="true" />
+      <video ref={videoRef} src={VIDEO_SRC} loop muted playsInline className="portfolio-feat-video" aria-hidden="true" />
       <div className="portfolio-feat-overlay" />
       <div className="portfolio-feat-info">
         <span className="portfolio-feat-title">{project.title}</span>
@@ -519,17 +508,26 @@ function FeaturedCard({ project, isActive, onClick }: { project: Project; isActi
 
 /* ─── Grid Card ─────────────────────────────────────────────── */
 function GridCard({ project, onEnter, onLeave, onClick }: { project: Project; onEnter: (p: Project, e: React.MouseEvent<HTMLDivElement>) => void; onLeave: () => void; onClick: () => void }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const handleEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    videoRef.current?.play().catch(() => {});
+    onEnter(project, e);
+  };
+  const handleLeave = () => {
+    videoRef.current?.pause();
+    onLeave();
+  };
   return (
     <div
       className="portfolio-grid-card"
-      onMouseEnter={(e) => onEnter(project, e)}
-      onMouseLeave={onLeave}
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
       onClick={onClick}
       role="button"
       tabIndex={0}
       aria-label={`Play ${project.title}`}
     >
-      <video src={VIDEO_SRC} autoPlay loop muted playsInline className="portfolio-grid-video" aria-hidden="true" />
+      <video ref={videoRef} src={VIDEO_SRC} loop muted playsInline className="portfolio-grid-video" aria-hidden="true" />
       <div className="portfolio-grid-overlay" />
       <span className="portfolio-grid-year">{project.year}</span>
       <div className="portfolio-grid-info">
