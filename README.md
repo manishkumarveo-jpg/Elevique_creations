@@ -1,36 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Elevique Website
+
+Elevique is a Next.js website for a creative AI visuals studio. The site presents the studio landing page, service sections, client/map visuals, and a portfolio page for featured work.
+
+## Tech Stack
+
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- Framer Motion
+- GSAP
+- Three.js with React Three Fiber and Drei
+- D3 Geo and TopoJSON for map rendering
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the local development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev
+```
 
-## Learn More
+Starts the Next.js development server.
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Creates a production build.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run start
+```
 
-## Deploy on Vercel
+Starts the production server after a successful build.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run lint
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Runs ESLint.
+
+## Project Structure
+
+```text
+src/
+  app/
+    layout.tsx          Root layout, metadata, fonts, global background
+    page.tsx            Home page
+    portfolio/page.tsx  Portfolio route
+    globals.css         Global styles
+  components/
+    ClientsMap.tsx
+    DotBackground.tsx
+    FeaturedShowcase.tsx
+    HeroSection.tsx
+    Navbar.tsx
+    ServicesSection.tsx
+    SoundToggle.tsx
+  styles/
+    clients-map.css
+context/
+  Hero Section.md
+  clientSection.md
+  portfolio.md
+  service.md
+```
+
+## Routes
+
+- `/` - Home page with hero, services, and client map sections.
+- `/portfolio` - Portfolio page with navigation and featured showcase.
+
+## Development Notes
+
+- This project uses the App Router under `src/app`.
+- Global metadata and font setup live in `src/app/layout.tsx`.
+- Shared UI and visual sections live in `src/components`.
+- Content planning notes are stored in `context/`.
+
+Before changing Next.js-specific APIs or conventions, check the local Next.js documentation in `node_modules/next/dist/docs/`, because this project uses Next.js 16.

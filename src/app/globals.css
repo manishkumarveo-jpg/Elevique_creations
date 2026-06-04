@@ -15,11 +15,20 @@
   --glass:         rgba(255, 255, 255, 0.03);
   --glass-border:  rgba(255, 255, 255, 0.07);
   --glass-strong:  rgba(255, 255, 255, 0.055);
+  --background:     var(--black);
+  --foreground:     var(--white);
+  --muted-foreground: var(--muted-strong);
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-cinema:   cubic-bezier(0.77, 0, 0.175, 1);
 
   --nav-h: 80px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
 }
 
 /* ─── Reset ─────────────────────────────────────────────────── */
@@ -2506,3 +2515,199 @@ body {
   .cm-ring-a, .cm-ring-b { animation: none; }
   .cm-tooltip { animation: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   EDITORIAL TESTIMONIAL
+   ═══════════════════════════════════════════════════════════════ */
+
+.te-wrap {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 72px 48px 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Quote row ────────────────────────────────────────────── */
+.te-quote-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 48px;
+  margin-bottom: 56px;
+}
+
+/* Ghost number */
+.te-number {
+  font-size: clamp(100px, 10vw, 160px);
+  font-weight: 300;
+  line-height: 1;
+  color: rgba(248, 250, 252, 0.06);
+  select: none;
+  flex-shrink: 0;
+  width: 160px;
+  text-align: right;
+  padding-top: 6px;
+  letter-spacing: -0.04em;
+  transition: color 0.5s ease;
+}
+
+/* Right column */
+.te-right {
+  flex: 1;
+  min-width: 0;
+  padding-top: 8px;
+}
+
+/* Quote text */
+.te-quote {
+  font-size: clamp(1.45rem, 2.4vw, 2.05rem);
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: -0.02em;
+  color: var(--white);
+  margin-bottom: 36px;
+  transition: opacity 0.3s ease, transform 0.35s var(--ease-out-expo);
+}
+
+.te-quote--in  { opacity: 1; transform: translateX(0); }
+.te-quote--out { opacity: 0; transform: translateX(12px); }
+
+/* Author */
+.te-author {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: opacity 0.3s ease 0.08s;
+}
+
+.te-author--in  { opacity: 1; }
+.te-author--out { opacity: 0; }
+
+.te-avatar {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  filter: grayscale(1);
+  border: 1px solid rgba(248, 250, 252, 0.12);
+}
+
+.te-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: -0.01em;
+  margin-bottom: 3px;
+}
+
+.te-role {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-weight: 300;
+}
+
+.te-slash {
+  color: rgba(248, 250, 252, 0.2);
+  margin: 0 2px;
+}
+
+/* ── Nav bar ──────────────────────────────────────────────── */
+.te-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--glass-border);
+  padding-top: 24px;
+}
+
+.te-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Dash buttons */
+.te-dash-btn {
+  background: none;
+  border: none;
+  padding: 8px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.te-dash {
+  display: block;
+  height: 1.5px;
+  width: 32px;
+  border-radius: 2px;
+  background: rgba(248, 250, 252, 0.18);
+  transition: all 0.45s var(--ease-out-expo);
+}
+
+.te-dash--active {
+  width: 48px;
+  background: var(--white);
+}
+
+.te-dash-btn:hover:not(:has(.te-dash--active)) .te-dash {
+  background: rgba(248, 250, 252, 0.38);
+}
+
+/* Counter */
+.te-counter {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-left: 8px;
+}
+
+/* Arrows */
+.te-arrows {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.te-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: none;
+  color: rgba(248, 250, 252, 0.35);
+  cursor: pointer;
+  transition: color 0.25s ease, background 0.25s ease;
+}
+
+.te-arrow:hover {
+  color: var(--white);
+  background: rgba(248, 250, 252, 0.06);
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .te-wrap { padding: 48px 24px 40px; }
+  .te-quote-row { gap: 24px; }
+  .te-number { width: 80px; font-size: 72px; }
+  .te-quote { font-size: clamp(1.2rem, 5vw, 1.6rem); margin-bottom: 28px; }
+}
+
+@media (max-width: 480px) {
+  .te-number { display: none; }
+  .te-quote-row { gap: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .te-quote, .te-author { transition: none; }
+}
+
