@@ -279,7 +279,7 @@ export default function FeaturedShowcase() {
 
   /* ════════════════════════════════════════════════════════════ */
   return (
-    <section id="work" style={{ background: "#0a0a0f" }}>
+    <section id="work" style={{ background: "#000000" }}>
 
       {/* ══ HERO ════════════════════════════════════════════════ */}
       <div className="portfolio-hero">
@@ -311,6 +311,7 @@ export default function FeaturedShowcase() {
 
       {/* ══ FEATURED ROW ════════════════════════════════════════ */}
       <div className="portfolio-featured-wrap">
+        <div className="svc-grid-overlay" aria-hidden="true" />
         <p className="portfolio-featured-label">Featured Projects</p>
         <div className="portfolio-featured-row">
           {PROJECTS.slice(0, 5).map((p) => (
@@ -321,6 +322,7 @@ export default function FeaturedShowcase() {
 
       {/* ══ GRID ════════════════════════════════════════════════ */}
       <div className="portfolio-grid-wrap">
+        <div className="svc-grid-overlay" aria-hidden="true" />
         <h3 className="portfolio-grid-heading">Portfolio</h3>
         <div className="portfolio-grid">
           {PROJECTS.map((p) => (
