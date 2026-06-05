@@ -9,6 +9,7 @@ import "./ui/navbar.css";
 const navLinks = [
   { label: "Portfolio", href: "/portfolio" },
   { label: "Services",  href: "/services"  },
+  { label: "Process",   href: "/process"   },
   { label: "About",     href: "/about"     },
   { label: "Contact",   href: "/contact"   },
 ];

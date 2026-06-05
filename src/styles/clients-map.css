@@ -111,7 +111,7 @@
   height: 5px;
   border-radius: 50%;
   background: var(--gold);
-  box-shadow: 0 0 6px rgba(201,169,110,.45);
+  box-shadow: 0 0 6px rgba(20,184,166,.45);
   flex-shrink: 0;
 }
 

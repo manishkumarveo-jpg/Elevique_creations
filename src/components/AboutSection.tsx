@@ -149,7 +149,7 @@ export default function AboutSection() {
                   fontSize: "0.52rem",
                   fontWeight: 700,
                   letterSpacing: "0.28em",
-                  color: "var(--gold)",
+                  color: "var(--teal)",
                   opacity: 0.8,
                 }}>
                   {pillar.number}

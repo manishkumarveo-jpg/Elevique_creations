@@ -27,8 +27,8 @@ function Crystal() {
         <mesh ref={outerRef}>
           <icosahedronGeometry args={[1.65, 1]} />
           <MeshDistortMaterial
-            color="#C9A96E"
-            emissive="#C9A96E"
+            color="#14B8A6"
+            emissive="#14B8A6"
             emissiveIntensity={0.18}
             metalness={0.96}
             roughness={0.04}
@@ -43,8 +43,8 @@ function Crystal() {
         <mesh ref={innerRef}>
           <icosahedronGeometry args={[1.35, 1]} />
           <meshStandardMaterial
-            color="#C9A96E"
-            emissive="#C9A96E"
+            color="#14B8A6"
+            emissive="#14B8A6"
             emissiveIntensity={0.4}
             wireframe
             transparent
@@ -56,8 +56,8 @@ function Crystal() {
         <mesh>
           <sphereGeometry args={[0.9, 32, 32]} />
           <meshStandardMaterial
-            color="#e8c98a"
-            emissive="#e8c98a"
+            color="#5eead4"
+            emissive="#5eead4"
             emissiveIntensity={0.6}
             transparent
             opacity={0.06}
@@ -70,7 +70,7 @@ function Crystal() {
           scale={5.5}
           size={1.4}
           speed={0.22}
-          color="#C9A96E"
+          color="#14B8A6"
           opacity={0.55}
         />
 
@@ -97,7 +97,7 @@ export default function AboutScene3D() {
       dpr={[1, 1.5]}
     >
       <ambientLight intensity={0.25} />
-      <pointLight position={[4,  5,  4]} intensity={1.2} color="#C9A96E" />
+      <pointLight position={[4,  5,  4]} intensity={1.2} color="#14B8A6" />
       <pointLight position={[-4, -3, -3]} intensity={0.6} color="#14B8A6" />
       <pointLight position={[0,  0,  6]} intensity={0.3} color="#ffffff" />
       <Suspense fallback={null}>

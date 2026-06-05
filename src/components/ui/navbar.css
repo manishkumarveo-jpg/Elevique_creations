@@ -4,8 +4,8 @@
 
 /* ─── Local tokens ───────────────────────────────────────────── */
 :root {
-  --nb-gold:            #C9A96E;
-  --nb-gold-light:      #e8c98a;
+  --nb-gold:            #14B8A6;
+  --nb-gold-light:      #5eead4;
   --nb-text:            rgba(255, 255, 255, 0.92);
   --nb-muted:           rgba(255, 255, 255, 0.65);
   --nb-surface:         rgba(255, 255, 255, 0.04);
@@ -143,7 +143,7 @@
   background: linear-gradient(
     to right,
     transparent,
-    rgba(201, 169, 110, 0.35),
+    rgba(20, 184, 166, 0.35),
     transparent
   );
   pointer-events: none;
@@ -241,7 +241,7 @@
 }
 
 .navbar-cta:hover {
-  background: rgba(201, 169, 110, 0.08);
+  background: rgba(20, 184, 166, 0.08);
   border-color: var(--nb-gold);
   color: var(--nb-gold-light);
   transform: scale(1.03);
