@@ -270,13 +270,13 @@
 @media (max-width: 900px) {
   .cm-section {
     grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
+    grid-template-rows: auto auto;
     height: auto;
-    min-height: 100svh;
+    min-height: auto;
   }
 
   .cm-left {
-    padding: calc(var(--nav-h) + 1.5rem) 5vw 1rem;
+    padding: calc(var(--nav-h) + 1.5rem) 5vw 2rem;
   }
 
   .cm-right {
@@ -293,9 +293,27 @@
 
 @media (max-width: 600px) {
   .cm-heading { font-size: clamp(1.5rem, 7vw, 2.2rem); }
-  .cm-sub { max-width: 100%; font-size: 0.82rem; }
-  .cm-name { font-size: 0.72rem; }
-  .cm-city { font-size: 0.66rem; }
+  .cm-sub     { max-width: 100%; font-size: 0.82rem; }
+  .cm-name    { font-size: 0.72rem; }
+  .cm-city    { font-size: 0.66rem; }
+
+  .cm-left  { padding: calc(var(--nav-h) + 1rem) 4vw 1.5rem; }
+  .cm-right { padding: 0 4vw 3rem; }
+  .cm-svg   { width: 95vw; max-width: 100%; }
+
+  .cm-tooltip {
+    width: min(168px, 80vw);
+    padding: 8px 10px;
+    font-size: 0.75rem;
+  }
+
+  .cm-list { gap: 6px; }
+  .cm-item { padding: 7px 10px; }
+}
+
+@media (max-width: 480px) {
+  .cm-heading { font-size: clamp(1.35rem, 8vw, 1.8rem); }
+  .cm-left    { padding: calc(var(--nav-h) + 0.75rem) 5vw 1.25rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

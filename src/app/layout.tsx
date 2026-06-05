@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Syne, Space_Grotesk, Geist } from "next/font/google";
 import "./globals.css";
 import DotBackground from "@/components/DotBackground";
+import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 import { cn } from "@/lib/utils";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
@@ -40,7 +41,7 @@ export default function RootLayout({
     <html lang="en" className={cn(inter.variable, syne.variable, spaceGrotesk.variable, "font-sans", geist.variable)}>
       <body className="antialiased">
         <DotBackground />
-        {children}
+        <SmoothScrollProvider>{children}</SmoothScrollProvider>
       </body>
     </html>
   );

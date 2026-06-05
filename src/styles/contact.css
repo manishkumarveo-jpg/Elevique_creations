@@ -377,11 +377,33 @@
 
 @media (max-width: 768px) {
   .ct-section { padding: 6rem 0; }
-  .ct-grid { grid-template-columns: 1fr; gap: 4rem; }
+  .ct-grid { grid-template-columns: 1fr; gap: 3rem; }
   .ct-form-wrap { padding: 2rem; border-radius: 16px; justify-self: center; }
   .ct-bloom { width: 400px; height: 400px; right: -10%; }
+  .ct-heading { margin-bottom: 2rem; }
+  .ct-details { gap: 1.5rem; }
 }
 
 @media (max-width: 480px) {
+  .ct-section { padding: 4.5rem 0; }
+
+  .ct-heading  { font-size: clamp(1.6rem, 8vw, 2.2rem); }
+  .ct-subtext  { font-size: 0.8rem; }
+
+  .ct-form-wrap { padding: 1.5rem 1.25rem; }
+  .ct-form      { gap: 0.9rem; }
+
+  .ct-field label      { font-size: 0.6rem; }
+  .ct-field input,
+  .ct-field textarea   { padding: 11px 12px; font-size: 0.82rem; }
+
+  .ct-detail       { gap: 1rem; }
+  .ct-detail-icon  { width: 40px; height: 40px; flex-shrink: 0; }
+  .ct-detail-icon svg { width: 18px; height: 18px; }
+  .ct-detail-label { font-size: 0.55rem; }
+  .ct-detail-text  { font-size: 0.78rem; }
+
+  .ct-bloom { width: 200px; height: 200px; right: -5%; top: 10%; }
+
   .ct-submit { align-self: stretch; justify-content: center; }
 }

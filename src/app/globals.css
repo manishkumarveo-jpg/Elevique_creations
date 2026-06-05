@@ -696,9 +696,28 @@ body {
 
 @media (max-width: 480px) {
   .hero-title { font-size: clamp(1.6rem, 10vw, 2.2rem); }
-  .btn-primary { padding: 11px 22px; }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 320px;
+  }
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    justify-content: center;
+    padding: 13px 20px;
+    text-align: center;
+  }
+
+  .hero-trust { padding-bottom: 3.5vh; }
+
+  .trust-stats { flex-wrap: wrap; }
+  .trust-stat  { flex: 1 1 calc(50% - 1px); min-width: 80px; padding: 11px 10px; }
   .trust-stat-value { font-size: 1rem; }
-  .trust-stat-label { font-size: 0.44rem; }
+  .trust-stat-label { font-size: 0.44rem; letter-spacing: 0.12em; }
 }
 
 /* ─── Cursor glow — hide on touch devices ─────────────────────
@@ -2120,11 +2139,17 @@ body {
 
   .svc-grid {
     grid-template-columns: 1fr;
-    max-width: 420px;
-    margin: 0 auto;
+    max-width: 100%;
   }
 
-  .svc-flip-wrapper { height: 340px; }
+  .svc-flip-wrapper { height: 320px; }
+
+  .svc-bloom--title { width: 280px; height: 280px; }
+  .svc-bloom--diff  { width: 300px; height: 300px; }
+
+  .svc-heading { font-size: clamp(1.6rem, 6vw, 2.2rem); }
+  .svc-subheading { font-size: 0.82rem; }
+  .svc-header { margin-bottom: 2.5rem; }
 
   .svc-diff-grid {
     grid-template-columns: 1fr 1fr;
@@ -2137,6 +2162,12 @@ body {
 }
 
 @media (max-width: 480px) {
+  .svc-section,
+  .svc-diff-section { padding: 4rem 0; }
+
+  .svc-flip-wrapper { height: 290px; }
+  .svc-card-title   { font-size: 1rem; }
+
   .svc-diff-grid {
     grid-template-columns: 1fr;
   }
@@ -2149,8 +2180,11 @@ body {
   }
 
   .svc-modal-panel {
-    padding: 2rem 1.5rem 2rem;
+    max-width: 95vw;
+    padding: 1.75rem 1.25rem;
   }
+  .svc-modal-title    { font-size: 1.1rem; }
+  .svc-modal-subtitle { font-size: 0.78rem; }
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -3071,7 +3105,6 @@ body {
   z-index: 2;
 }
 
-/* ─── Timeline wrapper ─────────────────────────────────────────── */
 .proc-timeline {
   position: relative;
   z-index: 2;
@@ -3094,7 +3127,6 @@ body {
   transform: translateY(-3px);
 }
 
-/* Teal glow that blooms on hover */
 .proc-card-glow {
   position: absolute;
   inset: -60px;
@@ -3110,9 +3142,7 @@ body {
   z-index: 0;
 }
 
-.proc-card:hover .proc-card-glow {
-  opacity: 1;
-}
+.proc-card:hover .proc-card-glow { opacity: 1; }
 
 /* ─── Icon bubble ──────────────────────────────────────────────── */
 .proc-icon-wrap {
@@ -3136,10 +3166,7 @@ body {
   box-shadow: 0 0 16px rgba(20, 184, 166, 0.2);
 }
 
-.proc-icon-inner {
-  color: var(--teal);
-  display: flex;
-}
+.proc-icon-inner { color: var(--teal); display: flex; }
 
 /* ─── Step number ──────────────────────────────────────────────── */
 .proc-number {
@@ -3204,11 +3231,26 @@ body {
 
 /* ─── Responsive ───────────────────────────────────────────────── */
 @media (max-width: 1023px) {
-  .proc-timeline {
-    padding: 0 0 0 0;
-  }
+  .proc-section   { padding: 5rem 0 6rem; }
+  .proc-container { padding: 0 4vw; }
+  .proc-card      { padding: 1.75rem; }
+}
 
-  .proc-card {
-    margin-bottom: 1.25rem;
-  }
+@media (max-width: 768px) {
+  .proc-section { padding: 4.5rem 0 5.5rem; }
+  .proc-bloom   { width: 380px; height: 380px; }
+  .proc-title   { font-size: 1.1rem; }
+  .proc-desc    { font-size: 0.83rem; }
+}
+
+@media (max-width: 480px) {
+  .proc-section   { padding: 4rem 0 5rem; }
+  .proc-container { padding: 0 5vw; }
+  .proc-card      { padding: 1.5rem 1.25rem; }
+  .proc-icon-wrap { width: 42px; height: 42px; border-radius: 10px; }
+  .proc-title     { font-size: 1rem; margin-bottom: 0.6rem; }
+  .proc-desc      { font-size: 0.8rem; line-height: 1.65; margin-bottom: 1rem; }
+  .proc-tag       { font-size: 0.6rem; padding: 0.18rem 0.55rem; }
+  .proc-tags      { gap: 0.3rem; }
+  .proc-bloom     { width: 220px; height: 220px; }
 }

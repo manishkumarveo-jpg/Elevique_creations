@@ -76,9 +76,7 @@ function TimelineLine() {
       className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 w-px hidden lg:block"
       aria-hidden="true"
     >
-      {/* track */}
-      <div className="absolute inset-0 bg-white/[0.06]" />
-      {/* fill */}
+      <div className="absolute inset-0 bg-white/6" />
       <motion.div
         className="absolute top-0 left-0 right-0 origin-top"
         style={{
@@ -107,7 +105,7 @@ function TimelineDot({ inView }: { inView: boolean }) {
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
         <motion.div
-          className="w-1.5 h-1.5 rounded-full m-auto mt-[2px]"
+          className="w-1.5 h-1.5 rounded-full m-auto mt-0.5"
           style={{ background: "#14B8A6" }}
           animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
           transition={{ delay: 0.2, duration: 0.4 }}
@@ -118,13 +116,7 @@ function TimelineDot({ inView }: { inView: boolean }) {
 }
 
 /* ─── Step Card ─────────────────────────────────────────────────── */
-function StepCard({
-  step,
-  index,
-}: {
-  step: (typeof STEPS)[0];
-  index: number;
-}) {
+function StepCard({ step, index }: { step: (typeof STEPS)[0]; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-10%" });
   const isRight = index % 2 === 0;
@@ -138,7 +130,6 @@ function StepCard({
     <div ref={ref} className="relative grid lg:grid-cols-2 gap-0 items-start mb-16 lg:mb-24">
       <TimelineDot inView={inView} />
 
-      {/* Spacer — left side on even, right on odd */}
       {!isRight && <div className="hidden lg:block" />}
 
       <motion.div
@@ -148,14 +139,10 @@ function StepCard({
         transition={{ duration: 0.72, ease: EASE_OUT, delay: 0.05 }}
         className={`relative group ${isRight ? "lg:pr-16" : "lg:pl-16"}`}
       >
-        {/* Card */}
         <div className="proc-card">
-          {/* Gold glow on hover */}
           <div className="proc-card-glow" aria-hidden="true" />
 
-          {/* Top row */}
           <div className="flex items-start justify-between mb-5">
-            {/* Icon bubble */}
             <motion.div
               className="proc-icon-wrap"
               animate={inView ? { scale: 1, opacity: 1 } : { scale: 0.7, opacity: 0 }}
@@ -164,7 +151,6 @@ function StepCard({
               <span className="proc-icon-inner">{step.icon}</span>
             </motion.div>
 
-            {/* Step number */}
             <motion.span
               className="proc-number"
               animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: -6 }}
@@ -174,7 +160,6 @@ function StepCard({
             </motion.span>
           </div>
 
-          {/* Title */}
           <motion.h3
             className="proc-title"
             animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
@@ -183,7 +168,6 @@ function StepCard({
             {step.title}
           </motion.h3>
 
-          {/* Description */}
           <motion.p
             className="proc-desc"
             animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
@@ -192,7 +176,6 @@ function StepCard({
             {step.description}
           </motion.p>
 
-          {/* Tags */}
           <motion.div
             className="proc-tags"
             animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 8 }}
@@ -207,7 +190,6 @@ function StepCard({
         </div>
       </motion.div>
 
-      {/* Spacer — right side on even */}
       {isRight && <div className="hidden lg:block" />}
     </div>
   );
@@ -224,14 +206,10 @@ export default function ProcessSection() {
       className="proc-section"
       aria-labelledby="process-heading"
     >
-      {/* Background texture */}
       <div className="svc-grid-overlay" aria-hidden="true" />
-
-      {/* Gold bloom */}
       <div className="proc-bloom" aria-hidden="true" />
 
       <div className="proc-container">
-        {/* ── Header ── */}
         <div ref={headingRef} className="proc-header">
           <motion.span
             className="svc-eyebrow"
@@ -261,7 +239,6 @@ export default function ProcessSection() {
           </motion.p>
         </div>
 
-        {/* ── Timeline ── */}
         <div className="proc-timeline">
           <TimelineLine />
           {STEPS.map((step, i) => (
