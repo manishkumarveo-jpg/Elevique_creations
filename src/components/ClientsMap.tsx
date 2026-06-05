@@ -119,8 +119,8 @@ export default function ClientsMap() {
       const el = document.createElementNS("http://www.w3.org/2000/svg", "path");
       el.setAttribute("d", d);
       el.setAttribute("fill",   cli ? "#141210" : hashFill(feat.properties.st_nm));
-      el.setAttribute("stroke", cli ? "rgba(20,184,166,.25)" : "rgba(255,255,255,.035)");
-      el.setAttribute("stroke-width", cli ? "0.9" : "0.55");
+      el.setAttribute("stroke", cli ? "rgba(20,184,166,.5)" : "rgba(255,255,255,.08)");
+      el.setAttribute("stroke-width", cli ? "1.2" : "0.8");
       el.setAttribute("vector-effect", "non-scaling-stroke");
       if (cli) {
         el.setAttribute("data-client", cli.match);
@@ -158,6 +158,7 @@ export default function ClientsMap() {
         <span className="cm-eyebrow" aria-hidden="true">
           <span className="cm-eyebrow-line" />
           Our Clients
+          <span className="cm-count" aria-label="5 clients">05</span>
         </span>
 
         {/* heading */}
@@ -178,6 +179,7 @@ export default function ClientsMap() {
               <span className="cm-name">{c.name}</span>
               <span className="cm-city-sep" aria-hidden="true">·</span>
               <span className="cm-city">{c.city}</span>
+              <span className="cm-since" aria-label={`Client since ${c.since}`}>Since {c.since}</span>
             </li>
           ))}
         </ul>

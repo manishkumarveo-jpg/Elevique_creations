@@ -1,18 +1,16 @@
 import Navbar from "@/components/Navbar";
-import FeaturedShowcase from "@/components/FeaturedShowcase";
 import ContactSection from "@/components/ContactSection";
 import { Footer } from "@/components/ui/footer-section";
 
 export const metadata = {
-  title: "Portfolio | Elevique",
-  description: "Explore our AI visual projects and case studies.",
+  title: "Contact | Elevique",
+  description: "Start a project with Elevique. Get in touch with our team to discuss your AI visual production needs.",
 };
 
-export default function PortfolioPage() {
+export default function ContactPage() {
   return (
-    <main>
+    <main style={{ paddingTop: "calc(24px + 60px + 16px)" }}>
       <Navbar />
-      <FeaturedShowcase />
       <ContactSection />
       <Footer />
     </main>

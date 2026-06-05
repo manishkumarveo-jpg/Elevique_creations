@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
-import { Inter, Syne, Space_Grotesk } from "next/font/google";
+import { Inter, Syne, Space_Grotesk, Geist } from "next/font/google";
 import "./globals.css";
 import DotBackground from "@/components/DotBackground";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const inter = Inter({
   subsets: ["latin"],
@@ -34,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${syne.variable} ${spaceGrotesk.variable}`}>
+    <html lang="en" className={cn(inter.variable, syne.variable, spaceGrotesk.variable, "font-sans", geist.variable)}>
       <body className="antialiased">
         <DotBackground />
         {children}

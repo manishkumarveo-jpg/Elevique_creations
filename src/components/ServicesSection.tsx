@@ -12,6 +12,8 @@ import {
   Zap,
   BookOpen,
   Layers,
+  Camera,
+  Sparkles,
 } from "lucide-react";
 
 /* ─── Data ─────────────────────────────────────────────────────── */
@@ -37,26 +39,26 @@ const SERVICES = [
     synopsis:
       "Interactive 3D experiences built on WebGL, Three.js, and real-time render pipelines. From AR product configurators to WebXR showrooms, we deliver spatial content that converts. Fully integrated with your existing Next.js & API stack.",
   },
-   {
-    id: "immersive-engineering",
-    icon: <Cpu size={36} strokeWidth={1.5} />,
-    title: "Immersive Engineering",
+  {
+    id: "brand-strategy",
+    icon: <Layers size={36} strokeWidth={1.5} />,
+    title: "Brand Strategy",
     synopsis:
-      "Interactive 3D experiences built on WebGL, Three.js, and real-time render pipelines. From AR product configurators to WebXR showrooms, we deliver spatial content that converts. Fully integrated with your existing Next.js & API stack.",
+      "We craft visual identities that command attention. From moodboards and brand voice to full style systems — we align your visual language with your market position. Deliverables include brand decks, color systems, typographic frameworks, and creative direction guides.",
   },
-   {
-    id: "immersive-engineering",
-    icon: <Cpu size={36} strokeWidth={1.5} />,
-    title: "Immersive Engineering",
+  {
+    id: "ai-photography",
+    icon: <Camera size={36} strokeWidth={1.5} />,
+    title: "AI Photography",
     synopsis:
-      "Interactive 3D experiences built on WebGL, Three.js, and real-time render pipelines. From AR product configurators to WebXR showrooms, we deliver spatial content that converts. Fully integrated with your existing Next.js & API stack.",
+      "Hyper-realistic AI product and lifestyle photography indistinguishable from a high-budget shoot. We generate hero images, catalogue stills, and ambient lifestyle contexts — with unlimited revisions and no logistics overhead.",
   },
-   {
-    id: "immersive-engineering",
-    icon: <Cpu size={36} strokeWidth={1.5} />,
-    title: "Immersive Engineering",
+  {
+    id: "motion-graphics",
+    icon: <Sparkles size={36} strokeWidth={1.5} />,
+    title: "Motion Graphics",
     synopsis:
-      "Interactive 3D experiences built on WebGL, Three.js, and real-time render pipelines. From AR product configurators to WebXR showrooms, we deliver spatial content that converts. Fully integrated with your existing Next.js & API stack.",
+      "Kinetic logos, animated UI reveals, social-format reels, and broadcast motion packages. Our designers blend generative and hand-crafted animation to produce scroll-stopping content tuned for Instagram, TikTok, YouTube, and display advertising.",
   },
 ];
 

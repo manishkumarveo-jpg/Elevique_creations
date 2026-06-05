@@ -2,10 +2,14 @@ import HeroSection from "@/components/HeroSection";
 import ServicesSection from "@/components/ServicesSection";
 import ClientsMap from "@/components/ClientsMap";
 import TestimonialsEditorial from "@/components/ui/editorial-testimonial";
+import ContactSection from "@/components/ContactSection";
+import { Footer } from "@/components/ui/footer-section";
+
 
 export default function Home() {
   return (
     <main>
+      
       <HeroSection />
       <ServicesSection />
       <section
@@ -19,6 +23,8 @@ export default function Home() {
         <TestimonialsEditorial />
       </section>
       <ClientsMap />
+      <ContactSection />
+      <Footer />
     </main>
   );
 }
