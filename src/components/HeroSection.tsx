@@ -186,7 +186,7 @@ export default function HeroSection() {
           ref={videoRef}
           className="hero-video"
           src={VIDEO_SRC}
-          autoPlay loop muted playsInline preload="auto"
+          autoPlay loop muted playsInline preload="metadata"
           aria-hidden="true"
           style={{ scale: videoScale }}
         />

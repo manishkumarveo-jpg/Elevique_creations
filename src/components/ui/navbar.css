@@ -218,6 +218,32 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   LOGIN BUTTON (secondary, text-only pill)
+   ═══════════════════════════════════════════════════════════════ */
+.navbar-login {
+  position: relative;
+  z-index: 1;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--nb-muted);
+  padding: 7px 16px;
+  border: 1px solid transparent;
+  border-radius: 100px;
+  transition: all 0.3s var(--nb-ease);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.navbar-login:hover {
+  color: var(--nb-text);
+  border-color: var(--nb-border);
+  background: var(--nb-surface);
+}
+
+/* ═══════════════════════════════════════════════════════════════
    CTA BUTTON
    ═══════════════════════════════════════════════════════════════ */
 .navbar-cta {
@@ -346,10 +372,28 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2.5rem;
+  gap: 1.5rem;
   margin-top: 4rem;
   width: 100%;
   max-width: 320px;
+}
+
+.navbar-mobile-login {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--nb-muted);
+  padding: 8px 24px;
+  border: 1px solid var(--nb-border);
+  border-radius: 100px;
+  transition: all 0.3s var(--nb-ease);
+}
+
+.navbar-mobile-login:hover {
+  color: var(--nb-text);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .navbar-mobile-cta {
@@ -387,6 +431,7 @@
 @media (max-width: 768px) {
   .navbar-links         { display: none; }
   .navbar-cta           { display: none; }
+  .navbar-login         { display: none; }
   .navbar-mobile-toggle { display: flex; }
 
   .navbar-mobile-link { font-size: 2.6rem; }

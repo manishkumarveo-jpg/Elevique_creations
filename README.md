@@ -75,7 +75,6 @@ src/
   styles/
     clients-map.css
 context/
-  Hero Section.md
   clientSection.md
   portfolio.md
   service.md

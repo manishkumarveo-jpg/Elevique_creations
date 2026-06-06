@@ -1,0 +1,408 @@
+// Auto-generated placeholder — replace with:
+// npx supabase gen types typescript --project-id YOUR_PROJECT_ID > src/lib/types/database.ts
+
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
+
+export type Database = {
+  public: {
+    Tables: {
+      profiles: {
+        Row: {
+          id: string
+          full_name: string
+          email: string
+          role: 'admin' | 'team_member' | 'client'
+          company_name: string | null
+          phone: string | null
+          avatar_url: string | null
+          is_active: boolean
+          created_by: string | null
+          last_login: string | null
+          assigned_team_member_id: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id: string
+          full_name: string
+          email: string
+          role?: 'admin' | 'team_member' | 'client'
+          company_name?: string | null
+          phone?: string | null
+          avatar_url?: string | null
+          is_active?: boolean
+          created_by?: string | null
+          last_login?: string | null
+          assigned_team_member_id?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          full_name?: string
+          email?: string
+          role?: 'admin' | 'team_member' | 'client'
+          company_name?: string | null
+          phone?: string | null
+          avatar_url?: string | null
+          is_active?: boolean
+          created_by?: string | null
+          last_login?: string | null
+          assigned_team_member_id?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      projects: {
+        Row: {
+          id: string
+          name: string
+          client_id: string
+          package: string | null
+          status: 'briefing' | 'in_progress' | 'final_review' | 'completed' | 'paused'
+          deadline: string | null
+          description: string | null
+          created_by: string
+          is_archived: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          name: string
+          client_id: string
+          package?: string | null
+          status?: 'briefing' | 'in_progress' | 'final_review' | 'completed' | 'paused'
+          deadline?: string | null
+          description?: string | null
+          created_by: string
+          is_archived?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          name?: string
+          client_id?: string
+          package?: string | null
+          status?: 'briefing' | 'in_progress' | 'final_review' | 'completed' | 'paused'
+          deadline?: string | null
+          description?: string | null
+          created_by?: string
+          is_archived?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      project_assignments: {
+        Row: {
+          id: string
+          project_id: string
+          user_id: string
+          role_on_project: string
+          assigned_by: string
+          assigned_at: string
+        }
+        Insert: {
+          id?: string
+          project_id: string
+          user_id: string
+          role_on_project?: string
+          assigned_by: string
+          assigned_at?: string
+        }
+        Update: {
+          id?: string
+          project_id?: string
+          user_id?: string
+          role_on_project?: string
+          assigned_by?: string
+          assigned_at?: string
+        }
+        Relationships: []
+      }
+      milestones: {
+        Row: {
+          id: string
+          project_id: string
+          phase_number: number
+          phase_name: string
+          status: 'pending' | 'in_progress' | 'done'
+          scheduled_date: string | null
+          completed_date: string | null
+          notes: string | null
+          updated_by: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          project_id: string
+          phase_number: number
+          phase_name: string
+          status?: 'pending' | 'in_progress' | 'done'
+          scheduled_date?: string | null
+          completed_date?: string | null
+          notes?: string | null
+          updated_by?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          project_id?: string
+          phase_number?: number
+          phase_name?: string
+          status?: 'pending' | 'in_progress' | 'done'
+          scheduled_date?: string | null
+          completed_date?: string | null
+          notes?: string | null
+          updated_by?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      folders: {
+        Row: {
+          id: string
+          project_id: string
+          name: string
+          icon: string | null
+          description: string | null
+          sort_order: number
+          upload_roles: string[]
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          project_id: string
+          name: string
+          icon?: string | null
+          description?: string | null
+          sort_order?: number
+          upload_roles?: string[]
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          project_id?: string
+          name?: string
+          icon?: string | null
+          description?: string | null
+          sort_order?: number
+          upload_roles?: string[]
+          created_at?: string
+        }
+        Relationships: []
+      }
+      files: {
+        Row: {
+          id: string
+          folder_id: string
+          project_id: string
+          uploaded_by: string
+          file_name: string
+          file_type: string | null
+          file_size: string | null
+          file_url: string
+          notes: string | null
+          is_deleted: boolean
+          deleted_by: string | null
+          deleted_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          folder_id: string
+          project_id: string
+          uploaded_by: string
+          file_name: string
+          file_type?: string | null
+          file_size?: string | null
+          file_url: string
+          notes?: string | null
+          is_deleted?: boolean
+          deleted_by?: string | null
+          deleted_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          folder_id?: string
+          project_id?: string
+          uploaded_by?: string
+          file_name?: string
+          file_type?: string | null
+          file_size?: string | null
+          file_url?: string
+          notes?: string | null
+          is_deleted?: boolean
+          deleted_by?: string | null
+          deleted_at?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+      deliverables: {
+        Row: {
+          id: string
+          project_id: string
+          file_id: string | null
+          deliverable_type: 'video' | 'image'
+          file_name: string
+          duration: string | null
+          dimensions: string | null
+          resolution: string | null
+          format: string | null
+          status: 'pending' | 'shared' | 'delivered' | 'approved'
+          delivered_on: string | null
+          approved_by: string | null
+          approved_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          project_id: string
+          file_id?: string | null
+          deliverable_type: 'video' | 'image'
+          file_name: string
+          duration?: string | null
+          dimensions?: string | null
+          resolution?: string | null
+          format?: string | null
+          status?: 'pending' | 'shared' | 'delivered' | 'approved'
+          delivered_on?: string | null
+          approved_by?: string | null
+          approved_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          project_id?: string
+          file_id?: string | null
+          deliverable_type?: 'video' | 'image'
+          file_name?: string
+          duration?: string | null
+          dimensions?: string | null
+          resolution?: string | null
+          format?: string | null
+          status?: 'pending' | 'shared' | 'delivered' | 'approved'
+          delivered_on?: string | null
+          approved_by?: string | null
+          approved_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      asset_checklist: {
+        Row: {
+          id: string
+          project_id: string
+          item_label: string
+          is_completed: boolean
+          completed_by: string | null
+          completed_at: string | null
+          sort_order: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          project_id: string
+          item_label: string
+          is_completed?: boolean
+          completed_by?: string | null
+          completed_at?: string | null
+          sort_order?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          project_id?: string
+          item_label?: string
+          is_completed?: boolean
+          completed_by?: string | null
+          completed_at?: string | null
+          sort_order?: number
+          created_at?: string
+        }
+        Relationships: []
+      }
+      activity_log: {
+        Row: {
+          id: string
+          project_id: string | null
+          actor_id: string
+          actor_role: 'admin' | 'team_member' | 'client'
+          action: string
+          entity_type: string | null
+          entity_id: string | null
+          entity_name: string | null
+          metadata: Json
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          project_id?: string | null
+          actor_id: string
+          actor_role: 'admin' | 'team_member' | 'client'
+          action: string
+          entity_type?: string | null
+          entity_id?: string | null
+          entity_name?: string | null
+          metadata?: Json
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          project_id?: string | null
+          actor_id?: string
+          actor_role?: 'admin' | 'team_member' | 'client'
+          action?: string
+          entity_type?: string | null
+          entity_id?: string | null
+          entity_name?: string | null
+          metadata?: Json
+          created_at?: string
+        }
+        Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      get_user_role: {
+        Args: Record<PropertyKey, never>
+        Returns: 'admin' | 'team_member' | 'client'
+      }
+      is_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      is_assigned_to_project: {
+        Args: { p_project_id: string }
+        Returns: boolean
+      }
+      is_project_client: {
+        Args: { p_project_id: string }
+        Returns: boolean
+      }
+    }
+    Enums: {
+      user_role: 'admin' | 'team_member' | 'client'
+      project_status: 'briefing' | 'in_progress' | 'final_review' | 'completed' | 'paused'
+      milestone_status: 'pending' | 'in_progress' | 'done'
+      deliverable_type: 'video' | 'image'
+      deliverable_status: 'pending' | 'shared' | 'delivered' | 'approved'
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+}

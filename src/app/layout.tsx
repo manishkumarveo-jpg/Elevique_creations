@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, Syne, Space_Grotesk, Geist } from "next/font/google";
 import "./globals.css";
-import DotBackground from "@/components/DotBackground";
-import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 const inter = Inter({
   subsets: ["latin"],
@@ -34,15 +32,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={cn(inter.variable, syne.variable, spaceGrotesk.variable, "font-sans", geist.variable)}>
-      <body className="antialiased">
-        <DotBackground />
-        <SmoothScrollProvider>{children}</SmoothScrollProvider>
-      </body>
+    <html
+      lang="en"
+      className={cn(
+        inter.variable,
+        syne.variable,
+        spaceGrotesk.variable,
+        geist.variable,
+        "font-sans"
+      )}
+    >
+      <body className="antialiased">{children}</body>
     </html>
   );
 }

@@ -1,0 +1,19 @@
+import { createServerClient } from '@/lib/supabase/server'
+import type { Database } from '@/lib/types/database'
+
+type AssignmentRow = Database['public']['Tables']['project_assignments']['Row']
+
+export type AssignmentWithUser = AssignmentRow & {
+  user?: { id: string; full_name: string; email: string; role: string } | null
+}
+
+export async function getAssignmentsForProject(projectId: string): Promise<AssignmentWithUser[]> {
+  const supabase = await createServerClient()
+  const { data, error } = await supabase
+    .from('project_assignments')
+    .select('*')
+    .eq('project_id', projectId)
+    .order('assigned_at')
+  if (error) throw error
+  return data as unknown as AssignmentWithUser[]
+}

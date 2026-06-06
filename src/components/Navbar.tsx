@@ -64,6 +64,7 @@ export default function Navbar() {
             ))}
           </nav>
 
+          <Link href="/login" className="navbar-login" target="_blank" rel="noopener noreferrer">Login</Link>
           <Link href="/contact" className="navbar-cta">Book a Call</Link>
 
           <button
@@ -121,6 +122,21 @@ export default function Navbar() {
               </div>
 
               <div className="navbar-mobile-footer">
+                <motion.div
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.33, duration: 0.45, ease: EASE_OUT }}
+                >
+                  <Link
+                    href="/login"
+                    onClick={() => setMenuOpen(false)}
+                    className="navbar-mobile-login"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Login
+                  </Link>
+                </motion.div>
                 <motion.div
                   initial={{ opacity: 0, y: 12 }}
                   animate={{ opacity: 1, y: 0 }}
