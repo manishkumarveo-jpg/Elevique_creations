@@ -1,8 +1,6 @@
-import { requireTeamMember } from '@/lib/auth/require-role'
 import { TeamSidebar } from '@/components/team/TeamSidebar'
 
-export default async function TeamLayout({ children }: { children: React.ReactNode }) {
-  await requireTeamMember()
+export default function TeamLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="p-shell">
       <TeamSidebar />

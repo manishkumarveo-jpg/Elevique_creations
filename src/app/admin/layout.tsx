@@ -1,8 +1,6 @@
-import { requireAdmin } from '@/lib/auth/require-role'
 import { AdminSidebar } from '@/components/admin/AdminSidebar'
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  await requireAdmin()
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="p-shell">
       <AdminSidebar />

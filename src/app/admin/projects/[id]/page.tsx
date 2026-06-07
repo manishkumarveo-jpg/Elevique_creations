@@ -5,47 +5,21 @@ import { getFoldersForProject, getFilesForProject } from '@/lib/queries/files'
 import { getDeliverablesForProject } from '@/lib/queries/deliverables'
 import { getChecklistForProject } from '@/lib/queries/checklist'
 import { getAssignmentsForProject } from '@/lib/queries/assignments'
+import { getRevisionsForProject } from '@/lib/queries/revisions'
 import { Tabs } from '@/components/ui/Tabs'
 import { ProjectStatusBadge } from '@/components/shared/StatusBadge'
-import { MilestoneTimeline } from '@/components/shared/MilestoneTimeline'
+import { PipelineSteps } from '@/components/shared/PipelineSteps'
 import { MilestoneControls } from './MilestoneControls'
 import { FilesSection } from './FilesSection'
 import { AssignmentsSection } from './AssignmentsSection'
 import { DeliverablesSection } from './DeliverablesSection'
+import { ClientNoteAlert } from './ClientNoteAlert'
 
 interface Props { params: Promise<{ id: string }> }
 
-/* ── Reusable dark panel ──────────────────────────────────────── */
-const panel: React.CSSProperties = {
-  background: '#0f1220',
-  border: '1px solid rgba(255,255,255,0.10)',
-  borderRadius: 16,
-  padding: '1.5rem',
-}
-
-const panelLabel: React.CSSProperties = {
-  fontSize: '0.6rem',
-  fontWeight: 700,
-  letterSpacing: '0.2em',
-  textTransform: 'uppercase',
-  color: 'rgba(255,255,255,0.28)',
-  marginBottom: '1rem',
-}
-
-const dtStyle: React.CSSProperties = {
-  fontSize: '0.73rem',
-  color: 'rgba(255,255,255,0.32)',
-}
-
-const ddStyle: React.CSSProperties = {
-  fontSize: '0.73rem',
-  color: 'rgba(255,255,255,0.82)',
-  fontWeight: 500,
-}
-
 export default async function AdminProjectPage({ params }: Props) {
   const { id } = await params
-  const [project, milestones, folders, files, deliverables, checklist, assignments] = await Promise.all([
+  const [project, milestones, folders, files, deliverables, checklist, assignments, revisions] = await Promise.all([
     getProjectById(id).catch(() => null),
     getMilestonesForProject(id),
     getFoldersForProject(id),
@@ -53,11 +27,17 @@ export default async function AdminProjectPage({ params }: Props) {
     getDeliverablesForProject(id),
     getChecklistForProject(id),
     getAssignmentsForProject(id),
+    getRevisionsForProject(id),
   ])
 
   if (!project) notFound()
 
-  const client = project.client as { full_name?: string; company_name?: string } | null
+  const client = project.client as { full_name?: string; company_name?: string; email?: string } | null
+  const teamInitials = assignments.map(
+    a => (a.user as { full_name: string } | null)?.full_name?.[0]?.toUpperCase() ?? '?'
+  )
+  const checklistDone  = checklist.filter(c => c.is_completed).length
+  const checklistTotal = checklist.length
 
   const tabs = [
     {
@@ -65,36 +45,37 @@ export default async function AdminProjectPage({ params }: Props) {
       label: 'Overview',
       content: (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-          {/* Details panel */}
-          <div style={panel}>
-            <p style={panelLabel}>Project Details</p>
-            <dl style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <dt style={dtStyle}>Status</dt>
-                <dd><ProjectStatusBadge status={project.status} /></dd>
+          <div className="p-info-panel">
+            <p className="p-info-panel-label">Project Details</p>
+            {[
+              { key: 'Status',   val: <ProjectStatusBadge status={project.status} /> },
+              { key: 'Client',   val: client?.company_name ?? client?.full_name ?? '—' },
+              { key: 'Package',  val: project.package ?? '—' },
+              { key: 'Deadline', val: project.deadline ?? '—' },
+              { key: 'Created',  val: new Date(project.created_at).toLocaleDateString() },
+            ].map(row => (
+              <div key={row.key} className="p-info-row">
+                <span className="p-info-key">{row.key}</span>
+                <span className="p-info-val">{row.val}</span>
               </div>
-              <div style={{ height: 1, background: 'rgba(255,255,255,0.05)' }} />
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <dt style={dtStyle}>Package</dt>
-                <dd style={ddStyle}>{project.package ?? '—'}</dd>
+            ))}
+            {assignments.length > 0 && (
+              <div className="p-info-row" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '0.5rem' }}>
+                <span className="p-info-key">Team</span>
+                <div className="p-avatar-stack">
+                  {assignments.slice(0, 4).map(a => (
+                    <div key={a.id} className="p-avatar-sm">
+                      {(a.user as { full_name: string } | null)?.full_name?.[0]?.toUpperCase() ?? '?'}
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div style={{ height: 1, background: 'rgba(255,255,255,0.05)' }} />
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <dt style={dtStyle}>Deadline</dt>
-                <dd style={ddStyle}>{project.deadline ?? '—'}</dd>
-              </div>
-              <div style={{ height: 1, background: 'rgba(255,255,255,0.05)' }} />
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <dt style={dtStyle}>Created</dt>
-                <dd style={ddStyle}>{new Date(project.created_at).toLocaleDateString()}</dd>
-              </div>
-            </dl>
+            )}
           </div>
 
-          {/* Description panel */}
-          <div style={panel}>
-            <p style={panelLabel}>Description</p>
-            <p style={{ fontSize: '0.82rem', color: project.description ? 'rgba(255,255,255,0.72)' : 'rgba(255,255,255,0.22)', lineHeight: 1.6, fontStyle: project.description ? 'normal' : 'italic' }}>
+          <div className="p-info-panel">
+            <p className="p-info-panel-label">Description</p>
+            <p style={{ fontSize: '0.82rem', color: project.description ? 'var(--p-t2)' : 'var(--p-t3)', lineHeight: 1.6, fontStyle: project.description ? 'normal' : 'italic' }}>
               {project.description ?? 'No description provided.'}
             </p>
           </div>
@@ -105,13 +86,13 @@ export default async function AdminProjectPage({ params }: Props) {
       key: 'milestones',
       label: 'Milestones',
       content: (
-        <div style={panel}>
-          <p style={panelLabel}>Milestones</p>
+        <div className="p-info-panel">
+          <p className="p-info-panel-label">Project Pipeline</p>
           {milestones.length === 0 ? (
-            <p style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.25)', fontStyle: 'italic' }}>No milestones yet.</p>
+            <p style={{ fontSize: '0.78rem', color: 'var(--p-t3)', fontStyle: 'italic' }}>No milestones yet.</p>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              <MilestoneTimeline milestones={milestones} />
+              <PipelineSteps milestones={milestones} teamInitials={teamInitials} />
               <MilestoneControls milestones={milestones} projectId={id} />
             </div>
           )}
@@ -131,23 +112,75 @@ export default async function AdminProjectPage({ params }: Props) {
     {
       key: 'deliverables',
       label: 'Deliverables',
-      content: <DeliverablesSection deliverables={deliverables} checklist={checklist} projectId={id} isAdmin />,
+      content: (
+        <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: '1.5rem', alignItems: 'start' }}>
+          {/* Main deliverables */}
+          <DeliverablesSection deliverables={deliverables} checklist={checklist} projectId={id} isAdmin />
+
+          {/* Right sidebar: pipeline + checklist */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {milestones.length > 0 && (
+              <div className="p-info-panel">
+                <p className="p-info-panel-label">Project Pipeline</p>
+                <PipelineSteps milestones={milestones} teamInitials={teamInitials} />
+              </div>
+            )}
+            {checklistTotal > 0 && (
+              <div className="p-info-panel">
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.875rem' }}>
+                  <p className="p-info-panel-label" style={{ margin: 0 }}>Asset Checklist</p>
+                  <span style={{
+                    fontSize: '0.65rem',
+                    fontWeight: 700,
+                    padding: '0.18rem 0.55rem',
+                    borderRadius: 20,
+                    background: checklistDone === checklistTotal ? 'rgba(52,211,153,0.12)' : 'var(--p-s2)',
+                    color: checklistDone === checklistTotal ? '#6ee7b7' : 'var(--p-t3)',
+                    border: checklistDone === checklistTotal ? '1px solid rgba(52,211,153,0.22)' : '1px solid var(--p-b1)',
+                  }}>
+                    {checklistDone}/{checklistTotal} Complete
+                  </span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  {checklist.map(item => (
+                    <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
+                      <div style={{
+                        width: 16, height: 16, borderRadius: 4, flexShrink: 0,
+                        background: item.is_completed ? 'var(--p-teal)' : 'rgba(255,255,255,0.05)',
+                        border: item.is_completed ? '1px solid var(--p-teal)' : '1px solid var(--p-b1)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      }}>
+                        {item.is_completed && (
+                          <svg viewBox="0 0 12 12" fill="none" stroke="#07080c" style={{ width: 9, height: 9 }}>
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M2 6l3 3 5-5" />
+                          </svg>
+                        )}
+                      </div>
+                      <span style={{ fontSize: '0.73rem', color: item.is_completed ? 'var(--p-t3)' : 'var(--p-t2)', textDecoration: item.is_completed ? 'line-through' : 'none' }}>
+                        {item.item_label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      ),
     },
   ]
 
   return (
-    <div style={{ maxWidth: 1000, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
-
-      {/* Page header */}
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem' }}>
+    <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
         <div>
-          <p style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.28em', textTransform: 'uppercase', color: '#14B8A6', margin: '0 0 0.3rem' }}>
+          <p style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.28em', textTransform: 'uppercase', color: 'var(--p-teal)', margin: '0 0 0.3rem' }}>
             Admin · Projects
           </p>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 600, color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.01em', margin: 0 }}>
+          <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--p-t1)', letterSpacing: '-0.01em', margin: 0 }}>
             {project.name}
           </h1>
-          <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.32)', marginTop: '0.25rem' }}>
+          <p style={{ fontSize: '0.75rem', color: 'var(--p-t3)', marginTop: '0.25rem' }}>
             {client?.company_name ?? client?.full_name ?? 'No client'}
             {project.deadline ? ` · Due ${project.deadline}` : ''}
           </p>
@@ -155,6 +188,7 @@ export default async function AdminProjectPage({ params }: Props) {
         <ProjectStatusBadge status={project.status} />
       </div>
 
+      <ClientNoteAlert projectId={id} revisions={revisions} />
       <Tabs tabs={tabs} />
     </div>
   )

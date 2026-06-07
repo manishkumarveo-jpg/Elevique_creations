@@ -13,6 +13,7 @@ const AddDeliverableSchema = z.object({
   dimensions: z.string().optional(),
   resolution: z.string().optional(),
   format: z.string().optional(),
+  drive_link: z.string().url().optional().or(z.literal('')),
 })
 
 export async function addDeliverable(input: unknown) {
@@ -44,6 +45,7 @@ export async function markDelivered(deliverableId: string, projectId: string) {
   const { error } = await supabase.from('deliverables').update({
     status: 'delivered',
     delivered_on: new Date().toISOString(),
+    revision_note: null,
   }).eq('id', deliverableId)
 
   if (error) throw new Error(error.message)
@@ -69,6 +71,7 @@ export async function approveDeliverable(deliverableId: string, projectId: strin
     status: 'approved',
     approved_by: user.id,
     approved_at: new Date().toISOString(),
+    revision_note: null,
   }).eq('id', deliverableId)
 
   if (error) throw new Error(error.message)
@@ -80,6 +83,34 @@ export async function approveDeliverable(deliverableId: string, projectId: strin
     project_id: projectId,
     entity_type: 'deliverable',
     entity_id: deliverableId,
+  })
+
+  revalidatePath(`/portal/projects/${projectId}`)
+  revalidatePath(`/admin/projects/${projectId}`)
+}
+
+export async function requestRevision(deliverableId: string, projectId: string, note: string) {
+  const user = await (await import('@/lib/auth/require-role')).requireClient()
+  const supabase = await createServerClient()
+
+  const trimmedNote = note.trim()
+  if (!trimmedNote) throw new Error('Please describe what needs to change.')
+
+  const { error } = await supabase.from('deliverables').update({
+    status: 'shared',
+    revision_note: trimmedNote,
+  }).eq('id', deliverableId)
+
+  if (error) throw new Error(error.message)
+
+  await logActivity({
+    actor_id: user.id,
+    actor_role: 'client',
+    action: 'deliverable.revision_requested',
+    project_id: projectId,
+    entity_type: 'deliverable',
+    entity_id: deliverableId,
+    metadata: { note: trimmedNote },
   })
 
   revalidatePath(`/portal/projects/${projectId}`)

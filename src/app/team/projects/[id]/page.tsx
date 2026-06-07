@@ -4,6 +4,7 @@ import { getProjectById } from '@/lib/queries/projects'
 import { getMilestonesForProject } from '@/lib/queries/milestones'
 import { getFoldersForProject, getFilesForProject } from '@/lib/queries/files'
 import { getChecklistForProject } from '@/lib/queries/checklist'
+import { getRevisionsForProject } from '@/lib/queries/revisions'
 import { Tabs } from '@/components/ui/Tabs'
 import { ProjectStatusBadge } from '@/components/shared/StatusBadge'
 import { MilestoneTimeline } from '@/components/shared/MilestoneTimeline'
@@ -34,12 +35,13 @@ export default async function TeamProjectPage({ params }: Props) {
   const supabase = await createServerClient()
   await supabase.auth.getUser()
 
-  const [project, milestones, folders, files, checklist] = await Promise.all([
+  const [project, milestones, folders, files, checklist, revisions] = await Promise.all([
     getProjectById(id).catch(() => null),
     getMilestonesForProject(id),
     getFoldersForProject(id),
     getFilesForProject(id),
     getChecklistForProject(id),
+    getRevisionsForProject(id),
   ])
 
   if (!project) notFound()
@@ -94,6 +96,45 @@ export default async function TeamProjectPage({ params }: Props) {
         </div>
         <ProjectStatusBadge status={project.status} />
       </div>
+      {revisions.length > 0 && (
+        <div style={{
+          background: '#0f1220',
+          border: '1px solid rgba(251,191,36,0.18)',
+          borderRadius: 16,
+          padding: '1.25rem 1.5rem',
+        }}>
+          <p style={{
+            fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.2em',
+            textTransform: 'uppercase', color: 'rgba(251,191,36,0.7)', margin: '0 0 1rem',
+          }}>
+            Client Revision Requests
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
+            {revisions.map(r => (
+              <div key={r.id} style={{
+                opacity: r.status === 'resolved' ? 0.45 : 1,
+                padding: '0.5rem 0.75rem',
+                background: r.status === 'open' ? 'rgba(251,191,36,0.04)' : 'rgba(255,255,255,0.02)',
+                border: r.status === 'open' ? '1px solid rgba(251,191,36,0.14)' : '1px solid rgba(255,255,255,0.06)',
+                borderRadius: 8,
+              }}>
+                <span style={{
+                  fontSize: '0.62rem',
+                  color: r.status === 'open' ? 'rgba(251,191,36,0.65)' : 'rgba(255,255,255,0.25)',
+                }}>
+                  {r.status === 'open' ? 'OPEN' : 'RESOLVED'} · {new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </span>
+                <p style={{
+                  fontSize: '0.82rem', margin: '0.2rem 0 0', lineHeight: 1.5,
+                  color: r.status === 'open' ? 'rgba(255,255,255,0.80)' : 'rgba(255,255,255,0.35)',
+                }}>
+                  {r.note}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
       <Tabs tabs={tabs} />
     </div>
   )

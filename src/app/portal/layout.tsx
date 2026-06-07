@@ -1,8 +1,6 @@
-import { requireClient } from '@/lib/auth/require-role'
 import { ClientSidebar } from '@/components/portal/ClientSidebar'
 
-export default async function PortalLayout({ children }: { children: React.ReactNode }) {
-  await requireClient()
+export default function PortalLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="p-shell">
       <ClientSidebar />

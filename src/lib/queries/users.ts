@@ -1,4 +1,5 @@
 import { createServerClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 export async function getAllProfiles() {
   const supabase = await createServerClient()
@@ -55,7 +56,7 @@ export type ClientWithAssignment = {
 }
 
 export async function getClientsWithAssignment(): Promise<ClientWithAssignment[]> {
-  const supabase = await createServerClient()
+  const supabase = createAdminClient()
   const { data, error } = await supabase
     .from('profiles')
     .select('id, full_name, email, company_name, is_active, assigned_team_member_id')

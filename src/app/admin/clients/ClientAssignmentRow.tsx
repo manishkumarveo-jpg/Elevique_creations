@@ -1,6 +1,6 @@
 'use client'
 
-import { useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { Avatar } from '@/components/ui/Avatar'
 import { Td, Tr } from '@/components/ui/Table'
 import { assignTeamMemberToClient } from '@/lib/actions/users/assign-team-member'
@@ -18,18 +18,43 @@ interface Client {
 export function ClientAssignmentRow({
   client,
   teamMembers,
+  compact = false,
 }: {
   client: Client
   teamMembers: TeamMember[]
+  compact?: boolean
 }) {
+  const [selectedId, setSelectedId] = useState(client.assigned_team_member_id ?? '')
   const [isPending, startTransition] = useTransition()
 
   function handleChange(e: React.ChangeEvent<HTMLSelectElement>) {
-    const value = e.target.value || null
-    startTransition(() => assignTeamMemberToClient(client.id, value))
+    const value = e.target.value
+    setSelectedId(value)
+    startTransition(() => assignTeamMemberToClient(client.id, value || null))
   }
 
-  const assigned = teamMembers.find(m => m.id === client.assigned_team_member_id)
+  const assigned = teamMembers.find(m => m.id === selectedId)
+
+  if (compact) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        {assigned && <Avatar name={assigned.full_name} size="sm" />}
+        <select
+          value={selectedId}
+          onChange={handleChange}
+          disabled={isPending}
+          className="p-select"
+          style={{ minWidth: 0, fontSize: '0.72rem', padding: '0.3rem 0.6rem' }}
+        >
+          <option value="">— Unassigned —</option>
+          {teamMembers.map(m => (
+            <option key={m.id} value={m.id}>{m.full_name}</option>
+          ))}
+        </select>
+        {isPending && <span style={{ fontSize: '0.65rem', color: 'var(--p-teal)' }} className="animate-pulse">…</span>}
+      </div>
+    )
+  }
 
   return (
     <Tr>
@@ -52,7 +77,7 @@ export function ClientAssignmentRow({
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
           {assigned && <Avatar name={assigned.full_name} size="sm" />}
           <select
-            defaultValue={client.assigned_team_member_id ?? ''}
+            value={selectedId}
             onChange={handleChange}
             disabled={isPending}
             className="p-select"

@@ -11,7 +11,7 @@ export async function getAssignmentsForProject(projectId: string): Promise<Assig
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('project_assignments')
-    .select('*')
+    .select('*, user:profiles!project_assignments_user_id_fkey(id, full_name, email, role)')
     .eq('project_id', projectId)
     .order('assigned_at')
   if (error) throw error

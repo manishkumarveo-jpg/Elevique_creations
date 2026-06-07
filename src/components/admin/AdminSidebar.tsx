@@ -15,11 +15,11 @@ const navItems = [
     ),
   },
   {
-    href: '/admin/users',
-    label: 'Users',
+    href: '/admin/projects',
+    label: 'Projects',
     icon: (
       <svg className="p-nav-icon" viewBox="0 0 20 20" fill="currentColor">
-        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+        <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
       </svg>
     ),
   },
@@ -34,11 +34,39 @@ const navItems = [
     ),
   },
   {
-    href: '/admin/projects',
-    label: 'Projects',
+    href: '/admin/users',
+    label: 'Users',
     icon: (
       <svg className="p-nav-icon" viewBox="0 0 20 20" fill="currentColor">
-        <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
+      </svg>
+    ),
+  },
+  {
+    href: '/admin/analytics',
+    label: 'Analytics',
+    icon: (
+      <svg className="p-nav-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zm6-4a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zm6-3a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+      </svg>
+    ),
+  },
+  {
+    href: '/admin/documents',
+    label: 'Documents',
+    icon: (
+      <svg className="p-nav-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
+      </svg>
+    ),
+  },
+  {
+    href: '/admin/communications',
+    label: 'Communications',
+    icon: (
+      <svg className="p-nav-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z" />
+        <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z" />
       </svg>
     ),
   },
@@ -55,7 +83,7 @@ export function AdminSidebar() {
         </div>
         <div>
           <p className="p-sidebar-brand-name">Elevique</p>
-          <p className="p-sidebar-role-tag">Admin</p>
+          <p className="p-sidebar-role-tag">Management Suite</p>
         </div>
       </div>
 
@@ -74,6 +102,15 @@ export function AdminSidebar() {
           )
         })}
       </nav>
+
+      <div style={{ padding: '0 0 0.25rem' }}>
+        <Link href="/admin/projects/new" className="p-sidebar-cta">
+          <svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+          </svg>
+          New Project
+        </Link>
+      </div>
 
       <div className="p-sidebar-footer">
         <form action={logoutAdmin}>

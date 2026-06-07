@@ -63,6 +63,7 @@ export type Database = {
           status: 'briefing' | 'in_progress' | 'final_review' | 'completed' | 'paused'
           deadline: string | null
           description: string | null
+          client_note: string | null
           created_by: string
           is_archived: boolean
           created_at: string
@@ -76,6 +77,7 @@ export type Database = {
           status?: 'briefing' | 'in_progress' | 'final_review' | 'completed' | 'paused'
           deadline?: string | null
           description?: string | null
+          client_note?: string | null
           created_by: string
           is_archived?: boolean
           created_at?: string
@@ -89,6 +91,7 @@ export type Database = {
           status?: 'briefing' | 'in_progress' | 'final_review' | 'completed' | 'paused'
           deadline?: string | null
           description?: string | null
+          client_note?: string | null
           created_by?: string
           is_archived?: boolean
           created_at?: string
@@ -261,6 +264,8 @@ export type Database = {
           delivered_on: string | null
           approved_by: string | null
           approved_at: string | null
+          revision_note: string | null
+          drive_link: string | null
           created_at: string
           updated_at: string
         }
@@ -278,6 +283,8 @@ export type Database = {
           delivered_on?: string | null
           approved_by?: string | null
           approved_at?: string | null
+          revision_note?: string | null
+          drive_link?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -295,6 +302,8 @@ export type Database = {
           delivered_on?: string | null
           approved_by?: string | null
           approved_at?: string | null
+          revision_note?: string | null
+          drive_link?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -329,6 +338,39 @@ export type Database = {
           completed_by?: string | null
           completed_at?: string | null
           sort_order?: number
+          created_at?: string
+        }
+        Relationships: []
+      }
+      project_revisions: {
+        Row: {
+          id: string
+          project_id: string
+          submitted_by: string
+          note: string
+          status: 'open' | 'resolved'
+          resolved_by: string | null
+          resolved_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          project_id: string
+          submitted_by: string
+          note: string
+          status?: 'open' | 'resolved'
+          resolved_by?: string | null
+          resolved_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          project_id?: string
+          submitted_by?: string
+          note?: string
+          status?: 'open' | 'resolved'
+          resolved_by?: string | null
+          resolved_at?: string | null
           created_at?: string
         }
         Relationships: []
@@ -368,6 +410,30 @@ export type Database = {
           entity_id?: string | null
           entity_name?: string | null
           metadata?: Json
+          created_at?: string
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          id: string
+          project_id: string
+          sender_id: string
+          body: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          project_id: string
+          sender_id: string
+          body: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          project_id?: string
+          sender_id?: string
+          body?: string
           created_at?: string
         }
         Relationships: []

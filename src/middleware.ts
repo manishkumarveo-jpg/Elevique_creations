@@ -3,12 +3,19 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { Ratelimit } from '@upstash/ratelimit'
 import { Redis } from '@upstash/redis'
 
-const ratelimit = new Ratelimit({
-  redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(100, '60 s'),
-  analytics: true,
-  prefix: 'elevique_rl',
-})
+let ratelimit: Ratelimit | null = null
+
+function getRatelimit(): Ratelimit | null {
+  if (ratelimit) return ratelimit
+  if (!process.env.UPSTASH_REDIS_REST_URL || !process.env.UPSTASH_REDIS_REST_TOKEN) return null
+  ratelimit = new Ratelimit({
+    redis: Redis.fromEnv(),
+    limiter: Ratelimit.slidingWindow(100, '60 s'),
+    analytics: true,
+    prefix: 'elevique_rl',
+  })
+  return ratelimit
+}
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -18,26 +25,29 @@ export async function middleware(request: NextRequest) {
 
   // Rate limiting on all API routes
   if (pathname.startsWith('/api/')) {
-    const ip =
-      request.headers.get('x-real-ip') ??
-      request.headers.get('x-forwarded-for')?.split(',')[0].trim() ??
-      '127.0.0.1'
+    const limiter = getRatelimit()
+    if (limiter) {
+      const ip =
+        request.headers.get('x-real-ip') ??
+        request.headers.get('x-forwarded-for')?.split(',')[0].trim() ??
+        '127.0.0.1'
 
-    const { success, remaining, reset } = await ratelimit.limit(ip)
+      const { success, remaining, reset } = await limiter.limit(ip)
 
-    if (!success) {
-      return new NextResponse(
-        JSON.stringify({ error: 'Too many requests. Please slow down.' }),
-        {
-          status: 429,
-          headers: {
-            'Content-Type': 'application/json',
-            'X-RateLimit-Remaining': remaining.toString(),
-            'X-RateLimit-Reset': reset.toString(),
-            'Retry-After': '60',
-          },
-        }
-      )
+      if (!success) {
+        return new NextResponse(
+          JSON.stringify({ error: 'Too many requests. Please slow down.' }),
+          {
+            status: 429,
+            headers: {
+              'Content-Type': 'application/json',
+              'X-RateLimit-Remaining': remaining.toString(),
+              'X-RateLimit-Reset': reset.toString(),
+              'Retry-After': '60',
+            },
+          }
+        )
+      }
     }
   }
 

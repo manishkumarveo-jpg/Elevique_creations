@@ -50,7 +50,9 @@ export function Tabs({ tabs, defaultTab }: TabsProps) {
           )
         })}
       </div>
-      {current?.content}
+      <div key={active}>
+        {current?.content}
+      </div>
     </div>
   )
 }

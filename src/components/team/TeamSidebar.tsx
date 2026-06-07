@@ -7,10 +7,21 @@ import { logoutTeam } from '@/lib/actions/auth/logout-admin'
 const navItems = [
   {
     href: '/team/dashboard',
-    label: 'My Projects',
+    label: 'Projects',
+    matchPrefix: '/team/projects',
     icon: (
       <svg className="p-nav-icon" viewBox="0 0 20 20" fill="currentColor">
         <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+      </svg>
+    ),
+  },
+  {
+    href: '/team/communications',
+    label: 'Communications',
+    icon: (
+      <svg className="p-nav-icon" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z" />
+        <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z" />
       </svg>
     ),
   },
@@ -18,6 +29,7 @@ const navItems = [
 
 export function TeamSidebar() {
   const pathname = usePathname()
+
   return (
     <aside className="p-sidebar">
       <div className="p-sidebar-header">
@@ -32,10 +44,11 @@ export function TeamSidebar() {
 
       <nav className="p-sidebar-nav">
         {navItems.map(item => {
-          const active = pathname.startsWith(item.href)
+          const matchPath = 'matchPrefix' in item ? (item as { matchPrefix: string }).matchPrefix : item.href
+          const active = pathname === item.href || pathname.startsWith(matchPath + '/')
           return (
             <Link
-              key={item.href}
+              key={item.href + item.label}
               href={item.href}
               className={`p-nav-item${active ? ' active' : ''}`}
             >
@@ -45,6 +58,15 @@ export function TeamSidebar() {
           )
         })}
       </nav>
+
+      <div style={{ padding: '0 0 0.25rem' }}>
+        <Link href="/admin/projects/new" className="p-sidebar-cta">
+          <svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+          </svg>
+          New Project
+        </Link>
+      </div>
 
       <div className="p-sidebar-footer">
         <form action={logoutTeam}>

@@ -2,9 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { DeliverableStatusBadge } from '@/components/shared/StatusBadge'
-import { AssetChecklist } from '@/components/shared/AssetChecklist'
 import { addDeliverable, markDelivered } from '@/lib/actions/deliverables/update-deliverable'
-import { toggleChecklistItem } from '@/lib/actions/checklist/update-checklist'
 import type { Database } from '@/lib/types/database'
 
 type Deliverable = Database['public']['Tables']['deliverables']['Row']
@@ -15,22 +13,6 @@ interface Props {
   checklist: ChecklistItem[]
   projectId: string
   isAdmin?: boolean
-}
-
-const panel: React.CSSProperties = {
-  background: '#0f1220',
-  border: '1px solid rgba(255,255,255,0.10)',
-  borderRadius: 16,
-  padding: '1.5rem',
-}
-
-const panelLabel: React.CSSProperties = {
-  fontSize: '0.6rem',
-  fontWeight: 700,
-  letterSpacing: '0.2em',
-  textTransform: 'uppercase',
-  color: 'rgba(255,255,255,0.28)',
-  marginBottom: '1rem',
 }
 
 const inputStyle: React.CSSProperties = {
@@ -67,10 +49,10 @@ const selStyle: React.CSSProperties = {
   paddingRight: '2rem',
 }
 
-export function DeliverablesSection({ deliverables, checklist, projectId, isAdmin }: Props) {
+export function DeliverablesSection({ deliverables, projectId, isAdmin }: Props) {
   const [showForm, setShowForm] = useState(false)
   const [isPending, startTransition] = useTransition()
-  const [form, setForm] = useState({ file_name: '', deliverable_type: 'video', format: '', duration: '', dimensions: '' })
+  const [form, setForm] = useState({ file_name: '', deliverable_type: 'video', format: '', duration: '', dimensions: '', drive_link: '' })
   const [error, setError] = useState('')
 
   function set(key: keyof typeof form) {
@@ -84,7 +66,7 @@ export function DeliverablesSection({ deliverables, checklist, projectId, isAdmi
     startTransition(async () => {
       try {
         await addDeliverable({ ...form, project_id: projectId, deliverable_type: form.deliverable_type as 'video' | 'image' })
-        setForm({ file_name: '', deliverable_type: 'video', format: '', duration: '', dimensions: '' })
+        setForm({ file_name: '', deliverable_type: 'video', format: '', duration: '', dimensions: '', drive_link: '' })
         setShowForm(false)
       } catch (err: unknown) {
         setError(err instanceof Error ? err.message : 'Failed')
@@ -92,36 +74,13 @@ export function DeliverablesSection({ deliverables, checklist, projectId, isAdmi
     })
   }
 
-  const VideoIcon = () => (
-    <svg viewBox="0 0 20 20" fill="currentColor" style={{ width: 15, height: 15, color: '#14B8A6' }}>
-      <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zm12.553 1.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
-    </svg>
-  )
-  const ImageIcon = () => (
-    <svg viewBox="0 0 20 20" fill="currentColor" style={{ width: 15, height: 15, color: 'rgba(251,191,36,0.8)' }}>
-      <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-    </svg>
-  )
-
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 
-      {/* Checklist */}
-      <div style={panel}>
-        <p style={panelLabel}>Asset Checklist</p>
-        <AssetChecklist
-          items={checklist}
-          readOnly
-          onToggle={async (itemId, checked) => {
-            await toggleChecklistItem(itemId, projectId, checked)
-          }}
-        />
-      </div>
-
-      {/* Deliverables */}
-      <div style={panel}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-          <p style={{ ...panelLabel, marginBottom: 0 }}>Deliverables</p>
+      {/* Add new form */}
+      <div className="p-info-panel">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: showForm ? '1.125rem' : 0 }}>
+          <p className="p-info-panel-label" style={{ margin: 0 }}>Add New Deliverable</p>
           {isAdmin && (
             <button
               onClick={() => setShowForm(v => !v)}
@@ -145,26 +104,19 @@ export function DeliverablesSection({ deliverables, checklist, projectId, isAdmi
         </div>
 
         {showForm && (
-          <form onSubmit={handleAdd} style={{
-            background: '#0c1018',
-            border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: 12,
-            padding: '1.125rem',
-            marginBottom: '1.125rem',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.75rem',
-          }}>
-            <div>
-              <label style={fieldLabel}>File Name *</label>
-              <input style={inputStyle} value={form.file_name} onChange={set('file_name')} required placeholder="hero_video_v1" />
-            </div>
-            <div>
-              <label style={fieldLabel}>Type</label>
-              <select style={selStyle} value={form.deliverable_type} onChange={set('deliverable_type')}>
-                <option value="video">Video</option>
-                <option value="image">Image</option>
-              </select>
+          <form onSubmit={handleAdd} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.625rem' }}>
+              <div>
+                <label style={fieldLabel}>Item Name *</label>
+                <input style={inputStyle} value={form.file_name} onChange={set('file_name')} required placeholder="e.g. Logo Vector Set" />
+              </div>
+              <div>
+                <label style={fieldLabel}>Type</label>
+                <select style={selStyle} value={form.deliverable_type} onChange={set('deliverable_type')}>
+                  <option value="video">Video</option>
+                  <option value="image">Image</option>
+                </select>
+              </div>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.625rem' }}>
               <div>
@@ -180,89 +132,130 @@ export function DeliverablesSection({ deliverables, checklist, projectId, isAdmi
                 <input style={inputStyle} value={form.dimensions} onChange={set('dimensions')} placeholder="1920×1080" />
               </div>
             </div>
+            <div>
+              <label style={fieldLabel}>Google Drive Link</label>
+              <input style={inputStyle} value={form.drive_link} onChange={set('drive_link')} placeholder="https://drive.google.com/…" type="url" />
+            </div>
             {error && <p style={{ fontSize: '0.72rem', color: 'rgba(248,113,113,0.85)', margin: 0 }}>{error}</p>}
             <button
               type="submit"
               disabled={isPending}
-              style={{
-                alignSelf: 'flex-start',
-                padding: '0.5rem 1.125rem',
-                background: '#14B8A6',
-                color: '#07080c',
-                fontSize: '0.68rem',
-                fontWeight: 700,
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                border: 'none',
-                borderRadius: 7,
-                cursor: 'pointer',
-                fontFamily: 'inherit',
-                opacity: isPending ? 0.5 : 1,
-              }}
+              className="p-btn-primary"
+              style={{ alignSelf: 'flex-end' }}
             >
-              {isPending ? 'Adding…' : 'Add Deliverable'}
+              {isPending ? 'Adding…' : 'Create Item'}
             </button>
           </form>
         )}
+      </div>
+
+      {/* Active deliverables table */}
+      <div className="p-info-panel" style={{ padding: 0 }}>
+        <div style={{ padding: '1.125rem 1.25rem', borderBottom: '1px solid var(--p-b2)' }}>
+          <p className="p-info-panel-label" style={{ margin: 0 }}>Active Deliverables</p>
+        </div>
 
         {deliverables.length === 0 ? (
-          <p style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.22)', fontStyle: 'italic' }}>No deliverables yet.</p>
+          <p style={{ padding: '1.5rem', fontSize: '0.78rem', color: 'var(--p-t3)', fontStyle: 'italic' }}>No deliverables yet.</p>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
-            {deliverables.map((d, i) => (
-              <div key={d.id} style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.875rem',
-                padding: '0.875rem 0',
-                borderBottom: i < deliverables.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none',
-              }}>
-                <div style={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: 8,
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0,
-                }}>
-                  {d.deliverable_type === 'video' ? <VideoIcon /> : <ImageIcon />}
-                </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: '0.82rem', fontWeight: 500, color: 'rgba(255,255,255,0.85)', margin: 0 }}>{d.file_name}</p>
-                  <p style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.28)', margin: 0 }}>
-                    {[d.format, d.dimensions, d.duration].filter(Boolean).join(' · ')}
-                  </p>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', flexShrink: 0 }}>
-                  <DeliverableStatusBadge status={d.status} />
-                  {isAdmin && d.status !== 'delivered' && d.status !== 'approved' && (
-                    <button
-                      disabled={isPending}
-                      onClick={() => startTransition(() => markDelivered(d.id, projectId))}
-                      style={{
-                        background: 'none',
-                        border: '1px solid rgba(52,211,153,0.25)',
-                        borderRadius: 7,
-                        padding: '0.25rem 0.65rem',
-                        fontSize: '0.65rem',
-                        fontWeight: 600,
-                        letterSpacing: '0.08em',
-                        textTransform: 'uppercase',
-                        color: 'rgba(52,211,153,0.75)',
-                        cursor: 'pointer',
-                        fontFamily: 'inherit',
-                        opacity: isPending ? 0.5 : 1,
-                      }}
-                    >
-                      Mark Delivered
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
+          <div className="p-table-wrap" style={{ borderRadius: 0, border: 'none' }}>
+            <table className="p-table">
+              <thead>
+                <tr>
+                  <th>Deliverable</th>
+                  <th>Format</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {deliverables.map(d => (
+                  <tr key={d.id}>
+                    <td>
+                      <p className="p-table-name">{d.file_name}</p>
+                      <p className="p-table-sub">
+                        {d.deliverable_type === 'video' ? '🎬' : '🖼'}{' '}
+                        {[d.format, d.dimensions, d.duration].filter(Boolean).join(' · ') || d.deliverable_type}
+                      </p>
+                      {d.revision_note && (
+                        <p style={{
+                          marginTop: '0.25rem',
+                          padding: '0.2rem 0.5rem',
+                          background: 'var(--p-amber-dim)',
+                          border: '1px solid var(--p-amber-b)',
+                          borderRadius: 6,
+                          fontSize: '0.65rem',
+                          color: 'var(--p-amber)',
+                          display: 'inline-block',
+                        }}>
+                          Revision: {d.revision_note}
+                        </p>
+                      )}
+                    </td>
+                    <td style={{ whiteSpace: 'nowrap' }}>
+                      <span style={{ fontSize: '0.72rem', color: 'var(--p-t2)' }}>
+                        {d.format ?? d.deliverable_type}
+                      </span>
+                    </td>
+                    <td>
+                      <DeliverableStatusBadge status={d.status} />
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        {d.drive_link && (
+                          <a
+                            href={d.drive_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
+                              padding: '0.22rem 0.55rem',
+                              background: 'rgba(66,133,244,0.08)',
+                              border: '1px solid rgba(66,133,244,0.22)',
+                              borderRadius: 6, fontSize: '0.62rem', fontWeight: 600,
+                              color: 'rgba(99,163,250,0.90)', textDecoration: 'none',
+                              whiteSpace: 'nowrap',
+                            }}
+                          >
+                            Drive ↗
+                          </a>
+                        )}
+                        {isAdmin && d.status !== 'delivered' && d.status !== 'approved' && (
+                          <button
+                            disabled={isPending}
+                            onClick={() => startTransition(() => markDelivered(d.id, projectId))}
+                            style={{
+                              background: 'rgba(52,211,153,0.07)',
+                              border: '1px solid rgba(52,211,153,0.22)',
+                              borderRadius: 6,
+                              padding: '0.22rem 0.55rem',
+                              fontSize: '0.62rem',
+                              fontWeight: 600,
+                              color: '#6ee7b7',
+                              cursor: 'pointer',
+                              fontFamily: 'inherit',
+                              opacity: isPending ? 0.5 : 1,
+                              whiteSpace: 'nowrap',
+                            }}
+                          >
+                            Mark Delivered
+                          </button>
+                        )}
+                        <button
+                          className="p-dot-menu"
+                          type="button"
+                          title="More options"
+                        >
+                          <svg viewBox="0 0 20 20" fill="currentColor" style={{ width: 14, height: 14 }}>
+                            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zm0 6a2 2 0 110-4 2 2 0 010 4zm0 6a2 2 0 110-4 2 2 0 010 4z" />
+                          </svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>
