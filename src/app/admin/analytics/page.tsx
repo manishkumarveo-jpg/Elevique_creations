@@ -153,7 +153,7 @@ export default async function AnalyticsPage() {
       </div>
 
       {/* Charts row */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1rem' }}>
+      <div className="p-analytics-charts-grid">
 
         {/* Bar chart: projects per month */}
         <div className="p-analytics-chart-card">

@@ -128,7 +128,7 @@ export default async function AdminDashboardPage() {
       )}
 
       {/* Stat row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.875rem' }}>
+      <div className="p-dash-stat-row">
         {/* Circular progress */}
         <div className="p-stat" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1.5rem 1rem' }}>
           <p className="p-stat-label" style={{ textAlign: 'center', marginBottom: '1rem' }}>Global Progress</p>
@@ -183,7 +183,7 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Two-column: project cards + activity */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem', alignItems: 'start' }}>
+      <div className="p-dash-main-grid">
 
         {/* Active project cards */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>

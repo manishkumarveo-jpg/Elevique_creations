@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import { logoutAdmin } from '@/lib/actions/auth/logout-admin'
 
 const navItems = [
@@ -74,54 +75,74 @@ const navItems = [
 
 export function AdminSidebar() {
   const pathname = usePathname()
+  const [mobileOpen, setMobileOpen] = useState(false)
+
+  useEffect(() => {
+    const open = () => setMobileOpen(true)
+    window.addEventListener('p:open-sidebar', open)
+    return () => window.removeEventListener('p:open-sidebar', open)
+  }, [])
+
+  // Close on route change
+  useEffect(() => { setMobileOpen(false) }, [pathname])
 
   return (
-    <aside className="p-sidebar">
-      <div className="p-sidebar-header">
-        <div className="p-sidebar-logo-box">
-          <span className="p-sidebar-logo-letter">E</span>
-        </div>
-        <div>
-          <p className="p-sidebar-brand-name">Elevique</p>
-          <p className="p-sidebar-role-tag">Management Suite</p>
-        </div>
-      </div>
-
-      <nav className="p-sidebar-nav">
-        {navItems.map(item => {
-          const active = pathname.startsWith(item.href)
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`p-nav-item${active ? ' active' : ''}`}
-            >
-              {item.icon}
-              {item.label}
-            </Link>
-          )
-        })}
-      </nav>
-
-      <div style={{ padding: '0 0 0.25rem' }}>
-        <Link href="/admin/projects/new" className="p-sidebar-cta">
-          <svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-          </svg>
-          New Project
-        </Link>
-      </div>
-
-      <div className="p-sidebar-footer">
-        <form action={logoutAdmin}>
-          <button type="submit" className="p-signout-btn">
-            <svg className="p-nav-icon" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" />
+    <>
+      {mobileOpen && (
+        <div className="p-overlay" onClick={() => setMobileOpen(false)} />
+      )}
+      <aside className={`p-sidebar${mobileOpen ? ' open' : ''}`}>
+        <div className="p-sidebar-header">
+          <div className="p-sidebar-logo-box">
+            <span className="p-sidebar-logo-letter">E</span>
+          </div>
+          <div style={{ flex: 1 }}>
+            <p className="p-sidebar-brand-name">Elevique</p>
+            <p className="p-sidebar-role-tag">Management Suite</p>
+          </div>
+          <button className="p-sidebar-close" onClick={() => setMobileOpen(false)} aria-label="Close menu">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
-            Sign out
           </button>
-        </form>
-      </div>
-    </aside>
+        </div>
+
+        <nav className="p-sidebar-nav">
+          {navItems.map(item => {
+            const active = pathname.startsWith(item.href)
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`p-nav-item${active ? ' active' : ''}`}
+              >
+                {item.icon}
+                {item.label}
+              </Link>
+            )
+          })}
+        </nav>
+
+        <div style={{ padding: '0 0 0.25rem' }}>
+          <Link href="/admin/projects/new" className="p-sidebar-cta">
+            <svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+            </svg>
+            New Project
+          </Link>
+        </div>
+
+        <div className="p-sidebar-footer">
+          <form action={logoutAdmin}>
+            <button type="submit" className="p-signout-btn">
+              <svg className="p-nav-icon" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" />
+              </svg>
+              Sign out
+            </button>
+          </form>
+        </div>
+      </aside>
+    </>
   )
 }
