@@ -33,7 +33,7 @@ Currently Elevique shares project progress via Notion pages manually. This cause
 | **Projects** | Each client has one or more projects with full status tracking. |
 | **Milestones** | Phase-by-phase progress: Briefing → Scripting → Production → Delivery. |
 | **Folders** | Six organized folders per project: Agreements, Assets, References, Scripts, Videos, Images. |
-| **Files** | Secure file upload and download with role-based access per folder. |
+| **Files** | Link-based file references (no local storage); role-based access enforced on external link metadata per folder. |
 | **Deliverables** | Structured table of all videos and images delivered to the client. |
 | **Asset Checklist** | Client-facing checklist for uploading required brand assets. |
 | **Activity Log** | Immutable audit trail of every action across the system. |
@@ -111,7 +111,7 @@ Project marked complete
 2. **Admin sets passwords** — Users receive credentials via email.
 3. **Clients are isolated** — Client A cannot see Client B's data under any circumstance.
 4. **Team members are scoped** — A team member only sees projects they are explicitly assigned to.
-5. **Files are private** — All storage buckets are private. Downloads use short-lived signed URLs.
+5. **Files are external links** — No storage buckets. No signed URLs. Files are served via external links (Google Drive, Dropbox, etc.) that open directly in new tabs.
 6. **Soft deletes** — Files are never permanently deleted. They are flagged `is_deleted = true`.
 7. **Audit everything** — Every create, update, upload, and login event is logged.
 

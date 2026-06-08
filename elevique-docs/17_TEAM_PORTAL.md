@@ -19,7 +19,7 @@ Auth is enforced by middleware — no `requireTeamMember()` call needed in the l
 
 Key points:
 - `matchPrefix` on the Projects item keeps it active when navigating into `/team/projects/[id]`
-- Auth action: `logoutTeam` from `@/lib/actions/auth/logout-admin`
+- Auth action: `logoutTeam` from `@/lib/actions/auth/logout-team`
 - Role tag displayed: **"Team"**
 
 ---

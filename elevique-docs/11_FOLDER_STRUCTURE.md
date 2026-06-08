@@ -106,7 +106,9 @@ elevique-portal/
 │   │   │
 │   │   ├── shared/                          # Used across multiple portals
 │   │   │   ├── MilestoneTimeline.tsx        # Read-only milestone display
-│   │   │   ├── FileUploader.tsx             # Drag + drop upload with progress
+│   │   │   ├── AddLinkForm.tsx              # Paste external link (Google Drive etc.)
+│   │   │   ├── FileLinkRow.tsx              # Single link row — opens URL in new tab
+│   │   │   ├── FolderFilesSection.tsx       # Folder card with link list + AddLinkForm
 │   │   │   ├── FileList.tsx                 # List of files in a folder
 │   │   │   ├── DeliverableTable.tsx         # Table of delivered files
 │   │   │   ├── ActivityFeed.tsx             # Activity log timeline

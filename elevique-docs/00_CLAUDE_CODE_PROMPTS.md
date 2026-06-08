@@ -237,24 +237,24 @@ From 13_SERVER_ACTIONS.md:
 1. src/lib/actions/activity.ts → "Activity Logger" section
 2. src/lib/actions/projects.ts → "Projects Actions" section (createProject, updateProjectStatus, archiveProject)
 3. src/lib/actions/milestones.ts → "Milestones Actions" section (updateMilestone, notifyMilestoneComplete helper)
-4. src/lib/actions/files.ts → "Files Actions" section (saveFileRecord, deleteFile)
-5. src/lib/actions/checklist.ts → "Checklist Actions" section (toggleChecklistItem)
-6. src/lib/actions/deliverables.ts → "Deliverables Actions" section (addDeliverable, approveDeliverable)
+4. src/lib/actions/checklist.ts → "Checklist Actions" section (toggleChecklistItem)
+5. src/lib/actions/deliverables.ts → "Deliverables Actions" section (addDeliverable, approveDeliverable)
 
 From 10_PROJECT_ASSIGNMENTS.md:
-7. src/lib/actions/assignments.ts → "Server Actions" section (assignTeamMember, removeTeamMember)
+6. src/lib/actions/assignments.ts → "Server Actions" section (assignTeamMember, removeTeamMember)
 
 Also create utility files:
-From 07_STORAGE.md:
-8. src/lib/utils/file-validation.ts → "Allowed MIME Types" section (ALLOWED_TYPES, MAX_FILE_SIZES, validateFile)
-9. src/lib/supabase/storage.ts → "Supabase Client — Storage Setup" section
-
 From 14_FILE_UPLOAD.md:
-10. src/lib/utils/format-file-size.ts → formatFileSize function
-11. src/lib/utils/format-date.ts → formatDate function
+7. src/lib/utils/format-date.ts → formatDate function
 
 From 10_PROJECT_ASSIGNMENTS.md:
-12. src/lib/queries/assignments.ts → "Query Functions" section (getProjectTeam, getAssignedProjects, getTeamMembers, isUserAssigned)
+8. src/lib/queries/assignments.ts → "Query Functions" section (getProjectTeam, getAssignedProjects, getTeamMembers, isUserAssigned)
+
+Do NOT create:
+- src/lib/actions/files.ts (replaced by saveLinkRecord in 14_FILE_UPLOAD.md)
+- src/lib/utils/file-validation.ts (no file uploads in this project)
+- src/lib/supabase/storage.ts (no storage buckets in this project)
+- src/lib/utils/format-file-size.ts (created in Phase 7)
 ```
 
 **✅ CHECKPOINT 6:**
@@ -406,9 +406,9 @@ Create the projects section of the admin panel:
 
 5. src/app/admin/projects/[id]/files/page.tsx
    - Show all 6 folders as cards
-   - Click a folder → expand to show files in that folder
-   - FileUploader component for each folder
-   - FileDownloadButton for each file
+   - Click a folder → expand to show links in that folder
+   - AddLinkForm component for each folder
+   - FileLinkRow for each link (opens external URL)
 
 6. src/app/admin/projects/[id]/team/page.tsx
    - AssignTeamForm component
@@ -436,8 +436,8 @@ Create the team portal with EXACT code from 17_TEAM_PORTAL.md:
 5. src/components/team/MilestoneUpdateRow.tsx → "MilestoneUpdateRow Component"
 6. src/app/team/projects/[id]/files/page.tsx → files page for team members
    - Same 6-folder layout as admin but only shows folders where upload_roles includes 'team_member'
-   - FileUploader for allowed folders
-   - FileDownloadButton for all files
+   - AddLinkForm for allowed folders
+   - FileLinkRow for all links (opens external URL)
 ```
 
 **✅ CHECKPOINT 10:**
@@ -457,11 +457,11 @@ Create the client portal with EXACT code from 18_CLIENT_PORTAL.md:
 4. src/components/portal/FolderGrid.tsx → a grid of folder cards
    - Show each folder as a card with icon, name, description
    - Click a folder → link to /portal/projects/[id]?folder=[folder_id] or expand inline
-   - Only show "Upload" button on folders where upload_roles includes 'client'
+   - Only show "Add Link" button on folders where upload_roles includes 'client'
 5. src/app/portal/projects/[id]/deliverables/page.tsx → deliverables page
    - Table: file_name, type, dimensions, format, duration, status
    - "Approve" button on rows with status 'delivered' (uses approveDeliverable action)
-   - FileDownloadButton for each deliverable linked to a file
+   - FileLinkRow for each deliverable link (opens external URL)
 
 Now add Realtime to the client project page:
 6. In src/app/portal/projects/[id]/page.tsx: extract client-side interaction into a Client Component wrapper that uses the useProjectRealtime hook from 15_REALTIME_NOTIFICATIONS.md
@@ -600,8 +600,8 @@ Live site tests (replace with your actual domain):
 ✅ Client: login → sees only own project
 ✅ Client: milestone update reflects in real-time
 ✅ Client cannot access other client's project URL (test manually)
-✅ File upload works (assets folder)
-✅ File download works (signed URL)
+✅ Admin: add external link to a folder → FileLinkRow renders with correct provider icon
+✅ Client: external link opens in new tab
 ✅ Deliverable added + client can approve
 ```
 

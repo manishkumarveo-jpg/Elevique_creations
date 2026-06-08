@@ -95,19 +95,18 @@ Browser / Mobile
 9. Page renders with only data the user is allowed to see
 ```
 
-### File Upload Request
+### Add File Link Request
 
 ```
-1. User selects file in browser
-2. Browser POSTs to /api/upload with { bucket, project_id, file_name }
-3. Server validates session, role, bucket permission
-4. Server calls Upstash Redis → per-user upload rate limit (20/min)
-5. Server calls supabase.storage.createSignedUploadUrl() → returns { signedUrl, path }
-6. Browser PUTs file directly to Supabase Storage using signedUrl (60s expiry)
-   → File NEVER passes through Next.js server (zero bandwidth cost)
-7. Upload succeeds → browser calls saveFileRecord() server action
-8. Server inserts row into files table
-9. Supabase Realtime broadcasts change → other viewers update live
+1. Admin or team member pastes an external URL (Google Drive, Dropbox, etc.) into AddLinkForm
+2. Browser calls saveLinkRecord() server action with { project_id, folder_id, file_url, file_name }
+3. Server validates session and role (requireAdmin / requireTeamMember)
+4. Server calls isValidUrl(file_url) → rejects malformed URLs
+5. Server checks folder upload_roles[] contains the user's role
+6. Server inserts row into files table (storing file_url, file_name, folder_id, added_by)
+7. Supabase RLS enforces read access — only authorised roles see the row
+8. Supabase Realtime broadcasts change → other viewers update live
+9. Clients open the external link directly in a new tab (no signed URL, no download proxy)
 ```
 
 ---
