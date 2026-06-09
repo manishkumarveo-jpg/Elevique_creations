@@ -164,7 +164,7 @@ function ReelCard({
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [liked, setLiked] = useState<boolean>(false);
   const [likeCount, setLikeCount] = useState<number>(120);
-  const [copied, setCopied] = useState<boolean>(false);
+  const [copied, setCopied] = useState<boolean | 'error'>(false);
   
   // Double-tap and play/pause action feedback
   const [showHeartPop, setShowHeartPop] = useState<boolean>(false);
@@ -187,8 +187,8 @@ function ReelCard({
           .then(() => {
             setIsPlaying(true);
           })
-          .catch(() => {
-            // Autoplay blocked: fall back to paused state
+          .catch((err: unknown) => {
+            console.error('[PortfolioReels] autoplay blocked:', err);
             setIsPlaying(false);
           });
       }
@@ -273,7 +273,11 @@ function ReelCard({
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
-    }).catch(() => {});
+    }).catch((err) => {
+      console.error('[PortfolioReels] clipboard write failed:', err);
+      setCopied('error');
+      setTimeout(() => setCopied(false), 2000);
+    });
   }, [project.id]);
 
   const handleOpenDetails = useCallback((e: React.MouseEvent) => {
@@ -379,7 +383,7 @@ function ReelCard({
           >
             <Share2 size={20} />
           </button>
-          <span className="reel-action-label">{copied ? "Copied" : "Share"}</span>
+          <span className="reel-action-label">{copied === true ? "Copied" : copied === 'error' ? "Failed" : "Share"}</span>
         </div>
 
         {/* Audio control */}

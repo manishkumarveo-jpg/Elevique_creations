@@ -126,6 +126,6 @@ Project marked complete
 - [ ] Client logs in and sees only their own project
 - [ ] Client cannot access any URL belonging to another client (tested manually)
 - [ ] Team member cannot access admin routes (tested manually)
-- [ ] Files upload and download correctly with signed URLs
+- [ ] Files open correctly via external links (Google Drive, Dropbox)
 - [ ] Milestone updates appear in real-time on the client portal without refresh
 - [ ] Activity log records every action correctly

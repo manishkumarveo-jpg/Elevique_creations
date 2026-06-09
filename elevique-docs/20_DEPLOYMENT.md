@@ -46,7 +46,37 @@ Before deploying, confirm all of these are done:
 
 ### Run migrations in this exact order:
 
+1. `20260601_01_enums_and_functions.sql`
+2. `20260601_02_profiles.sql`
+3. `20260601_03_projects.sql`
+4. `20260601_04_assignments.sql`
+5. `20260601_05_milestones.sql`
+6. `20260601_06_folders.sql`
+7. `20260601_07_files.sql`
+8. `20260601_08_deliverables.sql`
+9. `20260601_09_checklist.sql`
+10. `20260601_10_activity_log.sql`
+11. `20260601_11_seed_trigger.sql`
+12. `20260601_12_rls.sql`
+13. `20260601_13_indexes.sql`
+
+Paste each file into **Supabase SQL Editor → Run** in the order above. Do not skip files.
+
 ### Create the first admin user manually
+
+1. Go to **Supabase Dashboard → Authentication → Users → Add User**
+2. Enter the admin email and a secure temporary password; tick **Auto Confirm User** if available.
+3. Copy the new user's `id` (UUID shown in the Users table).
+4. Open **SQL Editor** and run:
+
+```sql
+UPDATE profiles
+SET role = 'admin', full_name = 'Admin', is_active = true
+WHERE id = '<paste-user-id-here>';
+```
+
+5. Record the credentials in a password manager and instruct the admin to change the password on first login.
+6. Verify: log in at `/admin/login` → dashboard should load with stats.
 
 ---
 
@@ -74,6 +104,11 @@ Before deploying, confirm all of these are done:
 ## Step 4 — Deploy to Vercel
 
 ### Connect repository
+
+1. Push your code to GitHub: `git push origin main`
+2. Go to [vercel.com](https://vercel.com) → **Add New Project** → **Import Git Repository**
+3. Authorize Vercel to access your GitHub account and select the `elevique-portal` repo.
+4. Grant **Read & Write** permissions so Vercel can trigger deployments on push.
 
 ### Vercel setup
 

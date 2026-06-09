@@ -12,4 +12,6 @@ export const env = {
   upstashRedisToken: requireEnv('UPSTASH_REDIS_REST_TOKEN'),
   resendApiKey: requireEnv('RESEND_API_KEY'),
   appUrl: requireEnv('NEXT_PUBLIC_APP_URL'),
+  contactFromEmail: requireEnv('CONTACT_FROM_EMAIL'),
+  contactRecipientEmail: requireEnv('CONTACT_RECIPIENT_EMAIL'),
 }

@@ -20,7 +20,7 @@ Auth is enforced by middleware — no `requireClient()` call in the layout. `Mob
 Key points:
 - `matchPrefix` on Projects keeps it active when viewing `/portal/projects/[id]`
 - No "New Project" CTA — project creation is admin-only
-- Auth action: `logoutClient` from `@/lib/actions/auth/logout-client`
+- Auth action: `logoutClient` from `@/lib/actions/auth/logout-admin` (all three logout functions live in this shared module)
 - Role tag displayed: **"Premium Portal"**
 
 ---

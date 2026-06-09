@@ -43,7 +43,14 @@ export function ClientSidebar() {
   return (
     <>
       {mobileOpen && (
-        <div className="p-overlay" onClick={() => setMobileOpen(false)} />
+        <div
+          className="p-overlay"
+          onClick={() => setMobileOpen(false)}
+          role="button"
+          tabIndex={0}
+          aria-label="Close sidebar"
+          onKeyDown={(e) => { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') setMobileOpen(false) }}
+        />
       )}
       <aside className={`p-sidebar${mobileOpen ? ' open' : ''}`}>
         <div className="p-sidebar-header">

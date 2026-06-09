@@ -621,8 +621,8 @@ Live site tests (replace with your actual domain):
 ### Rate limit errors in development
 → Normal if you're making many requests quickly. Wait 60 seconds.
 
-### File upload 403 error
-→ Check storage bucket policies are applied (Phase 12 checkpoint)
+### External link 403 / access denied error
+→ This project uses no file storage. If an external link (Google Drive, Dropbox, etc.) returns 403, check the sharing settings on the external file — it must be set to "Anyone with the link can view". There are no storage bucket policies in this project.
 
 ### Realtime not working
 → Check Supabase → Database → Replication has the tables enabled

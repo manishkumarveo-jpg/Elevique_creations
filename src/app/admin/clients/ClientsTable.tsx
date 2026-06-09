@@ -42,12 +42,18 @@ function ClientRowMenu({ client, onToggle }: { client: Client; onToggle: () => v
   function handleToggleActive() {
     setOpen(false)
     startTransition(async () => {
-      if (client.is_active) {
-        await deactivateUser({ user_id: client.id })
-      } else {
-        await reactivateUser({ user_id: client.id })
+      try {
+        const result = client.is_active
+          ? await deactivateUser({ user_id: client.id })
+          : await reactivateUser({ user_id: client.id })
+        if (result && 'error' in result && result.error) {
+          console.error('[ClientsTable] toggle active failed:', result.error)
+          return
+        }
+        onToggle()
+      } catch (err) {
+        console.error('[ClientsTable] toggle active error:', err)
       }
-      onToggle()
     })
   }
 

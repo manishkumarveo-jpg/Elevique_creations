@@ -45,7 +45,7 @@ Set via a `setSecurityHeaders(response: NextResponse): NextResponse` helper in `
 | `X-Frame-Options` | `DENY` |
 | `X-Content-Type-Options` | `nosniff` |
 | `Referrer-Policy` | `strict-origin-when-cross-origin` |
-| `Content-Security-Policy` | `default-src 'self'; script-src 'self' 'unsafe-inline'; ...` (tune per feature) |
+| `Content-Security-Policy` | `default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://*.supabase.co; frame-ancestors 'none'` (inject a per-request nonce via `crypto.randomUUID()` for any inline scripts) |
 
 ---
 
