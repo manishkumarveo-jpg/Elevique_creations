@@ -23,7 +23,7 @@ const SERVICES = [
     icon: <Video size={36} strokeWidth={1.5} />,
     title: "AI Video Ads",
     synopsis:
-      "We produce hyper-realistic AI-generated video ads that blend neural style transfer, generative scene composition, and cinematic grading. Deliverables include 15s, 30s & 60s cuts, motion-matched product reveals, and platform-optimised exports for Meta, TikTok, and YouTube.",
+      "Harness the power of Artificial Intelligence to create highly engaging, personalized, and cost-effective video advertisements that not only capture attention but also drive measurable business results. By combining advanced AI technologies with creative storytelling, we produce videos tailored to your audience's interests, behaviors, and preferences, ensuring every piece of content feels relevant and impactful."
   },
   {
     id: "content-creation",
@@ -127,6 +127,7 @@ function InquiryModal({
             Start a Project
           </div>
           <button
+            type="button"
             className="svc-modal-close"
             onClick={onClose}
             aria-label="Close modal"
@@ -253,6 +254,7 @@ function FlipCard({ svc, onStart }: { svc: (typeof SERVICES)[0]; onStart: () => 
           <DotGrid />
           <p className="svc-card-synopsis">{svc.synopsis}</p>
           <button
+            type="button"
             className="svc-card-cta"
             onClick={(e) => {
               e.stopPropagation();

@@ -78,6 +78,7 @@ export function MilestoneControls({ milestones, projectId }: { milestones: Miles
         </div>
 
         <button
+          type="button"
           onClick={handleSave}
           disabled={!selected || !status || isPending}
           style={{

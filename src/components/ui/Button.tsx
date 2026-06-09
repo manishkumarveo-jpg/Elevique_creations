@@ -1,9 +1,10 @@
-import { ButtonHTMLAttributes, forwardRef } from 'react'
+import { ButtonHTMLAttributes, type Ref } from 'react'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger'
   size?: 'sm' | 'md' | 'lg'
   loading?: boolean
+  ref?: Ref<HTMLButtonElement>
 }
 
 const variants = {
@@ -19,9 +20,10 @@ const sizes = {
   lg: 'px-6 py-3 text-sm',
 }
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = 'primary', size = 'md', loading, disabled, className = '', children, ...props }, ref) => (
+export function Button({ variant = 'primary', size = 'md', loading, disabled, className = '', children, ref, ...props }: ButtonProps) {
+  return (
     <button
+      type="button"
       ref={ref}
       disabled={disabled || loading}
       className={`inline-flex items-center justify-center gap-2 rounded-lg font-medium tracking-wide transition-all focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-[#020203] disabled:opacity-40 disabled:cursor-not-allowed ${variants[variant]} ${sizes[size]} ${className}`}
@@ -36,5 +38,4 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       {children}
     </button>
   )
-)
-Button.displayName = 'Button'
+}

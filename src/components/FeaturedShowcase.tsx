@@ -10,6 +10,8 @@ import {
   ChevronDown,
   ExternalLink,
 } from "lucide-react";
+import PortfolioReels from "./PortfolioReels";
+import "@/styles/portfolio-reels.css";
 
 /* ─── Data ───────────────────────────────────────────────────── */
 const VIDEO_SRC =
@@ -25,6 +27,7 @@ interface Project {
   techStack: string[];
   colorFrom: string;
   colorTo: string;
+  verticalVideoSrc?: string;
 }
 
 const PROJECTS: Project[] = [
@@ -125,6 +128,7 @@ interface PopupState {
 
 /* ════════════════════════════════════════════════════════════════ */
 export default function FeaturedShowcase() {
+  const [viewMode, setViewMode]         = useState<"grid" | "reels">("grid");
   const [active, setActive]           = useState<Project>(PROJECTS[0]);
   const [videoOverlay, setVideoOverlay] = useState<Project | null>(null);
   const [bottomSheet, setBottomSheet]   = useState<Project | null>(null);
@@ -297,11 +301,11 @@ export default function FeaturedShowcase() {
           <h2 className="portfolio-hero-title">{active.title}</h2>
           <p className="portfolio-hero-desc">{active.description}</p>
           <div className="portfolio-hero-actions">
-            <button className="portfolio-btn-primary" onClick={() => openVideoOverlay(active)}>
+            <button type="button" className="portfolio-btn-primary" onClick={() => openVideoOverlay(active)}>
               <Play size={15} fill="currentColor" />
               Watch Film
             </button>
-            <button className="portfolio-btn-ghost" onClick={() => openBottomSheet(active)}>
+            <button type="button" className="portfolio-btn-ghost" onClick={() => openBottomSheet(active)}>
               <ExternalLink size={15} />
               View Case Study
             </button>
@@ -309,33 +313,68 @@ export default function FeaturedShowcase() {
         </div>
       </div>
 
-      {/* ══ FEATURED ROW ════════════════════════════════════════ */}
-      <div className="portfolio-featured-wrap">
-        <div className="svc-grid-overlay" aria-hidden="true" />
-        <p className="portfolio-featured-label">Featured Projects</p>
-        <div className="portfolio-featured-row">
-          {PROJECTS.slice(0, 5).map((p) => (
-            <FeaturedCard key={p.id} project={p} isActive={active.id === p.id} onClick={() => switchProject(p)} />
-          ))}
+      {/* ══ VIEW TOGGLE ══════════════════════════════════════════ */}
+      <div className="portfolio-view-toggle-wrap">
+        <div className="portfolio-view-toggle">
+          <button
+            type="button"
+            className={`portfolio-toggle-btn${viewMode === "grid" ? " active" : ""}`}
+            onClick={() => setViewMode("grid")}
+            style={{ width: "130px", justifyContent: "center" }}
+          >
+            Grid Showcase
+          </button>
+          <button
+            type="button"
+            className={`portfolio-toggle-btn${viewMode === "reels" ? " active" : ""}`}
+            onClick={() => setViewMode("reels")}
+            style={{ width: "130px", justifyContent: "center" }}
+          >
+            Reels Feed
+          </button>
+          <div
+            className="portfolio-toggle-pill"
+            style={{
+              width: "130px",
+              transform: viewMode === "grid" ? "translateX(0)" : "translateX(130px)",
+            }}
+          />
         </div>
       </div>
 
-      {/* ══ GRID ════════════════════════════════════════════════ */}
-      <div className="portfolio-grid-wrap">
-        <div className="svc-grid-overlay" aria-hidden="true" />
-        <h3 className="portfolio-grid-heading">Portfolio</h3>
-        <div className="portfolio-grid">
-          {PROJECTS.map((p) => (
-            <GridCard
-              key={p.id}
-              project={p}
-              onEnter={onCardEnter}
-              onLeave={onCardLeave}
-              onClick={() => openVideoOverlay(p)}
-            />
-          ))}
-        </div>
-      </div>
+      {viewMode === "grid" ? (
+        <>
+          {/* ══ FEATURED ROW ════════════════════════════════════════ */}
+          <div className="portfolio-featured-wrap">
+            <div className="svc-grid-overlay" aria-hidden="true" />
+            <p className="portfolio-featured-label">Featured Projects</p>
+            <div className="portfolio-featured-row">
+              {PROJECTS.slice(0, 5).map((p) => (
+                <FeaturedCard key={p.id} project={p} isActive={active.id === p.id} onClick={() => switchProject(p)} />
+              ))}
+            </div>
+          </div>
+
+          {/* ══ GRID ════════════════════════════════════════════════ */}
+          <div className="portfolio-grid-wrap">
+            <div className="svc-grid-overlay" aria-hidden="true" />
+            <h3 className="portfolio-grid-heading">Portfolio</h3>
+            <div className="portfolio-grid">
+              {PROJECTS.map((p) => (
+                <GridCard
+                  key={p.id}
+                  project={p}
+                  onEnter={onCardEnter}
+                  onLeave={onCardLeave}
+                  onClick={() => openVideoOverlay(p)}
+                />
+              ))}
+            </div>
+          </div>
+        </>
+      ) : (
+        <PortfolioReels projects={PROJECTS} onViewDetails={openBottomSheet} />
+      )}
 
       {/* ══ POPUP ═══════════════════════════════════════════════ */}
       {popup && (
@@ -352,12 +391,13 @@ export default function FeaturedShowcase() {
           <div className="portfolio-popup-fade" aria-hidden="true" />
           <div className="portfolio-popup-overlay">
             <div className="portfolio-popup-actions">
-              <button className="portfolio-popup-play" onClick={(e) => { e.stopPropagation(); hidePopup(); openVideoOverlay(popup.project); }} aria-label="Play">
+              <button type="button" className="portfolio-popup-play" onClick={(e) => { e.stopPropagation(); hidePopup(); openVideoOverlay(popup.project); }} aria-label="Play">
                 <Play size={13} fill="currentColor" />
               </button>
-              <button className="portfolio-popup-icon-btn" onClick={(e) => e.stopPropagation()} aria-label="Add"><Plus size={13} /></button>
-              <button className="portfolio-popup-icon-btn" onClick={(e) => e.stopPropagation()} aria-label="Like"><ThumbsUp size={12} /></button>
+              <button type="button" className="portfolio-popup-icon-btn" onClick={(e) => e.stopPropagation()} aria-label="Add"><Plus size={13} /></button>
+              <button type="button" className="portfolio-popup-icon-btn" onClick={(e) => e.stopPropagation()} aria-label="Like"><ThumbsUp size={12} /></button>
               <button
+                type="button"
                 className="portfolio-popup-icon-btn portfolio-popup-icon-btn--right"
                 aria-label="Preview"
                 onClick={(e) => { e.stopPropagation(); hidePopup(); openBottomSheet(popup.project); }}
@@ -403,7 +443,7 @@ export default function FeaturedShowcase() {
             </div>
 
             {/* close */}
-            <button className="vo-close" onClick={closeVideoOverlay} aria-label="Close">
+            <button type="button" className="vo-close" onClick={closeVideoOverlay} aria-label="Close">
               <X size={20} />
             </button>
           </div>
@@ -417,7 +457,7 @@ export default function FeaturedShowcase() {
           <div ref={sheetPanelRef} className="bs-panel" role="dialog" aria-modal="true" aria-label={bottomSheet.title}>
 
             {/* close — top-right over video */}
-            <button className="bs-close" onClick={closeBottomSheet} aria-label="Close">
+            <button type="button" className="bs-close" onClick={closeBottomSheet} aria-label="Close">
               <X size={16} />
             </button>
 
@@ -431,6 +471,7 @@ export default function FeaturedShowcase() {
                 <h3 className="bs-video-title">{bottomSheet.title}</h3>
                 <div className="bs-video-btns">
                   <button
+                    type="button"
                     className="portfolio-btn-primary"
                     style={{ fontSize: "0.6rem", padding: "8px 16px" }}
                     onClick={() => { closeBottomSheet(); openVideoOverlay(bottomSheet); }}
@@ -461,7 +502,7 @@ export default function FeaturedShowcase() {
               </div>
 
               <div className="bs-actions">
-                <button className="portfolio-btn-ghost" style={{ fontSize: "0.6rem" }}>
+                <button type="button" className="portfolio-btn-ghost" style={{ fontSize: "0.6rem" }}>
                   <ExternalLink size={13} />
                   Case Study
                 </button>

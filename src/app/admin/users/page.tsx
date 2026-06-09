@@ -16,7 +16,7 @@ export default async function UsersPage() {
           <h1 className="p-page-title">Users</h1>
         </div>
         <Link href="/admin/users/new">
-          <button className="auth-btn" style={{ width: 'auto', padding: '0.55rem 1.25rem', marginTop: 0 }}>
+          <button type="button" className="auth-btn" style={{ width: 'auto', padding: '0.55rem 1.25rem', marginTop: 0 }}>
             + New User
           </button>
         </Link>

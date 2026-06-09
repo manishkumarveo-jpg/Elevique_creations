@@ -78,6 +78,7 @@ export function TeamMilestoneControls({ milestones, projectId }: { milestones: M
         </div>
 
         <button
+          type="button"
           onClick={handleSave}
           disabled={!selected || !status || isPending}
           style={{

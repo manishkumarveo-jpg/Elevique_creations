@@ -1,12 +1,13 @@
-import { InputHTMLAttributes, forwardRef } from 'react'
+import { InputHTMLAttributes, type Ref } from 'react'
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string
   error?: string
+  ref?: Ref<HTMLInputElement>
 }
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, id, className = '', ...props }, ref) => (
+export function Input({ label, error, id, className = '', ref, ...props }: InputProps) {
+  return (
     <div className="flex flex-col gap-1.5">
       {label && (
         <label htmlFor={id} className="text-xs font-medium text-white/60 uppercase tracking-widest">
@@ -22,5 +23,4 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       {error && <p className="text-xs text-red-400">{error}</p>}
     </div>
   )
-)
-Input.displayName = 'Input'
+}

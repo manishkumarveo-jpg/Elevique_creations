@@ -119,6 +119,7 @@ export function ClientDeliverablesSection({ deliverables, projectId }: { deliver
                   {d.status === 'delivered' && revisionOpen !== d.id && (
                     <>
                       <button
+                        type="button"
                         disabled={isPending}
                         onClick={() => startTransition(() => approveDeliverable(d.id, projectId))}
                         style={{
@@ -135,6 +136,7 @@ export function ClientDeliverablesSection({ deliverables, projectId }: { deliver
                         Approve
                       </button>
                       <button
+                        type="button"
                         disabled={isPending}
                         onClick={() => openRevision(d.id)}
                         style={{
@@ -198,6 +200,7 @@ export function ClientDeliverablesSection({ deliverables, projectId }: { deliver
                   )}
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
                     <button
+                      type="button"
                       disabled={isPending}
                       onClick={() => handleRevisionSubmit(d.id)}
                       style={{
@@ -212,6 +215,7 @@ export function ClientDeliverablesSection({ deliverables, projectId }: { deliver
                       {isPending ? 'Submitting…' : 'Submit'}
                     </button>
                     <button
+                      type="button"
                       disabled={isPending}
                       onClick={() => setRevisionOpen(null)}
                       style={{

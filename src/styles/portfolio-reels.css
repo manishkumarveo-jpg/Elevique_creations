@@ -1,0 +1,462 @@
+/* ─── View Toggle Switch ────────────────────────────────────────── */
+.portfolio-view-toggle-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem 0;
+  position: relative;
+  z-index: 10;
+}
+
+.portfolio-view-toggle {
+  display: inline-flex;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  padding: 4px;
+  border-radius: 9999px;
+  position: relative;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+.portfolio-toggle-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 8px 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 9999px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.portfolio-toggle-btn.active {
+  color: #ffffff;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+}
+
+.portfolio-toggle-pill {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  height: calc(100% - 8px);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.04) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), width 0.3s ease;
+  z-index: 1;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+}
+
+/* ─── Reels Immersive Feed Layout ────────────────────────────────── */
+.reels-feed-section {
+  position: relative;
+  width: 100%;
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  padding: 1rem 0 4rem;
+  background: #000000;
+}
+
+/* Desktop Ambient Backdrop */
+.reels-ambient-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.15;
+  filter: blur(80px) saturate(1.8);
+  transition: background-color 1s ease;
+  background-position: center;
+  background-size: cover;
+}
+
+/* Reels Chassis Wrapper (Smartphone frame on desktop, borderless full viewport on mobile) */
+.reels-chassis {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 420px;
+  height: 780px;
+  background: #0d0d0d;
+  border-radius: 36px;
+  border: 8px solid #1a1a1a;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8),
+              0 0 40px rgba(255, 255, 255, 0.03),
+              inset 0 0 20px rgba(0, 0, 0, 0.9);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Dynamic glow matching active project color */
+.reels-chassis-glow {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
+  border-radius: 36px;
+  pointer-events: none;
+  z-index: 3;
+  border: 1px solid transparent;
+  transition: border-color 0.8s ease, box-shadow 0.8s ease;
+}
+
+/* Snap Scroll Container */
+.reels-snap-container {
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE/Edge */
+}
+
+.reels-snap-container::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+/* Individual Reel Card */
+.reel-card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  overflow: hidden;
+  background: #000;
+}
+
+/* Reel Video styling */
+.reel-video-element {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* Ambient gradients over video */
+.reel-gradient-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.reel-gradient-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 20%;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ─── Overlays & Controls ───────────────────────────────────────── */
+
+/* Left Side Metadata Panel */
+.reel-meta-overlay {
+  position: absolute;
+  bottom: 30px;
+  left: 20px;
+  right: 80px;
+  z-index: 3;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+
+.reel-meta-overlay * {
+  pointer-events: auto;
+}
+
+.reel-meta-badge {
+  align-self: flex-start;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 4px;
+  border: 1px solid;
+  transition: all 0.3s ease;
+}
+
+.reel-meta-title {
+  font-family: inherit;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  line-height: 1.2;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.reel-meta-desc {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+.reel-meta-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.reel-meta-tag {
+  font-size: 0.65rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.9);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+  backdrop-filter: blur(4px);
+}
+
+/* Right Side Actions Bar */
+.reel-actions-overlay {
+  position: absolute;
+  bottom: 30px;
+  right: 15px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.reel-action-btn-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.reel-action-btn {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(20, 20, 20, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.reel-action-btn:hover {
+  transform: scale(1.12);
+  background: rgba(40, 40, 40, 0.8);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.reel-action-btn:active {
+  transform: scale(0.92);
+}
+
+.reel-action-label {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 600;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* Heart animations and pulses */
+.reel-action-btn.liked {
+  color: #ff2d55;
+  background: rgba(255, 45, 85, 0.15);
+  border-color: rgba(255, 45, 85, 0.4);
+  animation: heartPulse 0.3s linear;
+}
+
+@keyframes heartPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1.12); }
+}
+
+/* Double-Tap Heart animation */
+.double-tap-heart {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  color: #ff2d55;
+  filter: drop-shadow(0 0 15px rgba(255, 45, 85, 0.6));
+  z-index: 4;
+  pointer-events: none;
+  animation: heartPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes heartPop {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+  15% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.9; }
+  30% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  80% { transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
+  100% { transform: translate(-50%, -30%) scale(0); opacity: 0; }
+}
+
+/* Floating particle hearts */
+.floating-heart {
+  position: absolute;
+  pointer-events: none;
+  z-index: 5;
+  color: #ff2d55;
+  opacity: 0.9;
+  animation: floatUpHeart 1.2s ease-out forwards;
+}
+
+@keyframes floatUpHeart {
+  0% {
+    transform: translateY(0) scale(0.6) rotate(0deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(-120px) scale(1.2) rotate(var(--rot, 15deg));
+    opacity: 0;
+  }
+}
+
+/* Play/Pause center overlay */
+.play-pause-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0;
+  animation: fadeOutPlay 0.5s ease-out forwards;
+}
+
+@keyframes fadeOutPlay {
+  0% { opacity: 0.9; transform: translate(-50%, -50%) scale(0.8); }
+  50% { opacity: 0.9; transform: translate(-50%, -50%) scale(1.1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.3); }
+}
+
+/* ─── Swipe Indicators & UI decor ──────────────────────────────── */
+.reels-swipe-hint {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+  z-index: 3;
+  animation: swipePulse 2s infinite ease-in-out;
+}
+
+@keyframes swipePulse {
+  0%, 100% { transform: translate(-50%, 0); opacity: 0.3; }
+  50% { transform: translate(-50%, -6px); opacity: 0.8; }
+}
+
+/* Phone Status Bar Decor */
+.reels-status-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 30px;
+  padding: 0 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 4;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 500;
+  pointer-events: none;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+.reels-status-icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Responsive Overrides */
+@media (max-width: 480px) {
+  .reels-feed-section {
+    padding: 0;
+  }
+  
+  .reels-chassis {
+    border-radius: 0;
+    border: none;
+    height: 100vh;
+    max-width: 100%;
+    box-shadow: none;
+  }
+  
+  .reels-status-bar {
+    padding: 0 16px;
+  }
+  
+  .reels-chassis-glow {
+    display: none;
+  }
+  
+  .reel-meta-overlay {
+    bottom: 40px;
+    left: 16px;
+    right: 74px;
+  }
+  
+  .reel-actions-overlay {
+    bottom: 40px;
+    right: 12px;
+  }
+}

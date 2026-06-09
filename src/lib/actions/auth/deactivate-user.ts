@@ -19,6 +19,7 @@ export async function deactivateUser(input: unknown) {
   await supabase.from('profiles').update({ is_active: false }).eq('id', user_id)
 
   revalidatePath('/admin/users')
+  revalidatePath('/admin/clients')
   return { success: true }
 }
 
@@ -33,5 +34,6 @@ export async function reactivateUser(input: unknown) {
   await supabase.from('profiles').update({ is_active: true }).eq('id', user_id)
 
   revalidatePath('/admin/users')
+  revalidatePath('/admin/clients')
   return { success: true }
 }

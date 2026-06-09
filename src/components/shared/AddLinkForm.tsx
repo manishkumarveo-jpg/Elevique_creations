@@ -66,6 +66,7 @@ export function AddLinkForm({ onSubmit, placeholder = 'https://drive.google.com/
   if (!open) {
     return (
       <button
+        type="button"
         onClick={() => setOpen(true)}
         style={{
           display: 'inline-flex',

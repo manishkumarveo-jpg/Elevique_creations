@@ -112,6 +112,7 @@ export default function TestimonialsEditorial() {
         <div className="te-nav-left">
           {testimonials.map((_, index) => (
             <button
+              type="button"
               key={index}
               onClick={() => handleChange(index)}
               aria-label={`Testimonial ${index + 1}`}
@@ -132,6 +133,7 @@ export default function TestimonialsEditorial() {
         {/* Arrows */}
         <div className="te-arrows">
           <button
+            type="button"
             onClick={handlePrev}
             className="te-arrow"
             aria-label="Previous"
@@ -139,6 +141,7 @@ export default function TestimonialsEditorial() {
             <ChevronLeft size={18} />
           </button>
           <button
+            type="button"
             onClick={handleNext}
             className="te-arrow"
             aria-label="Next"

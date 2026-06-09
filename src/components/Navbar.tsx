@@ -68,6 +68,7 @@ export default function Navbar() {
           <Link href="/contact" className="navbar-cta">Book a Call</Link>
 
           <button
+            type="button"
             className={`navbar-mobile-toggle${menuOpen ? " is-open" : ""}`}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
             aria-expanded={menuOpen}

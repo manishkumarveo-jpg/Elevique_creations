@@ -1,6 +1,6 @@
 import { createServerClient } from '@/lib/supabase/server'
 import { getClientsWithAssignment, getTeamMembers } from '@/lib/queries/users'
-import { ClientAssignmentRow } from './ClientAssignmentRow'
+import { ClientsTable } from './ClientsTable'
 
 export default async function ClientsPage() {
   let clients: Awaited<ReturnType<typeof getClientsWithAssignment>> = []
@@ -68,20 +68,6 @@ CREATE INDEX IF NOT EXISTS idx_profiles_assigned_team_member
             Manage and monitor {clients.length} strategic client partnership{clients.length !== 1 ? 's' : ''}.
           </p>
         </div>
-        <div className="p-ecosystem-actions">
-          <button className="p-btn-filter" type="button">
-            <svg viewBox="0 0 20 20" fill="currentColor" style={{ width: 13, height: 13 }}>
-              <path fillRule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clipRule="evenodd" />
-            </svg>
-            Filter
-          </button>
-          <a href="/admin/users/new" className="p-btn-new-client">
-            <svg viewBox="0 0 20 20" fill="currentColor" style={{ width: 13, height: 13 }}>
-              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-            </svg>
-            New Client
-          </a>
-        </div>
       </div>
 
       {/* Stats */}
@@ -112,7 +98,7 @@ CREATE INDEX IF NOT EXISTS idx_profiles_assigned_team_member
         </div>
       </div>
 
-      {/* Client table */}
+      {/* Interactive filter + table */}
       {clients.length === 0 ? (
         <div className="p-empty">
           <div className="p-empty-icon-wrap">
@@ -125,78 +111,7 @@ CREATE INDEX IF NOT EXISTS idx_profiles_assigned_team_member
           <p className="p-empty-sub">Create client accounts from the Users page first.</p>
         </div>
       ) : (
-        <div style={{ background: 'var(--p-s1)', border: '1px solid var(--p-b1)', borderRadius: 16, overflow: 'hidden' }}>
-          {/* Table header */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '2fr 1fr 1fr 1fr auto',
-            gap: '1rem',
-            padding: '0.625rem 1.125rem',
-            borderBottom: '1px solid var(--p-b1)',
-          }}>
-            {['Client', 'Team Member', 'Projects', 'Status', ''].map(h => (
-              <span key={h} style={{ fontSize: '0.58rem', fontWeight: 700, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--p-t3)' }}>{h}</span>
-            ))}
-          </div>
-
-          {/* Rows */}
-          {clients.map(client => {
-            const assignedMember = teamMembers.find(m => m.id === client.assigned_team_member_id)
-            const activeCount = projectCounts[client.id] ?? 0
-
-            return (
-              <div
-                key={client.id}
-                className="p-ecosystem-client-row"
-                style={{ gridTemplateColumns: '2fr 1fr 1fr 1fr auto', display: 'grid', gap: '1rem', alignItems: 'center' }}
-              >
-                {/* Logo + name */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                  <div className="p-ecosystem-logo">
-                    {(client.company_name ?? client.full_name)?.[0]?.toUpperCase() ?? '?'}
-                  </div>
-                  <div>
-                    <p className="p-ecosystem-client-name">{client.full_name}</p>
-                    <p className="p-ecosystem-client-domain">{client.company_name ?? client.email}</p>
-                  </div>
-                </div>
-
-                {/* Assigned team member */}
-                <div>
-                  {assignedMember ? (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <div className="p-avatar-sm">{assignedMember.full_name[0].toUpperCase()}</div>
-                      <span style={{ fontSize: '0.73rem', color: 'var(--p-t2)' }}>{assignedMember.full_name.split(' ')[0]}</span>
-                    </div>
-                  ) : (
-                    <ClientAssignmentRow client={client} teamMembers={teamMembers} compact />
-                  )}
-                </div>
-
-                {/* Project count */}
-                <div>
-                  <span style={{ fontSize: '0.78rem', color: activeCount > 0 ? 'var(--p-t1)' : 'var(--p-t3)', fontWeight: activeCount > 0 ? 500 : 400 }}>
-                    {activeCount} active
-                  </span>
-                </div>
-
-                {/* Status chip */}
-                <div>
-                  <span className={client.is_active ? 'p-chip p-chip--active' : 'p-chip p-chip--inactive'}>
-                    {client.is_active ? 'Active' : 'Inactive'}
-                  </span>
-                </div>
-
-                {/* Three-dot menu */}
-                <button className="p-dot-menu" type="button" title="Options">
-                  <svg viewBox="0 0 20 20" fill="currentColor" style={{ width: 14, height: 14 }}>
-                    <path d="M10 6a2 2 0 110-4 2 2 0 010 4zm0 6a2 2 0 110-4 2 2 0 010 4zm0 6a2 2 0 110-4 2 2 0 010 4z" />
-                  </svg>
-                </button>
-              </div>
-            )
-          })}
-        </div>
+        <ClientsTable clients={clients} teamMembers={teamMembers} projectCounts={projectCounts} />
       )}
 
       {/* Summary */}

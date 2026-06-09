@@ -29,6 +29,7 @@ export function Tabs({ tabs, defaultTab }: TabsProps) {
           const isActive = active === tab.key
           return (
             <button
+              type="button"
               key={tab.key}
               onClick={() => setActive(tab.key)}
               style={{

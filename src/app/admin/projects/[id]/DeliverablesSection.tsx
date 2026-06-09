@@ -83,6 +83,7 @@ export function DeliverablesSection({ deliverables, projectId, isAdmin }: Props)
           <p className="p-info-panel-label" style={{ margin: 0 }}>Add New Deliverable</p>
           {isAdmin && (
             <button
+              type="button"
               onClick={() => setShowForm(v => !v)}
               style={{
                 background: showForm ? 'none' : 'rgba(20,184,166,0.1)',
@@ -222,6 +223,7 @@ export function DeliverablesSection({ deliverables, projectId, isAdmin }: Props)
                         )}
                         {isAdmin && d.status !== 'delivered' && d.status !== 'approved' && (
                           <button
+                            type="button"
                             disabled={isPending}
                             onClick={() => startTransition(() => markDelivered(d.id, projectId))}
                             style={{

@@ -25,6 +25,12 @@ const deliverableStatusMap: Record<DeliverableStatus, { label: string; variant: 
   approved: { label: 'Approved', variant: 'green' },
 }
 
+const roleBadgeMap: Record<'admin' | 'team_member' | 'client', { label: string; variant: 'purple' | 'blue' | 'gray' }> = {
+  admin: { label: 'Admin', variant: 'purple' },
+  team_member: { label: 'Team Member', variant: 'blue' },
+  client: { label: 'Client', variant: 'gray' },
+}
+
 export function ProjectStatusBadge({ status }: { status: ProjectStatus }) {
   const { label, variant } = projectStatusMap[status]
   return <Badge variant={variant}>{label}</Badge>
@@ -41,11 +47,6 @@ export function DeliverableStatusBadge({ status }: { status: DeliverableStatus }
 }
 
 export function RoleBadge({ role }: { role: 'admin' | 'team_member' | 'client' }) {
-  const map = {
-    admin: { label: 'Admin', variant: 'purple' as const },
-    team_member: { label: 'Team Member', variant: 'blue' as const },
-    client: { label: 'Client', variant: 'gray' as const },
-  }
-  const { label, variant } = map[role]
+  const { label, variant } = roleBadgeMap[role]
   return <Badge variant={variant}>{label}</Badge>
 }

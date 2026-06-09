@@ -44,6 +44,7 @@ export function ClientNoteAlert({ projectId, revisions }: Props) {
       {resolved.length > 0 && (
         <div style={{ marginTop: open.length > 0 ? '0.75rem' : 0 }}>
           <button
+            type="button"
             onClick={() => setShowResolved(v => !v)}
             style={{
               background: 'none', border: 'none', padding: 0, cursor: 'pointer',
@@ -101,6 +102,7 @@ function RevisionRow({ revision, projectId }: { revision: ProjectRevision; proje
         </p>
       </div>
       <button
+        type="button"
         disabled={isPending}
         onClick={() => startTransition(() => resolveRevision(revision.id, projectId))}
         style={{

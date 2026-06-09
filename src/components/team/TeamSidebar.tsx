@@ -54,7 +54,7 @@ export function TeamSidebar() {
             <p className="p-sidebar-brand-name">Elevique</p>
             <p className="p-sidebar-role-tag">Team</p>
           </div>
-          <button className="p-sidebar-close" onClick={() => setMobileOpen(false)} aria-label="Close menu">
+          <button type="button" className="p-sidebar-close" onClick={() => setMobileOpen(false)} aria-label="Close menu">
             <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
@@ -77,15 +77,6 @@ export function TeamSidebar() {
             )
           })}
         </nav>
-
-        <div style={{ padding: '0 0 0.25rem' }}>
-          <Link href="/team/projects/new" className="p-sidebar-cta">
-            <svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-            </svg>
-            New Project
-          </Link>
-        </div>
 
         <div className="p-sidebar-footer">
           <form action={logoutTeam}>

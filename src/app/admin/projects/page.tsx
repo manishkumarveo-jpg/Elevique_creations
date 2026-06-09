@@ -17,7 +17,7 @@ export default async function AdminProjectsPage() {
           </p>
         </div>
         <Link href="/admin/projects/new">
-          <button className="auth-btn" style={{ width: 'auto', padding: '0.55rem 1.25rem', marginTop: 0 }}>
+          <button type="button" className="auth-btn" style={{ width: 'auto', padding: '0.55rem 1.25rem', marginTop: 0 }}>
             + New Project
           </button>
         </Link>

@@ -1,14 +1,15 @@
-import { SelectHTMLAttributes, forwardRef } from 'react'
+import { SelectHTMLAttributes, type Ref } from 'react'
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label?: string
   error?: string
   options: { value: string; label: string }[]
   placeholder?: string
+  ref?: Ref<HTMLSelectElement>
 }
 
-export const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ label, error, id, options, placeholder, className = '', ...props }, ref) => (
+export function Select({ label, error, id, options, placeholder, className = '', ref, ...props }: SelectProps) {
+  return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
       {label && (
         <label htmlFor={id} className="auth-label">{label}</label>
@@ -27,5 +28,4 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
       {error && <p style={{ fontSize: '0.7rem', color: 'var(--p-red)' }}>{error}</p>}
     </div>
   )
-)
-Select.displayName = 'Select'
+}

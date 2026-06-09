@@ -64,6 +64,7 @@ export function ProjectFeedbackPanel({ projectId, revisions }: Props) {
         )}
         <div>
           <button
+            type="button"
             disabled={isPending}
             onClick={handleSubmit}
             style={{

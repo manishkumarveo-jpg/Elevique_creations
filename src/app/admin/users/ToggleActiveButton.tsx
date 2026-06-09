@@ -18,6 +18,7 @@ export function ToggleActiveButton({ userId, isActive }: { userId: string; isAct
 
   return (
     <button
+      type="button"
       onClick={handleClick}
       disabled={pending}
       className={isActive ? 'p-action-deactivate' : 'p-action-activate'}

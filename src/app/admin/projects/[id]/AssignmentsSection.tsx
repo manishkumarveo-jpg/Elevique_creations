@@ -80,6 +80,7 @@ export function AssignmentsSection({ assignments, projectId }: { assignments: As
                 </p>
               </div>
               <button
+                type="button"
                 onClick={() => startTransition(() => removeAssignment(a.id, projectId))}
                 disabled={isPending}
                 style={{
@@ -117,6 +118,7 @@ export function AssignmentsSection({ assignments, projectId }: { assignments: As
               ))}
             </select>
             <button
+              type="button"
               disabled={!selectedId || isPending}
               onClick={() => startTransition(async () => {
                 await assignUser(projectId, selectedId)

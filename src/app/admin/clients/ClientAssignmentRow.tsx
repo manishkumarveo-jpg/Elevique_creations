@@ -5,7 +5,7 @@ import { Avatar } from '@/components/ui/Avatar'
 import { Td, Tr } from '@/components/ui/Table'
 import { assignTeamMemberToClient } from '@/lib/actions/users/assign-team-member'
 
-interface TeamMember { id: string; full_name: string; email: string }
+interface TeamMember { id: string; full_name: string; email?: string | null }
 interface Client {
   id: string
   full_name: string

@@ -89,6 +89,7 @@ export function FileLinkRow({ file, onDelete, canDelete }: FileLinkRowProps) {
 
       {canDelete && onDelete && (
         <button
+          type="button"
           onClick={() => onDelete(file.id)}
           aria-label="Delete file"
           style={{

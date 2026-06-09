@@ -265,6 +265,7 @@ export default function HeroSection() {
             </a>
 
             <button
+              type="button"
               className="btn-secondary"
               onClick={scrollDown}
               id="hero-cta-secondary"
@@ -355,6 +356,7 @@ export default function HeroSection() {
             </motion.div>
 
             <button
+              type="button"
               className="showreel-close"
               onClick={() => setShowReel(false)}
               aria-label="Close showreel"
