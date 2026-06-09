@@ -5,12 +5,11 @@ function requireEnv(name: string): string {
 }
 
 export const env = {
-  supabaseUrl: requireEnv('NEXT_PUBLIC_SUPABASE_URL'),
-  supabaseAnonKey: requireEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY'),
-  supabaseServiceRoleKey: requireEnv('SUPABASE_SERVICE_ROLE_KEY'),
-  upstashRedisUrl: requireEnv('UPSTASH_REDIS_REST_URL'),
-  upstashRedisToken: requireEnv('UPSTASH_REDIS_REST_TOKEN'),
-  resendApiKey: requireEnv('RESEND_API_KEY'),
-  contactFromEmail: requireEnv('CONTACT_FROM_EMAIL'),
-  contactRecipientEmail: requireEnv('CONTACT_RECIPIENT_EMAIL'),
+  get supabaseUrl() { return requireEnv('NEXT_PUBLIC_SUPABASE_URL') },
+  get supabaseAnonKey() { return requireEnv('NEXT_PUBLIC_SUPABASE_ANON_KEY') },
+  get supabaseServiceRoleKey() { return requireEnv('SUPABASE_SERVICE_ROLE_KEY') },
+  get upstashRedisUrl() { return requireEnv('UPSTASH_REDIS_REST_URL') },
+  get upstashRedisToken() { return requireEnv('UPSTASH_REDIS_REST_TOKEN') },
+  get resendApiKey() { return requireEnv('RESEND_API_KEY') },
+  
 }
