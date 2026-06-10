@@ -523,6 +523,7 @@ function FeaturedCard({ project, isActive, onClick }: { project: Project; isActi
       className={`portfolio-feat-card${isActive ? " portfolio-feat-card--active" : ""}`}
       style={isActive ? { boxShadow: `0 0 18px 2px ${project.colorFrom}8C`, borderColor: project.colorFrom } : {}}
       onClick={onClick}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { if (e.key === " ") e.preventDefault(); onClick(); } }}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
       role="button"
@@ -604,6 +605,7 @@ function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
       onClick={onClick}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { if (e.key === " ") e.preventDefault(); onClick(); } }}
       role="button"
       tabIndex={0}
       aria-label={`Play ${project.title}`}
