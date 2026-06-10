@@ -24,6 +24,7 @@ interface Project {
   techStack: string[];
   colorFrom: string;
   colorTo: string;
+  videoSrc?: string;
   verticalVideoSrc?: string;
 }
 

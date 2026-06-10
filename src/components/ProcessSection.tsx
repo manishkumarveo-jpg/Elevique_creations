@@ -18,25 +18,25 @@ const STEPS = [
     icon: <Search size={22} strokeWidth={1.5} />,
     title: "Discovery & Brief",
     description:
-      "We start by deeply understanding your brand, audience, and goals. A structured discovery call surfaces objectives, creative references, platform requirements, and success metrics — so every decision that follows is grounded in strategy.",
+      "Share the goal, audience, product USPs, and any references. Brand logo/product shots would be required to proceed. We align on hooks, tone, and CTA so the ad is engineered for performance from the start.",
     tags: ["Brand Audit", "Goal Setting", "Creative Brief"],
   },
   {
     id: "strategy",
     number: "02",
     icon: <Lightbulb size={22} strokeWidth={1.5} />,
-    title: "Strategy & Concept",
+    title: "Script & Storyboard",
     description:
-      "Our creative directors translate the brief into a visual strategy. We present concept moodboards, narrative arcs, and style direction — refining until the direction is exactly right before a single pixel is produced.",
+      "The most crucial step! We craft a scroll-stopping script or a visual storyboard tailored to the client's brand platform. After the script is thoroughly reviewed and approved by the client, it is sent for video generation.",
     tags: ["Moodboards", "Art Direction", "Storyboard"],
   },
   {
     id: "production",
     number: "03",
     icon: <Cpu size={22} strokeWidth={1.5} />,
-    title: "AI Production",
+    title: "AI Generation + Editing",
     description:
-      "Our proprietary AI pipelines render hyper-realistic visuals, video sequences, and motion assets at cinematic quality. Neural styling, generative scene composition, and precision grading run in parallel — compressing weeks into days.",
+      "We generate realistic AI visuals and assemble scenes, then add pro voiceover/dialogues and music. Clean transitions, tasteful motion, and platform-native formats ensure it looks premium and performs.",
     tags: ["Neural Rendering", "Scene Composition", "Motion Grading"],
   },
   {
@@ -73,7 +73,7 @@ function TimelineLine() {
   return (
     <div
       ref={ref}
-      className="absolute left-1/2 top-0 bottom-0 -translate-x-1/2 w-px hidden lg:block"
+      className="absolute left-[21px] lg:left-1/2 top-0 bottom-0 -translate-x-1/2 w-px block"
       aria-hidden="true"
     >
       <div className="absolute inset-0 bg-white/6" />
@@ -93,19 +93,19 @@ function TimelineLine() {
 /* ─── Timeline dot ──────────────────────────────────────────────── */
 function TimelineDot({ inView }: { inView: boolean }) {
   return (
-    <div className="hidden lg:flex absolute left-1/2 top-8 -translate-x-1/2 items-center justify-center z-10">
+    <div className="flex absolute left-[21px] lg:left-1/2 top-8 -translate-x-1/2 items-center justify-center z-10">
       <motion.div
-        className="w-3 h-3 rounded-full"
+        className="w-3 h-3 rounded-full flex items-center justify-center"
         style={{ background: "var(--black)", border: "1px solid #14B8A6" }}
         animate={
           inView
-            ? { scale: [1, 1.5, 1], boxShadow: ["0 0 0px #14B8A6", "0 0 14px #14B8A6", "0 0 7px #14B8A6"] }
+            ? { scale: [1, 1.3, 1], boxShadow: ["0 0 0px #14B8A6", "0 0 12px #14B8A6", "0 0 6px #14B8A6"] }
             : {}
         }
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
         <motion.div
-          className="w-1.5 h-1.5 rounded-full m-auto mt-0.5"
+          className="w-1.5 h-1.5 rounded-full"
           style={{ background: "#14B8A6" }}
           animate={inView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
           transition={{ delay: 0.2, duration: 0.4 }}
@@ -122,8 +122,8 @@ function StepCard({ step, index }: { step: (typeof STEPS)[0]; index: number }) {
   const isRight = index % 2 === 0;
 
   const variants = {
-    hidden: { opacity: 0, x: isRight ? -40 : 40, y: 12 },
-    visible: { opacity: 1, x: 0, y: 0 },
+    hidden: { opacity: 0, y: 24 },
+    visible: { opacity: 1, y: 0 },
   };
 
   return (
@@ -137,7 +137,7 @@ function StepCard({ step, index }: { step: (typeof STEPS)[0]; index: number }) {
         initial="hidden"
         animate={inView ? "visible" : "hidden"}
         transition={{ duration: 0.72, ease: EASE_OUT, delay: 0.05 }}
-        className={`relative group ${isRight ? "lg:pr-16" : "lg:pl-16"}`}
+        className={`relative group pl-12 lg:pl-0 ${isRight ? "lg:pr-16 lg:pl-0" : "lg:pl-16"}`}
       >
         <div className="proc-card">
           <div className="proc-card-glow" aria-hidden="true" />

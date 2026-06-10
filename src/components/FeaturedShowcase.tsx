@@ -12,11 +12,9 @@ import {
 } from "lucide-react";
 import PortfolioReels from "./PortfolioReels";
 import "@/styles/portfolio-reels.css";
+import { GRID_PROJECTS, type GridProject } from "@/data/gridVideos";
 
 /* ─── Data ───────────────────────────────────────────────────── */
-const VIDEO_SRC =
-  "https://res.cloudinary.com/dpaoerbde/video/upload/v1780379272/hero-video_pxivlu.mp4";
-
 interface Project {
   id: number;
   title: string;
@@ -27,6 +25,7 @@ interface Project {
   techStack: string[];
   colorFrom: string;
   colorTo: string;
+  videoSrc: string;
   verticalVideoSrc?: string;
 }
 
@@ -34,13 +33,14 @@ const PROJECTS: Project[] = [
   {
     id: 1,
     title: "Elevique Creation",
-    category: "Ai Visuals",
+    category: "AI Visuals",
     year: "2024",
     role: "Creative Direction",
     description: "A visceral exploration of human endurance pushing the boundaries of motion and light.",
     techStack: ["AI Generation", "Motion Design", "Color Grading", "VFX"],
     colorFrom: "#ff6b35",
     colorTo: "#ff1a1a",
+    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1780998674/Forbes_properties_-_Real_estate_odzs1p.mov",
   },
   {
     id: 2,
@@ -52,6 +52,7 @@ const PROJECTS: Project[] = [
     techStack: ["AI Cinematics", "Editorial", "Sound Design", "Compositing"],
     colorFrom: "#e879f9",
     colorTo: "#7c3aed",
+    videoSrc: "https://res.cloudinary.com/dpaoerbde/video/upload/v1780379272/hero-video_pxivlu.mp4",
   },
   {
     id: 3,
@@ -63,6 +64,7 @@ const PROJECTS: Project[] = [
     techStack: ["3D Render", "AI Upscale", "Particle FX", "WebGL"],
     colorFrom: "#3b82f6",
     colorTo: "#06b6d4",
+    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781089842/Animated_movie_-_Malibhai_compressed_avswba.mp4",
   },
   {
     id: 4,
@@ -74,6 +76,7 @@ const PROJECTS: Project[] = [
     techStack: ["Product Viz", "AI Styling", "Motion Graphics", "Grade"],
     colorFrom: "#f59e0b",
     colorTo: "#ec4899",
+    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781090224/Its_me_music_video_compressed_ug7wwp.mp4",
   },
   {
     id: 5,
@@ -85,6 +88,7 @@ const PROJECTS: Project[] = [
     techStack: ["UI Animation", "AI Design", "WebGL", "Data Viz"],
     colorFrom: "#10b981",
     colorTo: "#3b82f6",
+    videoSrc: "",
   },
   {
     id: 6,
@@ -96,28 +100,7 @@ const PROJECTS: Project[] = [
     techStack: ["Stable Diffusion", "ControlNet", "Python", "TouchDesigner"],
     colorFrom: "#8b5cf6",
     colorTo: "#ec4899",
-  },
-  {
-    id: 7,
-    title: "Product Render",
-    category: "Commercial",
-    year: "2023",
-    role: "3D Specialist",
-    description: "Hyper-real product cinematics that dissolve the line between render and reality.",
-    techStack: ["Blender", "AI Texture", "Redshift", "Nuke"],
-    colorFrom: "#f97316",
-    colorTo: "#eab308",
-  },
-  {
-    id: 8,
-    title: "Future Cities",
-    category: "Documentary",
-    year: "2024",
-    role: "Creative WebGL Engineer",
-    description: "An architectural meditation on the cities we're building and the ones we dream.",
-    techStack: ["Drone AI", "Photogrammetry", "WebGL", "GLSL"],
-    colorFrom: "#06b6d4",
-    colorTo: "#10b981",
+    videoSrc: "",
   },
 ];
 
@@ -125,6 +108,16 @@ interface PopupState {
   project: Project;
   anchorEl: HTMLElement;
 }
+
+function groupByCategory(projects: GridProject[]) {
+  const map = new Map<string, GridProject[]>();
+  for (const p of projects) {
+    if (!map.has(p.category)) map.set(p.category, []);
+    map.get(p.category)!.push(p);
+  }
+  return Array.from(map.entries()).map(([category, items]) => ({ category, items }));
+}
+const CATEGORY_GROUPS = groupByCategory(GRID_PROJECTS);
 
 /* ════════════════════════════════════════════════════════════════ */
 export default function FeaturedShowcase() {
@@ -265,10 +258,10 @@ export default function FeaturedShowcase() {
     if (leaveTimer.current) { clearTimeout(leaveTimer.current); leaveTimer.current = null; }
   }, []);
 
-  const onCardEnter = useCallback((p: Project, e: React.MouseEvent<HTMLDivElement>) => {
+  const onCardEnter = useCallback((p: GridProject, e: React.MouseEvent<HTMLDivElement>) => {
     if (hoverTimer.current) clearTimeout(hoverTimer.current);
     const anchor = e.currentTarget;
-    hoverTimer.current = setTimeout(() => showPopup(p, anchor), 350);
+    hoverTimer.current = setTimeout(() => showPopup(p as Project, anchor), 350);
   }, [showPopup]);
 
   const onCardLeave = useCallback(() => {
@@ -287,7 +280,7 @@ export default function FeaturedShowcase() {
 
       {/* ══ HERO ════════════════════════════════════════════════ */}
       <div className="portfolio-hero">
-        <video ref={heroVideoRef} className="portfolio-hero-video" src={VIDEO_SRC} autoPlay loop muted playsInline aria-hidden="true" />
+        <video ref={heroVideoRef} className="portfolio-hero-video" src={active.videoSrc} autoPlay loop muted playsInline aria-hidden="true" />
         <div className="portfolio-hero-gradient-b" />
         <div className="portfolio-hero-gradient-l" />
         <div className="portfolio-label">
@@ -349,31 +342,28 @@ export default function FeaturedShowcase() {
             <div className="svc-grid-overlay" aria-hidden="true" />
             <p className="portfolio-featured-label">Featured Projects</p>
             <div className="portfolio-featured-row">
-              {PROJECTS.slice(0, 5).map((p) => (
+              {PROJECTS.slice(0, 6).map((p) => (
                 <FeaturedCard key={p.id} project={p} isActive={active.id === p.id} onClick={() => switchProject(p)} />
               ))}
             </div>
           </div>
 
-          {/* ══ GRID ════════════════════════════════════════════════ */}
-          <div className="portfolio-grid-wrap">
-            <div className="svc-grid-overlay" aria-hidden="true" />
-            <h3 className="portfolio-grid-heading">Portfolio</h3>
-            <div className="portfolio-grid">
-              {PROJECTS.map((p) => (
-                <GridCard
-                  key={p.id}
-                  project={p}
-                  onEnter={onCardEnter}
-                  onLeave={onCardLeave}
-                  onClick={() => openVideoOverlay(p)}
-                />
-              ))}
-            </div>
+          {/* ══ CATEGORY ROWS ═══════════════════════════════════════ */}
+          <div className="portfolio-rows-wrap">
+            {CATEGORY_GROUPS.map(({ category, items }) => (
+              <CategoryRow
+                key={category}
+                category={category}
+                projects={items}
+                onCardEnter={onCardEnter}
+                onCardLeave={onCardLeave}
+                onCardClick={(p: GridProject) => openVideoOverlay(p as Project)}
+              />
+            ))}
           </div>
         </>
       ) : (
-        <PortfolioReels projects={PROJECTS} onViewDetails={openBottomSheet} />
+        <PortfolioReels projects={PROJECTS} onViewDetails={openBottomSheet as any} />
       )}
 
       {/* ══ POPUP ═══════════════════════════════════════════════ */}
@@ -386,7 +376,7 @@ export default function FeaturedShowcase() {
           onClick={() => { hidePopup(); openVideoOverlay(popup.project); }}
           style={{ cursor: "pointer" }}
         >
-          <video src={VIDEO_SRC} autoPlay loop muted playsInline className="portfolio-popup-video" />
+          <video src={popup.project.videoSrc} autoPlay loop muted playsInline className="portfolio-popup-video" />
           <div className="portfolio-popup-scanline" aria-hidden="true" />
           <div className="portfolio-popup-fade" aria-hidden="true" />
           <div className="portfolio-popup-overlay">
@@ -425,7 +415,7 @@ export default function FeaturedShowcase() {
         <div ref={overlayBgRef} className="vo-backdrop" onClick={closeVideoOverlay} role="dialog" aria-modal="true" aria-label={videoOverlay.title}>
           <div ref={overlayBoxRef} className="vo-box" onClick={(e) => e.stopPropagation()}>
             <video
-              src={VIDEO_SRC}
+              src={videoOverlay.videoSrc}
               autoPlay
               loop
               muted
@@ -463,7 +453,7 @@ export default function FeaturedShowcase() {
 
             {/* ── video (full width, 16:9) ── */}
             <div className="bs-video-col">
-              <video src={VIDEO_SRC} autoPlay loop muted playsInline className="bs-video" />
+              <video src={bottomSheet.videoSrc} autoPlay loop muted playsInline className="bs-video" />
               <div className="bs-video-overlay" />
 
               {/* title + action btns float over gradient */}
@@ -521,7 +511,7 @@ function FeaturedCard({ project, isActive, onClick }: { project: Project; isActi
   const videoRef = useRef<HTMLVideoElement>(null);
   const onEnter = () => {
     if (!isActive) gsap.to(cardRef.current, { scale: 1.04, duration: 0.22, ease: "power4.out" });
-    videoRef.current?.play().catch(() => {});
+    if (project.videoSrc) videoRef.current?.play().catch(() => {});
   };
   const onLeave = () => {
     gsap.to(cardRef.current, { scale: 1, duration: 0.22, ease: "power4.out" });
@@ -539,7 +529,15 @@ function FeaturedCard({ project, isActive, onClick }: { project: Project; isActi
       tabIndex={0}
       aria-label={`Switch to ${project.title}`}
     >
-      <video ref={videoRef} src={VIDEO_SRC} loop muted playsInline className="portfolio-feat-video" aria-hidden="true" />
+      {project.videoSrc ? (
+        <video ref={videoRef} src={project.videoSrc} loop muted playsInline className="portfolio-feat-video" aria-hidden="true" />
+      ) : (
+        <div
+          className="portfolio-feat-video"
+          style={{ background: `linear-gradient(135deg, ${project.colorFrom}33 0%, ${project.colorTo}22 100%)` }}
+          aria-hidden="true"
+        />
+      )}
       <div className="portfolio-feat-overlay" />
       <div className="portfolio-feat-info">
         <span className="portfolio-feat-title">{project.title}</span>
@@ -549,11 +547,51 @@ function FeaturedCard({ project, isActive, onClick }: { project: Project; isActi
   );
 }
 
+/* ─── Category Row ──────────────────────────────────────────── */
+function CategoryRow({
+  category,
+  projects,
+  onCardEnter,
+  onCardLeave,
+  onCardClick,
+}: {
+  category: string;
+  projects: GridProject[];
+  onCardEnter: (p: GridProject, e: React.MouseEvent<HTMLDivElement>) => void;
+  onCardLeave: () => void;
+  onCardClick: (p: GridProject) => void;
+}) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const scroll = (dir: -1 | 1) => {
+    scrollRef.current?.scrollBy({ left: dir * 900, behavior: "smooth" });
+  };
+  return (
+    <div className="portfolio-row">
+      <span className="portfolio-row-label">{category}</span>
+      <div className="portfolio-row-track-wrap">
+        <button type="button" className="portfolio-row-arrow portfolio-row-arrow--left" onClick={() => scroll(-1)} aria-label="Scroll left">‹</button>
+        <div ref={scrollRef} className="portfolio-row-track">
+          {projects.map((p) => (
+            <GridCard
+              key={p.id}
+              project={p}
+              onEnter={onCardEnter}
+              onLeave={onCardLeave}
+              onClick={() => onCardClick(p)}
+            />
+          ))}
+        </div>
+        <button type="button" className="portfolio-row-arrow portfolio-row-arrow--right" onClick={() => scroll(1)} aria-label="Scroll right">›</button>
+      </div>
+    </div>
+  );
+}
+
 /* ─── Grid Card ─────────────────────────────────────────────── */
-function GridCard({ project, onEnter, onLeave, onClick }: { project: Project; onEnter: (p: Project, e: React.MouseEvent<HTMLDivElement>) => void; onLeave: () => void; onClick: () => void }) {
+function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject; onEnter: (p: GridProject, e: React.MouseEvent<HTMLDivElement>) => void; onLeave: () => void; onClick: () => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const handleEnter = (e: React.MouseEvent<HTMLDivElement>) => {
-    videoRef.current?.play().catch(() => {});
+    if (project.videoSrc) videoRef.current?.play().catch(() => {});
     onEnter(project, e);
   };
   const handleLeave = () => {
@@ -570,8 +608,21 @@ function GridCard({ project, onEnter, onLeave, onClick }: { project: Project; on
       tabIndex={0}
       aria-label={`Play ${project.title}`}
     >
-      <video ref={videoRef} src={VIDEO_SRC} loop muted playsInline className="portfolio-grid-video" aria-hidden="true" />
-      <div className="portfolio-grid-overlay" />
+      <div className="portfolio-grid-card-inner">
+        {project.videoSrc ? (
+          <video ref={videoRef} src={project.videoSrc} loop muted playsInline className="portfolio-grid-video" aria-hidden="true" />
+        ) : (
+          <div
+            className="portfolio-grid-video"
+            style={{
+              background: `linear-gradient(135deg, ${project.colorFrom}44 0%, ${project.colorTo}33 100%)`,
+              opacity: 0.7,
+            }}
+            aria-hidden="true"
+          />
+        )}
+        <div className="portfolio-grid-overlay" />
+      </div>
       <span className="portfolio-grid-year">{project.year}</span>
       <div className="portfolio-grid-info">
         <span className="portfolio-grid-title">{project.title}</span>

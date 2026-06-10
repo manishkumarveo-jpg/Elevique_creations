@@ -58,8 +58,8 @@ export default function ContactSection() {
                 </div>
                 <div className="ct-detail-content">
                   <h3 className="ct-detail-title">Ready for some coffee?</h3>
-                  <span className="ct-detail-text">401 Broadway, 24th floor</span>
-                  <span className="ct-detail-text">Church View, London</span>
+                  <span className="ct-detail-text">Elevique Creation</span>
+                  <span className="ct-detail-text">Vishwakarma colony, Pul Pehladpur ,New delhi 110044</span>
                 </div>
               </li>
 
@@ -70,8 +70,8 @@ export default function ContactSection() {
                 </div>
                 <div className="ct-detail-content">
                   <h3 className="ct-detail-title">Don&apos;t hesitate to reach out!</h3>
-                  <span className="ct-detail-text">Phone : 310-2568-4578</span>
-                  <span className="ct-detail-text">Fax : 310-1298-4836</span>
+                  <span className="ct-detail-text">Phone : +91 7217832613</span>
+
                 </div>
               </li>
 
