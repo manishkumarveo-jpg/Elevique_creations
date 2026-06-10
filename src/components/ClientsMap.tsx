@@ -51,6 +51,7 @@ export default function ClientsMap() {
   const svgRef       = useRef<SVGSVGElement>(null);
   const wrapRef      = useRef<HTMLDivElement>(null);
   const [states,  setStates]  = useState<StateFeature[]>([]);
+  const [countryOutline, setCountryOutline] = useState<GeoJSON.Geometry | null>(null);
   const [markers, setMarkers] = useState<{ client: Client; cx: number; cy: number }[]>([]);
   const [tooltip, setTooltip] = useState<Tooltip | null>(null);
   const [noMotion, setNoMotion] = useState(false);
@@ -90,7 +91,12 @@ export default function ClientsMap() {
           });
         });
 
-        if (!dead) setStates(features);
+        const dissolvedCountry = topojson.merge(topo, col.geometries as Parameters<typeof topojson.merge>[1]);
+
+        if (!dead) {
+          setStates(features);
+          setCountryOutline(dissolvedCountry);
+        }
       } catch (e) {
         console.error("ClientsMap: fetch failed", e);
       }
@@ -119,12 +125,12 @@ export default function ClientsMap() {
       const el = document.createElementNS("http://www.w3.org/2000/svg", "path");
       el.setAttribute("d", d);
       el.setAttribute("fill",   cli ? "#141210" : hashFill(feat.properties.st_nm));
-      el.setAttribute("stroke", cli ? "rgba(20,184,166,.5)" : "rgba(255,255,255,.08)");
-      el.setAttribute("stroke-width", cli ? "1.2" : "0.8");
+      el.setAttribute("stroke", cli ? "rgba(20,184,166,.65)" : "rgba(255,255,255,.18)");
+      el.setAttribute("stroke-width", cli ? "1.6" : "1.2");
+      el.setAttribute("class", cli ? "cm-state cm-state--active" : "cm-state");
       el.setAttribute("vector-effect", "non-scaling-stroke");
       if (cli) {
         el.setAttribute("data-client", cli.match);
-        el.setAttribute("style", "cursor:pointer;transition:fill .25s");
       }
       g.appendChild(el);
 
@@ -134,8 +140,19 @@ export default function ClientsMap() {
       }
     });
 
+    // Draw the bold outer outline of the entire country
+    if (countryOutline) {
+      const d = path({ type: "Feature", properties: {}, geometry: countryOutline } as unknown as GeoJSON.Feature) ?? "";
+      const el = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      el.setAttribute("d", d);
+      el.setAttribute("class", "cm-country-outline");
+      el.setAttribute("fill", "none");
+      el.setAttribute("vector-effect", "non-scaling-stroke");
+      g.appendChild(el);
+    }
+
     setMarkers(newMarkers);
-  }, [states]); // eslint-disable-line
+  }, [states, countryOutline]); // eslint-disable-line
 
   /* tooltip */
   const moveTip = useCallback((e: React.MouseEvent, cli: Client) => {

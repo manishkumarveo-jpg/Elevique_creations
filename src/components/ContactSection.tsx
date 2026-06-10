@@ -8,6 +8,7 @@ export default function ContactSection() {
   const [formState, setFormState] = useState({
     name: "",
     email: "",
+    phone: "",
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -26,7 +27,7 @@ export default function ContactSection() {
       const data = await res.json();
       if (!data.ok) throw new Error(data.error || "Failed to send");
       setIsSent(true);
-      setFormState({ name: "", email: "", message: "" });
+      setFormState({ name: "", email: "", phone: "", message: "" });
     } catch (err) {
       alert("Failed to send message. Please try again.");
       console.error(err);
@@ -140,6 +141,17 @@ export default function ContactSection() {
                     placeholder="Enter your email here..."
                     value={formState.email}
                     onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                  />
+                </div>
+
+                <div className="ct-field">
+                  <label htmlFor="phoneNumber">Phone Number</label>
+                  <input
+                    id="phoneNumber"
+                    type="tel"
+                    placeholder="Enter your phone number here..."
+                    value={formState.phone}
+                    onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
                   />
                 </div>
 

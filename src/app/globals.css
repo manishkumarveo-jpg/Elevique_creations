@@ -2045,7 +2045,7 @@ body {
   position: absolute !important;
   top: 52% !important;
   left: 50% !important;
-  transform: translate(-50%, -50%) !important;
+  transform: translate(-50%, -50%) scale(1.35) !important;
   width: 100% !important;
   height: 100px !important;
   display: flex !important;
@@ -2616,14 +2616,14 @@ body {
 
 /* Responsive Scaling to prevent overlap on smaller screens */
 @media (max-width: 768px) {
-  .svc-front-animation {
-    transform: translate(-50%, -50%) scale(0.85);
+  .svc-card--front > .svc-front-animation {
+    transform: translate(-50%, -50%) scale(1.1) !important;
   }
 }
 @media (max-width: 480px) {
-  .svc-front-animation {
-    transform: translate(-50%, -50%) scale(0.75);
-    top: 53%;
+  .svc-card--front > .svc-front-animation {
+    transform: translate(-50%, -50%) scale(0.9) !important;
+    top: 53% !important;
   }
 }
 
@@ -2892,10 +2892,35 @@ body {
   -webkit-mask-image: radial-gradient(ellipse 85% 85% at 50% 50%, black 55%, transparent 100%);
 }
 
-/* highlighted state hover */
-.cm-paths path[data-client]:hover {
-  fill: #1f1a16 !important;
+/* state path styling and hover effects */
+.cm-paths .cm-state {
+  transition: fill 0.35s ease, stroke 0.35s ease;
+  cursor: pointer;
 }
+
+.cm-paths .cm-state:hover {
+  stroke: rgba(255, 255, 255, 0.45) !important;
+  fill: rgba(255, 255, 255, 0.04) !important;
+}
+
+/* highlighted state hover */
+.cm-paths .cm-state--active {
+  cursor: pointer;
+}
+
+.cm-paths .cm-state--active:hover {
+  fill: #1f1a16 !important;
+  stroke: rgba(20, 184, 166, 0.95) !important;
+}
+
+/* bold glowing outer boundary of India */
+.cm-paths .cm-country-outline {
+  stroke: rgba(20, 184, 166, 0.65);
+  stroke-width: 2.2;
+  filter: drop-shadow(0 0 5px rgba(20, 184, 166, 0.45));
+  pointer-events: none;
+}
+
 
 /* ── Pin pulse animations ─────────────────────────────────────── */
 @keyframes cm-ping {
