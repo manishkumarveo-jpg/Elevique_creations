@@ -616,12 +616,8 @@ function FeaturedCard({ project, isActive, onClick }: { project: Project; isActi
       type="button"
       className={`portfolio-feat-card${isActive ? " portfolio-feat-card--active" : ""}`}
       style={{
-        border: "none",
         background: "transparent",
         padding: 0,
-        textAlign: "left",
-        display: "block",
-        width: "100%",
         cursor: "pointer",
         ...(isActive ? { boxShadow: `0 0 18px 2px ${project.colorFrom}8C`, borderColor: project.colorFrom } : {})
       }}
@@ -704,7 +700,7 @@ function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject
     <button
       type="button"
       className="portfolio-grid-card"
-      style={{ border: "none", background: "transparent", padding: 0, textAlign: "left", display: "block", width: "100%", cursor: "pointer" }}
+      style={{ border: "none", background: "transparent", padding: 0, cursor: "pointer" }}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
       onClick={onClick}
