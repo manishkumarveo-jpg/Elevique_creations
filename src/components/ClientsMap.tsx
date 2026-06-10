@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import * as d3Geo from "d3-geo";
 import * as topojson from "topojson-client";
 import type { Topology, GeometryCollection } from "topojson-specification";
@@ -44,40 +44,34 @@ interface StateFeature {
 }
 interface Tooltip { x: number; y: number; client: Client }
 
-/* ── Hydration-Safe prefers-reduced-motion Store ────────────── */
-const motionSubscribe = (callback: () => void) => {
-  const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-  mq.addEventListener("change", callback);
-  return () => mq.removeEventListener("change", callback);
-};
-const motionSnapshot = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const motionServerSnapshot = () => false;
-
-/* Helper to isolate fetch call from raw useEffect direct execution */
-const fetchMapData = async (url: string): Promise<Topology> => {
-  const res = await fetch(url);
-  return res.json();
-};
-
 /* ─────────────────────────────────────────────────────────────────
    COMPONENT
    ───────────────────────────────────────────────────────────────── */
 export default function ClientsMap() {
   const svgRef       = useRef<SVGSVGElement>(null);
   const wrapRef      = useRef<HTMLDivElement>(null);
+  const [states,  setStates]  = useState<StateFeature[]>([]);
+  const [countryOutline, setCountryOutline] = useState<GeoJSON.Geometry | null>(null);
   const [markers, setMarkers] = useState<{ client: Client; cx: number; cy: number }[]>([]);
   const [tooltip, setTooltip] = useState<Tooltip | null>(null);
+  const [noMotion, setNoMotion] = useState(false);
   const [focused,  setFocused]  = useState<number | null>(null);
 
-  /* prefers-reduced-motion subscription */
-  const noMotion = useSyncExternalStore(motionSubscribe, motionSnapshot, motionServerSnapshot);
+  /* prefers-reduced-motion */
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setNoMotion(mq.matches);
+    const h = (e: MediaQueryListEvent) => setNoMotion(e.matches);
+    mq.addEventListener("change", h);
+    return () => mq.removeEventListener("change", h);
+  }, []);
 
-  /* fetch TopoJSON → dissolve districts → state features → render SVG paths + compute centroids */
+  /* fetch TopoJSON → dissolve districts → state features */
   useEffect(() => {
     let dead = false;
     (async () => {
       try {
-        const topo = await fetchMapData(TOPO_URL);
+        const topo = (await (await fetch(TOPO_URL)).json()) as Topology;
         const key  = Object.keys(topo.objects)[0];
         const col  = topo.objects[key] as GeometryCollection<{ st_nm: string }>;
 
@@ -99,59 +93,66 @@ export default function ClientsMap() {
 
         const dissolvedCountry = topojson.merge(topo, col.geometries as Parameters<typeof topojson.merge>[1]);
 
-        if (dead || !svgRef.current) return;
-
-        // Setup projection and path builder
-        const fc: GeoJSON.FeatureCollection = { type: "FeatureCollection", features };
-        const proj = d3Geo.geoMercator().fitExtent([[44, 44], [VIEWBOX_W - 44, VIEWBOX_H - 64]], fc);
-        const path = d3Geo.geoPath().projection(proj);
-
-        const g = svgRef.current.querySelector(".cm-paths")!;
-        g.innerHTML = "";
-
-        const newMarkers: typeof markers = [];
-
-        features.forEach((feat) => {
-          const nm  = feat.properties.st_nm.toLowerCase();
-          const cli = CLIENTS.find((c) => nm.includes(c.match));
-          const d   = path(feat as unknown as GeoJSON.Feature) ?? "";
-
-          const el = document.createElementNS("http://www.w3.org/2000/svg", "path");
-          el.setAttribute("d", d);
-          el.setAttribute("fill",   cli ? "#141210" : hashFill(feat.properties.st_nm));
-          el.setAttribute("stroke", cli ? "rgba(20,184,166,.65)" : "rgba(255,255,255,.18)");
-          el.setAttribute("stroke-width", cli ? "1.6" : "1.2");
-          el.setAttribute("class", cli ? "cm-state cm-state--active" : "cm-state");
-          el.setAttribute("vector-effect", "non-scaling-stroke");
-          if (cli) {
-            el.setAttribute("data-client", cli.match);
-          }
-          g.appendChild(el);
-
-          if (cli) {
-            const c = path.centroid(feat as unknown as GeoJSON.Feature);
-            if (c && !isNaN(c[0])) newMarkers.push({ client: cli, cx: c[0], cy: c[1] });
-          }
-        });
-
-        // Draw the bold outer outline of the entire country
-        if (dissolvedCountry) {
-          const d = path({ type: "Feature", properties: {}, geometry: dissolvedCountry } as unknown as GeoJSON.Feature) ?? "";
-          const el = document.createElementNS("http://www.w3.org/2000/svg", "path");
-          el.setAttribute("d", d);
-          el.setAttribute("class", "cm-country-outline");
-          el.setAttribute("fill", "none");
-          el.setAttribute("vector-effect", "non-scaling-stroke");
-          g.appendChild(el);
+        if (!dead) {
+          setStates(features);
+          setCountryOutline(dissolvedCountry);
         }
-
-        setMarkers(newMarkers);
       } catch (e) {
-        console.error("ClientsMap: fetch or render failed", e);
+        console.error("ClientsMap: fetch failed", e);
       }
     })();
     return () => { dead = true; };
   }, []);
+
+  /* render SVG paths + compute centroids */
+  useEffect(() => {
+    if (!states.length || !svgRef.current) return;
+
+    const fc: GeoJSON.FeatureCollection = { type: "FeatureCollection", features: states };
+    const proj = d3Geo.geoMercator().fitExtent([[44, 44], [VIEWBOX_W - 44, VIEWBOX_H - 64]], fc);
+    const path = d3Geo.geoPath().projection(proj);
+
+    const g = svgRef.current.querySelector(".cm-paths")!;
+    g.innerHTML = "";
+
+    const newMarkers: typeof markers = [];
+
+    states.forEach((feat) => {
+      const nm  = feat.properties.st_nm.toLowerCase();
+      const cli = CLIENTS.find((c) => nm.includes(c.match));
+      const d   = path(feat as unknown as GeoJSON.Feature) ?? "";
+
+      const el = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      el.setAttribute("d", d);
+      el.setAttribute("fill",   cli ? "#141210" : hashFill(feat.properties.st_nm));
+      el.setAttribute("stroke", cli ? "rgba(20,184,166,.65)" : "rgba(255,255,255,.18)");
+      el.setAttribute("stroke-width", cli ? "1.6" : "1.2");
+      el.setAttribute("class", cli ? "cm-state cm-state--active" : "cm-state");
+      el.setAttribute("vector-effect", "non-scaling-stroke");
+      if (cli) {
+        el.setAttribute("data-client", cli.match);
+      }
+      g.appendChild(el);
+
+      if (cli) {
+        const c = path.centroid(feat as unknown as GeoJSON.Feature);
+        if (c && !isNaN(c[0])) newMarkers.push({ client: cli, cx: c[0], cy: c[1] });
+      }
+    });
+
+    // Draw the bold outer outline of the entire country
+    if (countryOutline) {
+      const d = path({ type: "Feature", properties: {}, geometry: countryOutline } as unknown as GeoJSON.Feature) ?? "";
+      const el = document.createElementNS("http://www.w3.org/2000/svg", "path");
+      el.setAttribute("d", d);
+      el.setAttribute("class", "cm-country-outline");
+      el.setAttribute("fill", "none");
+      el.setAttribute("vector-effect", "non-scaling-stroke");
+      g.appendChild(el);
+    }
+
+    setMarkers(newMarkers);
+  }, [states, countryOutline]); // eslint-disable-line
 
   /* tooltip */
   const moveTip = useCallback((e: React.MouseEvent, cli: Client) => {
@@ -188,9 +189,9 @@ export default function ClientsMap() {
         </p>
 
         {/* client list */}
-        <ul className="cm-list" aria-label="Client list">
+        <ul className="cm-list" aria-label="Client list" role="list">
           {CLIENTS.map((c) => (
-            <li key={c.match} className="cm-item">
+            <li key={c.match} className="cm-item" role="listitem">
               <span className="cm-dot" aria-hidden="true" />
               <span className="cm-name">{c.name}</span>
               <span className="cm-city-sep" aria-hidden="true">·</span>
@@ -241,7 +242,7 @@ export default function ClientsMap() {
               }}
               onBlur={() => { setFocused(null); hideTip(); }}
               onKeyDown={(e) => { if (e.key === "Escape") { hideTip(); (e.currentTarget as unknown as SVGElement & { blur(): void }).blur(); } }}
-              style={{ cursor: "pointer" }}
+              style={{ cursor: "pointer", outline: "none" }}
             >
               {/* pulsing rings */}
               {!noMotion && <>

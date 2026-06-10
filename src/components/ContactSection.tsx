@@ -51,9 +51,9 @@ export default function ContactSection() {
               Let’s create your ideas into reality
             </h2>
 
-            <ul className="ct-details">
+            <ul className="ct-details" role="list">
               {/* Ready for coffee */}
-              <li className="ct-detail">
+              <li className="ct-detail" role="listitem">
                 <div className="ct-detail-icon">
                   <MessageSquareMore size={20} strokeWidth={1.5} />
                 </div>
@@ -65,7 +65,7 @@ export default function ContactSection() {
               </li>
 
               {/* Don't hesitate to reach out */}
-              <li className="ct-detail">
+              <li className="ct-detail" role="listitem">
                 <div className="ct-detail-icon">
                   <Phone size={20} strokeWidth={1.5} />
                 </div>
@@ -77,7 +77,7 @@ export default function ContactSection() {
               </li>
 
               {/* How can we assist */}
-              <li className="ct-detail">
+              <li className="ct-detail" role="listitem">
                 <div className="ct-detail-icon">
                   <Mail size={20} strokeWidth={1.5} />
                 </div>
