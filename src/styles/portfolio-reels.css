@@ -8,6 +8,24 @@
   z-index: 10;
 }
 
+.portfolio-view-toggle-wrap.hero-toggle-overlay {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  z-index: 15;
+}
+
+@media (max-width: 768px) {
+  .portfolio-view-toggle-wrap.hero-toggle-overlay {
+    bottom: 1.5rem;
+  }
+  .portfolio-hero-content {
+    padding-bottom: 7.5rem !important;
+  }
+}
+
 .portfolio-view-toggle {
   display: inline-flex;
   background: rgba(255, 255, 255, 0.03);

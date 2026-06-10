@@ -145,6 +145,13 @@ export default function FeaturedShowcase() {
   /* ── Hero video transition ──────────────────────────────────── */
   const switchProject = useCallback((p: Project) => {
     if (!heroVideoRef.current) return;
+
+    // Smoothly scroll back up to the main video player
+    const heroEl = document.querySelector(".portfolio-hero");
+    if (heroEl) {
+      heroEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
     gsap.to(heroVideoRef.current, {
       opacity: 0, scale: 1.04, filter: "blur(10px)",
       duration: 0.25, ease: "power2.in",
@@ -157,6 +164,19 @@ export default function FeaturedShowcase() {
       },
     });
   }, []);
+
+  /* ── Scroll to Reels Section on view change ─────────────────── */
+  useEffect(() => {
+    if (viewMode === "reels") {
+      const timer = setTimeout(() => {
+        const el = document.querySelector(".reels-feed-section");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [viewMode]);
 
   /* ══ VIDEO OVERLAY ══════════════════════════════════════════════ */
   const openVideoOverlay = useCallback((p: Project) => {
@@ -304,34 +324,34 @@ export default function FeaturedShowcase() {
             </button>
           </div>
         </div>
-      </div>
 
-      {/* ══ VIEW TOGGLE ══════════════════════════════════════════ */}
-      <div className="portfolio-view-toggle-wrap">
-        <div className="portfolio-view-toggle">
-          <button
-            type="button"
-            className={`portfolio-toggle-btn${viewMode === "grid" ? " active" : ""}`}
-            onClick={() => setViewMode("grid")}
-            style={{ width: "130px", justifyContent: "center" }}
-          >
-            Grid Showcase
-          </button>
-          <button
-            type="button"
-            className={`portfolio-toggle-btn${viewMode === "reels" ? " active" : ""}`}
-            onClick={() => setViewMode("reels")}
-            style={{ width: "130px", justifyContent: "center" }}
-          >
-            Reels Feed
-          </button>
-          <div
-            className="portfolio-toggle-pill"
-            style={{
-              width: "130px",
-              transform: viewMode === "grid" ? "translateX(0)" : "translateX(130px)",
-            }}
-          />
+        {/* ══ VIEW TOGGLE ══════════════════════════════════════════ */}
+        <div className="portfolio-view-toggle-wrap hero-toggle-overlay">
+          <div className="portfolio-view-toggle">
+            <button
+              type="button"
+              className={`portfolio-toggle-btn${viewMode === "grid" ? " active" : ""}`}
+              onClick={() => setViewMode("grid")}
+              style={{ width: "130px", justifyContent: "center" }}
+            >
+              Grid Showcase
+            </button>
+            <button
+              type="button"
+              className={`portfolio-toggle-btn${viewMode === "reels" ? " active" : ""}`}
+              onClick={() => setViewMode("reels")}
+              style={{ width: "130px", justifyContent: "center" }}
+            >
+              Reels Feed
+            </button>
+            <div
+              className="portfolio-toggle-pill"
+              style={{
+                width: "130px",
+                transform: viewMode === "grid" ? "translateX(0)" : "translateX(130px)",
+              }}
+            />
+          </div>
         </div>
       </div>
 
