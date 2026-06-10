@@ -119,6 +119,17 @@ function groupByCategory(projects: GridProject[]) {
 }
 const CATEGORY_GROUPS = groupByCategory(GRID_PROJECTS);
 
+const VO_BACKDROP_CLICK_STYLE = {
+  position: "absolute",
+  inset: 0,
+  background: "transparent",
+  border: "none",
+  cursor: "pointer",
+  width: "100%",
+  height: "100%",
+  zIndex: 1,
+} as const;
+
 /* ════════════════════════════════════════════════════════════════ */
 export default function FeaturedShowcase() {
   const [viewMode, setViewMode]         = useState<"grid" | "reels">("grid");
@@ -131,12 +142,12 @@ export default function FeaturedShowcase() {
   const popupRef      = useRef<HTMLDivElement>(null);
 
   /* overlay refs */
-  const overlayBgRef  = useRef<HTMLDivElement>(null);
+  const overlayBgRef  = useRef<HTMLDialogElement>(null);
   const overlayBoxRef = useRef<HTMLDivElement>(null);
 
   /* bottom sheet refs */
   const sheetBgRef    = useRef<HTMLDivElement>(null);
-  const sheetPanelRef = useRef<HTMLDivElement>(null);
+  const sheetPanelRef = useRef<HTMLDialogElement>(null);
 
   const hoverTimer            = useRef<ReturnType<typeof setTimeout> | null>(null);
   const leaveTimer            = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -230,16 +241,37 @@ export default function FeaturedShowcase() {
     });
   }, []);
 
+  const videoOverlayRef = useRef(videoOverlay);
+  const bottomSheetRef = useRef(bottomSheet);
+  const closeVideoOverlayRef = useRef(closeVideoOverlay);
+  const closeBottomSheetRef = useRef(closeBottomSheet);
+
+  useEffect(() => {
+    videoOverlayRef.current = videoOverlay;
+  }, [videoOverlay]);
+
+  useEffect(() => {
+    bottomSheetRef.current = bottomSheet;
+  }, [bottomSheet]);
+
+  useEffect(() => {
+    closeVideoOverlayRef.current = closeVideoOverlay;
+  }, [closeVideoOverlay]);
+
+  useEffect(() => {
+    closeBottomSheetRef.current = closeBottomSheet;
+  }, [closeBottomSheet]);
+
   /* ── Escape key ─────────────────────────────────────────────── */
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
-      if (videoOverlay) closeVideoOverlay();
-      else if (bottomSheet) closeBottomSheet();
+      if (videoOverlayRef.current) closeVideoOverlayRef.current();
+      else if (bottomSheetRef.current) closeBottomSheetRef.current();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [videoOverlay, bottomSheet, closeVideoOverlay, closeBottomSheet]);
+  }, []);
 
   /* ══ POPUP ══════════════════════════════════════════════════════ */
   const showPopup = useCallback((p: Project, anchor: HTMLElement) => {
@@ -300,7 +332,7 @@ export default function FeaturedShowcase() {
 
       {/* ══ HERO ════════════════════════════════════════════════ */}
       <div className="portfolio-hero">
-        <video ref={heroVideoRef} className="portfolio-hero-video" src={active.videoSrc} autoPlay loop muted playsInline aria-hidden="true" />
+        <video ref={heroVideoRef} className="portfolio-hero-video" src={active.videoSrc} autoPlay loop muted playsInline aria-hidden="true" tabIndex={-1} />
         <div className="portfolio-hero-gradient-b" />
         <div className="portfolio-hero-gradient-l" />
         <div className="portfolio-label">
@@ -394,9 +426,19 @@ export default function FeaturedShowcase() {
           onMouseEnter={cancelHide}
           onMouseLeave={scheduleHide}
           onClick={() => { hidePopup(); openVideoOverlay(popup.project); }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              if (e.key === " ") e.preventDefault();
+              hidePopup();
+              openVideoOverlay(popup.project);
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label={`View details for ${popup.project.title}`}
           style={{ cursor: "pointer" }}
         >
-          <video src={popup.project.videoSrc} autoPlay loop muted playsInline className="portfolio-popup-video" />
+          <video src={popup.project.videoSrc} autoPlay loop muted playsInline className="portfolio-popup-video" aria-label={`${popup.project.title} video preview`} />
           <div className="portfolio-popup-scanline" aria-hidden="true" />
           <div className="portfolio-popup-fade" aria-hidden="true" />
           <div className="portfolio-popup-overlay">
@@ -432,8 +474,23 @@ export default function FeaturedShowcase() {
 
       {/* ══ VIDEO OVERLAY (full viewport) ════════════════════════ */}
       {videoOverlay && (
-        <div ref={overlayBgRef} className="vo-backdrop" onClick={closeVideoOverlay} role="dialog" aria-modal="true" aria-label={videoOverlay.title}>
-          <div ref={overlayBoxRef} className="vo-box" onClick={(e) => e.stopPropagation()}>
+        <dialog
+          ref={overlayBgRef}
+          className="vo-backdrop"
+          open
+          aria-modal="true"
+          aria-label={videoOverlay.title}
+          tabIndex={-1}
+          style={{ display: "flex", border: "none", background: "rgba(0, 0, 0, 0.96)", padding: 0 }}
+        >
+          <button
+            type="button"
+            className="vo-backdrop-click"
+            onClick={closeVideoOverlay}
+            aria-label="Close film overlay"
+            style={VO_BACKDROP_CLICK_STYLE}
+          />
+          <div ref={overlayBoxRef} className="vo-box" onClick={(e) => e.stopPropagation()} style={{ zIndex: 2 }}>
             <video
               src={videoOverlay.videoSrc}
               autoPlay
@@ -441,6 +498,7 @@ export default function FeaturedShowcase() {
               muted
               playsInline
               className="vo-video"
+              aria-label={`${videoOverlay.title} full film`}
             />
 
             {/* bottom info bar */}
@@ -457,14 +515,29 @@ export default function FeaturedShowcase() {
               <X size={20} />
             </button>
           </div>
-        </div>
+        </dialog>
       )}
 
       {/* ══ BOTTOM SHEET (Netflix-style centered modal) ══════════ */}
       {bottomSheet && (
         <>
-          <div ref={sheetBgRef} className="bs-backdrop" onClick={closeBottomSheet} aria-hidden="true" />
-          <div ref={sheetPanelRef} className="bs-panel" role="dialog" aria-modal="true" aria-label={bottomSheet.title}>
+          <button
+            ref={sheetBgRef as any}
+            type="button"
+            className="bs-backdrop"
+            onClick={closeBottomSheet}
+            aria-label="Close details dialog"
+            style={{ border: "none", padding: 0 }}
+          />
+          <dialog
+            ref={sheetPanelRef}
+            className="bs-panel"
+            open
+            aria-modal="true"
+            aria-label={bottomSheet.title}
+            tabIndex={-1}
+            style={{ border: "none", padding: 0 }}
+          >
 
             {/* close — top-right over video */}
             <button type="button" className="bs-close" onClick={closeBottomSheet} aria-label="Close">
@@ -473,7 +546,7 @@ export default function FeaturedShowcase() {
 
             {/* ── video (full width, 16:9) ── */}
             <div className="bs-video-col">
-              <video src={bottomSheet.videoSrc} autoPlay loop muted playsInline className="bs-video" />
+              <video src={bottomSheet.videoSrc} autoPlay loop muted playsInline className="bs-video" aria-label={`${bottomSheet.title} highlight video`} />
               <div className="bs-video-overlay" />
 
               {/* title + action btns float over gradient */}
@@ -483,7 +556,7 @@ export default function FeaturedShowcase() {
                   <button
                     type="button"
                     className="portfolio-btn-primary"
-                    style={{ fontSize: "0.6rem", padding: "8px 16px" }}
+                    style={{ fontSize: "0.75rem", padding: "8px 16px" }}
                     onClick={() => { closeBottomSheet(); openVideoOverlay(bottomSheet); }}
                   >
                     <Play size={12} fill="currentColor" />
@@ -512,13 +585,13 @@ export default function FeaturedShowcase() {
               </div>
 
               <div className="bs-actions">
-                <button type="button" className="portfolio-btn-ghost" style={{ fontSize: "0.6rem" }}>
+                <button type="button" className="portfolio-btn-ghost" style={{ fontSize: "0.75rem" }}>
                   <ExternalLink size={13} />
                   Case Study
                 </button>
               </div>
             </div>
-          </div>
+          </dialog>
         </>
       )}
     </section>
@@ -538,20 +611,28 @@ function FeaturedCard({ project, isActive, onClick }: { project: Project; isActi
     videoRef.current?.pause();
   };
   return (
-    <div
-      ref={cardRef}
+    <button
+      ref={cardRef as any}
+      type="button"
       className={`portfolio-feat-card${isActive ? " portfolio-feat-card--active" : ""}`}
-      style={isActive ? { boxShadow: `0 0 18px 2px ${project.colorFrom}8C`, borderColor: project.colorFrom } : {}}
+      style={{
+        border: "none",
+        background: "transparent",
+        padding: 0,
+        textAlign: "left",
+        display: "block",
+        width: "100%",
+        cursor: "pointer",
+        ...(isActive ? { boxShadow: `0 0 18px 2px ${project.colorFrom}8C`, borderColor: project.colorFrom } : {})
+      }}
       onClick={onClick}
       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { if (e.key === " ") e.preventDefault(); onClick(); } }}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
-      role="button"
-      tabIndex={0}
       aria-label={`Switch to ${project.title}`}
     >
       {project.videoSrc ? (
-        <video ref={videoRef} src={project.videoSrc} loop muted playsInline className="portfolio-feat-video" aria-hidden="true" />
+        <video ref={videoRef} src={project.videoSrc} loop muted playsInline className="portfolio-feat-video" aria-hidden="true" tabIndex={-1} />
       ) : (
         <div
           className="portfolio-feat-video"
@@ -564,7 +645,7 @@ function FeaturedCard({ project, isActive, onClick }: { project: Project; isActi
         <span className="portfolio-feat-title">{project.title}</span>
         <span className="portfolio-feat-category">{project.category.toUpperCase()}</span>
       </div>
-    </div>
+    </button>
   );
 }
 
@@ -611,28 +692,28 @@ function CategoryRow({
 /* ─── Grid Card ─────────────────────────────────────────────── */
 function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject; onEnter: (p: GridProject, e: React.MouseEvent<HTMLDivElement>) => void; onLeave: () => void; onClick: () => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const handleEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (project.videoSrc) videoRef.current?.play().catch(() => {});
-    onEnter(project, e);
+    onEnter(project, e as any);
   };
   const handleLeave = () => {
     videoRef.current?.pause();
     onLeave();
   };
   return (
-    <div
+    <button
+      type="button"
       className="portfolio-grid-card"
+      style={{ border: "none", background: "transparent", padding: 0, textAlign: "left", display: "block", width: "100%", cursor: "pointer" }}
       onMouseEnter={handleEnter}
       onMouseLeave={handleLeave}
       onClick={onClick}
       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { if (e.key === " ") e.preventDefault(); onClick(); } }}
-      role="button"
-      tabIndex={0}
       aria-label={`Play ${project.title}`}
     >
       <div className="portfolio-grid-card-inner">
         {project.videoSrc ? (
-          <video ref={videoRef} src={project.videoSrc} loop muted playsInline className="portfolio-grid-video" aria-hidden="true" />
+          <video ref={videoRef} src={project.videoSrc} loop muted playsInline className="portfolio-grid-video" aria-hidden="true" tabIndex={-1} />
         ) : (
           <div
             className="portfolio-grid-video"
@@ -650,6 +731,6 @@ function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject
         <span className="portfolio-grid-title">{project.title}</span>
         <span className="portfolio-grid-category">{project.category.toUpperCase()}</span>
       </div>
-    </div>
+    </button>
   );
 }

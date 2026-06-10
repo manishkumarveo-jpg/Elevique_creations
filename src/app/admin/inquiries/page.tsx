@@ -5,6 +5,30 @@ import { Mail, Phone, Calendar, MessageSquare } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
+const MIGRATION_PRE_STYLE = {
+  background: "rgba(0,0,0,0.3)",
+  padding: "1rem",
+  borderRadius: "8px",
+  marginTop: "1rem",
+  fontSize: "0.8rem",
+  overflowX: "auto",
+  color: "#ff6b35",
+  border: "1px solid rgba(255,255,255,0.08)",
+} as const;
+
+const EMPTY_STATE_STYLE = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: "5rem 2rem",
+  background: "rgba(255,255,255,0.02)",
+  border: "1px dashed rgba(255,255,255,0.08)",
+  borderRadius: "16px",
+  textAlign: "center",
+  gap: "1rem",
+} as const;
+
 export default async function AdminInquiriesPage() {
   const supabase = await createServerClient();
   let submissions: any[] = [];
@@ -36,18 +60,7 @@ export default async function AdminInquiriesPage() {
             The contact submissions table does not exist or has not been configured yet.
             Please apply the SQL migration in your Supabase SQL Editor first:
           </p>
-          <pre
-            style={{
-              background: "rgba(0,0,0,0.3)",
-              padding: "1rem",
-              borderRadius: "8px",
-              marginTop: "1rem",
-              fontSize: "0.8rem",
-              overflowX: "auto",
-              color: "#ff6b35",
-              border: "1px solid rgba(255,255,255,0.08)",
-            }}
-          >
+          <pre style={MIGRATION_PRE_STYLE}>
             supabase/migrations/20260610_19_contact_submissions.sql
           </pre>
         </div>
@@ -66,20 +79,7 @@ export default async function AdminInquiriesPage() {
       </div>
 
       {submissions.length === 0 ? (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "5rem 2rem",
-            background: "rgba(255,255,255,0.02)",
-            border: "1px dashed rgba(255,255,255,0.08)",
-            borderRadius: "16px",
-            textAlign: "center",
-            gap: "1rem",
-          }}
-        >
+        <div style={EMPTY_STATE_STYLE}>
           <MessageSquare size={40} style={{ opacity: 0.3, color: "var(--p-t3)" }} />
           <div>
             <h3 style={{ color: "var(--p-t1)", fontWeight: 600, fontSize: "1rem" }}>No Inquiries Yet</h3>

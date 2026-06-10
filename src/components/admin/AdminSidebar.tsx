@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { logoutAdmin } from '@/lib/actions/auth/logout-admin'
 
 const navItems = [
@@ -85,6 +85,12 @@ const navItems = [
 export function AdminSidebar() {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const prevPathRef = useRef(pathname)
+
+  if (pathname !== prevPathRef.current) {
+    prevPathRef.current = pathname
+    setMobileOpen(false)
+  }
 
   useEffect(() => {
     const open = () => setMobileOpen(true)
@@ -92,13 +98,21 @@ export function AdminSidebar() {
     return () => window.removeEventListener('p:open-sidebar', open)
   }, [])
 
-  // Close on route change
-  useEffect(() => { setMobileOpen(false) }, [pathname])
-
   return (
     <>
       {mobileOpen && (
-        <div className="p-overlay" onClick={() => setMobileOpen(false)} />
+        <button
+          type="button"
+          className="p-overlay"
+          aria-label="Close sidebar"
+          onClick={() => setMobileOpen(false)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              setMobileOpen(false)
+            }
+          }}
+          style={{ border: 'none', padding: 0 }}
+        />
       )}
       <aside className={`p-sidebar${mobileOpen ? ' open' : ''}`}>
         <div className="p-sidebar-header">
