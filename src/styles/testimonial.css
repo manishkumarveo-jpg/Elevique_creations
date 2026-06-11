@@ -1,0 +1,430 @@
+/* ═══════════════════════════════════════════════════════════════
+   EDITORIAL TESTIMONIAL
+   ═══════════════════════════════════════════════════════════════ */
+
+.te-wrap {
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 48px 24px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Ambient Backlight Glow ─────────────────────────────────── */
+.te-ambient-backlight {
+  position: absolute;
+  width: 450px;
+  height: 450px;
+  border-radius: 50%;
+  filter: blur(130px);
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle, rgba(20, 184, 166, 0.08) 0%, transparent 70%);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 0;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -10%) scale(0.8);
+}
+
+.te-ambient-backlight--active {
+  opacity: 1;
+  transform: translate(-50%, -10%) scale(1.15);
+}
+
+/* ── 3D Card Structure ───────────────────────────────────────── */
+.te-card-container {
+  position: relative;
+  width: 100%;
+  border-radius: 20px;
+  cursor: grab;
+  z-index: 10;
+  touch-action: none;
+}
+
+.te-card-container:active {
+  cursor: grabbing;
+}
+
+.te-card-inner {
+  background: rgba(255, 255, 255, 0.015);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 20px;
+  padding: 40px 36px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+  position: relative;
+  box-shadow:
+    0 30px 80px -25px rgba(0, 0, 0, 0.85),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* ── Spotlight Border & Core Glows ────────────────────────────── */
+.te-card-border-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  pointer-events: none;
+  z-index: 12;
+  padding: 1.2px;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.te-card-spotlight {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Watermark SVG Quote */
+.te-quote-watermark {
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  width: 110px;
+  height: 110px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Quote Layout ────────────────────────────────────────────── */
+.te-quote-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Ghost number */
+.te-number {
+  font-size: clamp(72px, 6vw, 96px);
+  font-weight: 300;
+  line-height: 0.95;
+  color: rgba(248, 250, 252, 0.035);
+  user-select: none;
+  flex-shrink: 0;
+  width: 80px;
+  text-align: right;
+  padding-top: 2px;
+  letter-spacing: -0.04em;
+  transition: color 0.5s ease;
+}
+
+/* Right content box */
+.te-right {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Quote text */
+.te-quote {
+  font-size: clamp(1.15rem, 1.7vw, 1.42rem);
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: -0.01em;
+  color: var(--white);
+  margin-bottom: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  text-align: left;
+}
+
+.te-word {
+  display: inline-block;
+  margin-right: 0.28em;
+}
+
+/* ── Author Row & Brand SVGs ─────────────────────────────────── */
+.te-author-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 18px;
+}
+
+.te-author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.te-avatar-container {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.te-avatar-ring {
+  position: absolute;
+  inset: -2.5px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 60%, transparent 100%);
+  z-index: 0;
+}
+
+.te-avatar {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  overflow: hidden;
+  z-index: 1;
+  background: var(--black);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+}
+
+.te-avatar-img {
+  filter: grayscale(1);
+  transition: filter 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.te-author:hover .te-avatar-img {
+  filter: grayscale(0);
+}
+
+.te-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: -0.01em;
+  margin-bottom: 1px;
+}
+
+.te-role {
+  font-size: 0.74rem;
+  color: var(--muted-strong);
+  font-weight: 300;
+}
+
+.te-slash {
+  color: rgba(248, 250, 252, 0.2);
+  margin: 0 2px;
+}
+
+/* SVG Logo Badge */
+.te-logo-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.55;
+  transition: opacity 0.3s ease;
+  height: 26px;
+}
+
+.te-logo-wrapper:hover {
+  opacity: 0.95;
+}
+
+/* ── Autoplay Timer Progress ─────────────────────────────────── */
+.te-progress-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.02);
+  z-index: 20;
+}
+
+.te-progress-bar {
+  height: 100%;
+  background: linear-gradient(to right, var(--gold), var(--gold-light));
+  width: 0%;
+}
+
+/* ── Navigation Bar ──────────────────────────────────────────── */
+.te-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--glass-border);
+  padding-top: 28px;
+  margin-top: 24px;
+}
+
+.te-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Dash pagination */
+.te-dash-btn {
+  background: none;
+  border: none;
+  padding: 12px 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.te-dash {
+  display: block;
+  height: 2px;
+  border-radius: 4px;
+}
+
+/* Navigation Tooltip */
+.te-tooltip-hover {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(2, 2, 3, 0.92);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  pointer-events: none;
+  z-index: 50;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  white-space: nowrap;
+}
+
+.te-tooltip-hover::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 4px;
+  border-style: solid;
+  border-color: rgba(2, 2, 3, 0.92) transparent transparent transparent;
+}
+
+.te-tooltip-name {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: 0.02em;
+}
+
+.te-tooltip-company {
+  font-size: 8px;
+  font-weight: 600;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Counter */
+.te-counter {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted-strong);
+  margin-left: 12px;
+  font-family: ui-monospace, monospace;
+}
+
+/* Arrows controls */
+.te-arrows {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.te-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  color: rgba(248, 250, 252, 0.45);
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  transition:
+    color 0.25s ease,
+    border-color 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.te-arrow:hover {
+  color: var(--white);
+  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ── Responsive Viewports ────────────────────────────────────── */
+@media (max-width: 768px) {
+  .te-wrap {
+    padding: 48px 20px 32px;
+  }
+  .te-card-inner {
+    padding: 40px 32px 32px;
+  }
+  .te-quote-row {
+    gap: 20px;
+    flex-direction: column;
+  }
+  .te-number {
+    text-align: left;
+    width: auto;
+    font-size: 56px;
+    padding: 0;
+  }
+  .te-quote {
+    font-size: clamp(1.15rem, 4.5vw, 1.45rem);
+    margin-bottom: 24px;
+  }
+  .te-author-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding-top: 20px;
+  }
+  .te-logo-wrapper {
+    margin-left: 68px;
+    height: 26px;
+  }
+}
+
+@media (max-width: 480px) {
+  .te-number {
+    display: none;
+  }
+  .te-card-inner {
+    padding: 32px 20px 24px;
+  }
+  .te-logo-wrapper {
+    margin-left: 0;
+    padding-top: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .te-avatar-ring {
+    animation: none !important;
+  }
+  .te-card-container {
+    transform: none !important;
+  }
+}

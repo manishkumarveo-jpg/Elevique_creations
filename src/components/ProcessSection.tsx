@@ -10,6 +10,8 @@ import {
   Rocket,
 } from "lucide-react";
 
+import "@/styles/process.css";
+
 /* ─── Data ─────────────────────────────────────────────────────── */
 const STEPS = [
   {

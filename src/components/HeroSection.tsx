@@ -9,6 +9,7 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import Navbar from "./Navbar";
+import "@/styles/hero.css";
 
 /* ─── Data ──────────────────────────────────────────────────── */
 const VIDEO_SRC =

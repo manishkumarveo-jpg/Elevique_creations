@@ -496,3 +496,18 @@
     right: 12px;
   }
 }
+
+/* Height-based desktop/tablet scaling for short screens */
+@media (max-height: 850px) and (min-width: 481px) {
+  .reels-chassis {
+    height: calc(100vh - 140px);
+    width: calc((100vh - 140px) * 0.54);
+    max-width: 380px;
+    border-radius: 28px;
+  }
+  .reels-feed-section {
+    min-height: auto;
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+  }
+}

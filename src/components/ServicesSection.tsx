@@ -16,6 +16,8 @@ import {
   Sparkles,
 } from "lucide-react";
 
+import "@/styles/services.css";
+
 /* ─── Data ─────────────────────────────────────────────────────── */
 const SERVICES = [
   {

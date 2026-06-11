@@ -2401,3 +2401,19 @@
   flex-shrink: 0;
 }
 .p-dot-menu:hover { background: var(--p-s2); border-color: var(--p-b1); color: var(--p-t1); }
+
+/* ═══════════════════════════════════════════════════════════════
+   DASHBOARD — Dark glass scope tokens
+   Applied via .dashboard class on layout wrappers
+   ═══════════════════════════════════════════════════════════════ */
+.dashboard {
+  --dash-teal:        #14B8A6;
+  --dash-teal-dim:    rgba(20, 184, 166, 0.12);
+  --dash-teal-glow:   0 0 24px rgba(20, 184, 166, 0.12);
+  --dash-surface:     rgba(255, 255, 255, 0.03);
+  --dash-border:      rgba(255, 255, 255, 0.08);
+  --dash-border-h:    rgba(20, 184, 166, 0.35);
+  --dash-text:        rgba(255, 255, 255, 0.92);
+  --dash-muted:       rgba(255, 255, 255, 0.45);
+  --dash-divider:     rgba(255, 255, 255, 0.06);
+}
