@@ -4,16 +4,31 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import * as d3Geo from "d3-geo";
 import * as topojson from "topojson-client";
 import type { Topology, GeometryCollection } from "topojson-specification";
+import "@/styles/clients-map.css";
 
 /* ─────────────────────────────────────────────────────────────────
    ✏️  CLIENTS — swap in your real data here
    ───────────────────────────────────────────────────────────────── */
 const CLIENTS = [
-  { match: "delhi",       name: "Vantage Media", city: "New Delhi", state: "Delhi",      since: "2021" },
-  { match: "rajasthan",   name: "Forge Labs",    city: "Jaipur",    state: "Rajasthan",  since: "2022" },
-  { match: "bengal",      name: "Meridian Co.",  city: "Kolkata",   state: "West Bengal",since: "2020" },
-  { match: "maharashtra", name: "Atlas Group",   city: "Mumbai",    state: "Maharashtra",since: "2019" },
-  { match: "tamil",       name: "Nimbus AI",     city: "Chennai",   state: "Tamil Nadu", since: "2023" },
+  { match: "delhi",       name: "Vantage Media",    city: "New Delhi",  state: "Delhi",         since: "2021" },
+  { match: "rajasthan",   name: "Forge Labs",        city: "Jaipur",     state: "Rajasthan",     since: "2022" },
+  { match: "bengal",      name: "Meridian Co.",      city: "Kolkata",    state: "West Bengal",   since: "2020" },
+  { match: "maharashtra", name: "Atlas Group",       city: "Mumbai",     state: "Maharashtra",   since: "2019" },
+  { match: "tamil",       name: "Nimbus AI",         city: "Chennai",    state: "Tamil Nadu",    since: "2023" },
+  { match: "karnataka",   name: "Apex Digital",      city: "Bengaluru",  state: "Karnataka",     since: "2022" },
+  { match: "telangana",   name: "Horizon Tech",      city: "Hyderabad",  state: "Telangana",     since: "2023" },
+  { match: "gujarat",     name: "BlueSky Ventures",  city: "Ahmedabad",  state: "Gujarat",       since: "2024" },
+  { match: "haryana",     name: "FinLease",          city: "Gurugram",   state: "Haryana",       since: "2021" },
+  { match: "uttar pradesh", name: "Zephyr Studios",  city: "Noida",      state: "Uttar Pradesh", since: "2023" },
+  { match: "kerala",      name: "Vortex Labs",       city: "Kochi",      state: "Kerala",        since: "2022" },
+  { match: "punjab",      name: "Pinnacle Corp",     city: "Chandigarh", state: "Punjab",        since: "2021" },
+  { match: "goa",         name: "Aura Design Studio",city: "Panaji",     state: "Goa",           since: "2024" },
+  { match: "madhya",      name: "Nova Syndicate",    city: "Indore",     state: "Madhya Pradesh",since: "2023" },
+  { match: "odisha",      name: "Prism Enterprise",  city: "Bhubaneswar",state: "Odisha",        since: "2023" },
+  { match: "assam",       name: "Zenith Holdings",   city: "Guwahati",   state: "Assam",         since: "2022" },
+  { match: "bihar",       name: "Elysian Media",     city: "Patna",      state: "Bihar",         since: "2022" },
+  { match: "andhra",      name: "Summit Capital",    city: "Visakhapatnam", state: "Andhra Pradesh", since: "2021" },
+  { match: "tamil",       name: "Apex Labs",         city: "Coimbatore", state: "Tamil Nadu",    since: "2024" },
 ] as const;
 
 /* ─────────────────────────────────────────────────────────────────
@@ -48,6 +63,9 @@ interface Tooltip { x: number; y: number; client: Client }
    COMPONENT
    ───────────────────────────────────────────────────────────────── */
 export default function ClientsMap() {
+  const totalClients = CLIENTS.length;
+  const clientCountStr = totalClients < 10 ? `0${totalClients}+` : `${totalClients}+`;
+
   const svgRef       = useRef<SVGSVGElement>(null);
   const wrapRef      = useRef<HTMLDivElement>(null);
   const [states,  setStates]  = useState<StateFeature[]>([]);
@@ -60,7 +78,10 @@ export default function ClientsMap() {
   /* prefers-reduced-motion */
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setNoMotion(mq.matches);
+    const matches = mq.matches;
+    Promise.resolve().then(() => {
+      setNoMotion(matches);
+    });
     const h = (e: MediaQueryListEvent) => setNoMotion(e.matches);
     mq.addEventListener("change", h);
     return () => mq.removeEventListener("change", h);
@@ -119,24 +140,37 @@ export default function ClientsMap() {
 
     states.forEach((feat) => {
       const nm  = feat.properties.st_nm.toLowerCase();
-      const cli = CLIENTS.find((c) => nm.includes(c.match));
+      const matching = CLIENTS.filter((c) => nm.includes(c.match));
+      const hasClient = matching.length > 0;
       const d   = path(feat as unknown as GeoJSON.Feature) ?? "";
 
       const el = document.createElementNS("http://www.w3.org/2000/svg", "path");
       el.setAttribute("d", d);
-      el.setAttribute("fill",   cli ? "#141210" : hashFill(feat.properties.st_nm));
-      el.setAttribute("stroke", cli ? "rgba(20,184,166,.65)" : "rgba(255,255,255,.18)");
-      el.setAttribute("stroke-width", cli ? "1.6" : "1.2");
-      el.setAttribute("class", cli ? "cm-state cm-state--active" : "cm-state");
+      el.setAttribute("fill",   hasClient ? "#141210" : hashFill(feat.properties.st_nm));
+      el.setAttribute("stroke", hasClient ? "rgba(20,184,166,.65)" : "rgba(255,255,255,.18)");
+      el.setAttribute("stroke-width", hasClient ? "1.6" : "1.2");
+      el.setAttribute("class", hasClient ? "cm-state cm-state--active" : "cm-state");
       el.setAttribute("vector-effect", "non-scaling-stroke");
-      if (cli) {
-        el.setAttribute("data-client", cli.match);
+      if (hasClient) {
+        el.setAttribute("data-client", matching[0].match);
       }
       g.appendChild(el);
 
-      if (cli) {
+      if (hasClient) {
         const c = path.centroid(feat as unknown as GeoJSON.Feature);
-        if (c && !isNaN(c[0])) newMarkers.push({ client: cli, cx: c[0], cy: c[1] });
+        if (c && !isNaN(c[0])) {
+          matching.forEach((cli, idx) => {
+            let cx = c[0];
+            let cy = c[1];
+            if (matching.length > 1) {
+              const angle = (idx / matching.length) * 2 * Math.PI;
+              const radius = 22; // Offset multiple markers in a circle around the state centroid
+              cx += Math.cos(angle) * radius;
+              cy += Math.sin(angle) * radius;
+            }
+            newMarkers.push({ client: cli, cx, cy });
+          });
+        }
       }
     });
 
@@ -152,20 +186,24 @@ export default function ClientsMap() {
     }
 
     setMarkers(newMarkers);
-  }, [states, countryOutline]); // eslint-disable-line
+  }, [states, countryOutline]);
 
   /* tooltip */
   const moveTip = useCallback((e: React.MouseEvent, cli: Client) => {
-    const r = wrapRef.current!.getBoundingClientRect();
-    setTooltip({ x: e.clientX - r.left, y: e.clientY - r.top, client: cli });
+    if (!wrapRef.current) return;
+    const r = wrapRef.current.getBoundingClientRect();
+    const x = e.clientX - r.left;
+    const y = e.clientY - r.top;
+
+    // Clamp inside wrapper dimensions
+    const TW = 192, TH = 88;
+    const tx = Math.min(Math.max(x + 14, 4), r.width - TW - 4);
+    const ty = Math.min(Math.max(y - 16, 4), r.height - TH - 4);
+
+    setTooltip({ x: tx, y: ty, client: cli });
   }, []);
 
   const hideTip = useCallback(() => setTooltip(null), []);
-
-  /* clamp tooltip */
-  const TW = 192, TH = 88;
-  const tx = tooltip ? Math.min(Math.max(tooltip.x + 14, 4), (wrapRef.current?.offsetWidth  ?? 9999) - TW - 4) : 0;
-  const ty = tooltip ? Math.min(Math.max(tooltip.y - 16, 4), (wrapRef.current?.offsetHeight ?? 9999) - TH - 4) : 0;
 
   return (
     <section className="cm-section" id="clients" aria-labelledby="cm-heading">
@@ -175,7 +213,7 @@ export default function ClientsMap() {
         <span className="cm-eyebrow" aria-hidden="true">
           <span className="cm-eyebrow-line" />
           Our Clients
-          <span className="cm-count" aria-label="5 clients">05</span>
+          <span className="cm-count" aria-label={`${totalClients}+ clients`}>{clientCountStr}</span>
         </span>
 
         {/* heading */}
@@ -191,7 +229,7 @@ export default function ClientsMap() {
         {/* client list */}
         <ul className="cm-list" aria-label="Client list" role="list">
           {CLIENTS.map((c) => (
-            <li key={c.match} className="cm-item" role="listitem">
+            <li key={`${c.name}-${c.city}`} className="cm-item">
               <span className="cm-dot" aria-hidden="true" />
               <span className="cm-name">{c.name}</span>
               <span className="cm-city-sep" aria-hidden="true">·</span>
@@ -215,7 +253,7 @@ export default function ClientsMap() {
           className="cm-svg"
           viewBox={`0 0 ${VIEWBOX_W} ${VIEWBOX_H}`}
           preserveAspectRatio="xMidYMid meet"
-          aria-label="Map of India showing 5 active client locations"
+          aria-label={`Map of India showing ${totalClients}+ active client locations`}
           role="img"
         >
           <g className="cm-paths" />
@@ -223,7 +261,7 @@ export default function ClientsMap() {
           {/* pin markers */}
           {markers.map(({ client, cx, cy }, i) => (
             <g
-              key={client.match}
+              key={`${client.name}-${client.city}`}
               transform={`translate(${cx},${cy})`}
               tabIndex={0}
               role="button"
@@ -237,7 +275,15 @@ export default function ClientsMap() {
                 if (wrap && svg) {
                   const sr = svg.getBoundingClientRect(), wr = wrap.getBoundingClientRect();
                   const sx = sr.width / VIEWBOX_W, sy = sr.height / VIEWBOX_H;
-                  setTooltip({ x: cx * sx + (sr.left - wr.left) + 14, y: cy * sy + (sr.top - wr.top) - 16, client });
+                  const x = cx * sx + (sr.left - wr.left);
+                  const y = cy * sy + (sr.top - wr.top);
+
+                  // Clamp inside wrapper dimensions
+                  const TW = 192, TH = 88;
+                  const tx = Math.min(Math.max(x + 14, 4), wr.width - TW - 4);
+                  const ty = Math.min(Math.max(y - 16, 4), wr.height - TH - 4);
+
+                  setTooltip({ x: tx, y: ty, client });
                 }
               }}
               onBlur={() => { setFocused(null); hideTip(); }}
@@ -275,7 +321,7 @@ export default function ClientsMap() {
 
         {/* tooltip */}
         {tooltip && (
-          <div className="cm-tooltip" role="tooltip" style={{ left: tx, top: ty }}>
+          <div className="cm-tooltip" role="tooltip" style={{ left: tooltip.x, top: tooltip.y }}>
             <div className="cm-tt-name">{tooltip.client.name}</div>
             <div className="cm-tt-loc">
               <span className="cm-tt-dot" aria-hidden="true" />

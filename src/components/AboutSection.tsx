@@ -6,6 +6,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 
 const AboutScene3D = dynamic(() => import("./AboutScene3D"), { ssr: false });
+import "@/styles/about.css";
 
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 

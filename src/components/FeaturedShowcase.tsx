@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import PortfolioReels from "./PortfolioReels";
 import "@/styles/portfolio-reels.css";
+import "@/styles/portfolio-showcase.css";
 import { GRID_PROJECTS, type GridProject } from "@/data/gridVideos";
 
 /* ─── Data ───────────────────────────────────────────────────── */
