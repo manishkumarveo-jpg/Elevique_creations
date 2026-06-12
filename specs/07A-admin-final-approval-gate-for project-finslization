@@ -1,0 +1,192 @@
+# Plan: Admin Final Approval Gate for Project Finalization
+
+## Context
+
+Projects can currently be set to `completed` by anyone with admin access, or auto-completed by the `sync_project_status()` trigger when all milestones are done — with no explicit admin sign-off. The spec adds a mandatory admin approval checkpoint between `final_review` and `completed`. Team members can finalize only after an admin sets `admin_approved = true`. Clients remain read-only throughout.
+
+---
+
+## Critical Finding: Trigger Conflict
+
+`sync_project_status()` (migration `20260601_11_seed_trigger.sql`, line 83) does:
+```sql
+UPDATE projects SET status = 'completed' WHERE id = NEW.project_id;
+```
+With the new `CHECK (status <> 'completed' OR admin_approved = true)` in place, this auto-complete will **fail** when `admin_approved = false`. The function must be updated to advance to `final_review` instead.
+
+---
+
+## Implementation Plan
+
+### Step 1 — Database Migration
+**New file:** `supabase/migrations/20260612_21_admin_approval_gate.sql`
+
+```sql
+-- 1. New approval columns
+ALTER TABLE public.projects
+  ADD COLUMN admin_approved      boolean NOT NULL DEFAULT false,
+  ADD COLUMN approved_by_admin   uuid REFERENCES public.profiles(id),
+  ADD COLUMN admin_approved_at   timestamptz;
+
+-- 2. Hard DB guarantee
+ALTER TABLE public.projects
+  ADD CONSTRAINT completed_requires_admin_approval
+  CHECK (status <> 'completed' OR admin_approved = true);
+
+-- 3. Enforcement trigger
+CREATE OR REPLACE FUNCTION public.enforce_admin_approval()
+RETURNS trigger AS $$
+DECLARE actor_role public.user_role;
+BEGIN
+  SELECT role INTO actor_role FROM public.profiles WHERE id = auth.uid();
+
+  IF actor_role = 'client' THEN
+    RAISE EXCEPTION 'Clients cannot modify projects';
+  END IF;
+
+  IF (NEW.admin_approved    IS DISTINCT FROM OLD.admin_approved
+   OR NEW.approved_by_admin IS DISTINCT FROM OLD.approved_by_admin
+   OR NEW.admin_approved_at IS DISTINCT FROM OLD.admin_approved_at)
+     AND actor_role <> 'admin' THEN
+    RAISE EXCEPTION 'Only an admin can give or revoke final approval';
+  END IF;
+
+  IF NEW.status = 'completed' AND OLD.status <> 'completed'
+     AND NEW.admin_approved = false THEN
+    RAISE EXCEPTION 'Project cannot be finalized before admin final approval';
+  END IF;
+
+  IF NEW.admin_approved = false AND OLD.status = 'completed' THEN
+    NEW.status := 'final_review';
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER trg_enforce_admin_approval
+  BEFORE UPDATE ON public.projects
+  FOR EACH ROW EXECUTE FUNCTION public.enforce_admin_approval();
+
+-- 4. Fix sync_project_status to advance to final_review (not completed)
+CREATE OR REPLACE FUNCTION public.sync_project_status()
+RETURNS TRIGGER AS $$
+DECLARE
+  total_milestones INT;
+  done_milestones  INT;
+BEGIN
+  SELECT COUNT(*) INTO total_milestones FROM milestones WHERE project_id = NEW.project_id;
+  SELECT COUNT(*) INTO done_milestones  FROM milestones WHERE project_id = NEW.project_id AND status = 'done';
+
+  IF total_milestones > 0 AND total_milestones = done_milestones THEN
+    UPDATE projects
+    SET status = 'final_review'
+    WHERE id = NEW.project_id AND status NOT IN ('final_review', 'completed', 'paused');
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- 5. RLS UPDATE policy for team members (trigger enforces column-level rules)
+CREATE POLICY "projects: team member update assigned"
+  ON public.projects FOR UPDATE
+  USING (get_user_role() = 'team_member' AND is_assigned_to_project(id));
+```
+
+---
+
+### Step 2 — TypeScript Types
+**File:** `src/lib/types/database.ts`
+
+Add to `projects` `Row` and `Update` types:
+```ts
+admin_approved: boolean
+approved_by_admin: string | null
+admin_approved_at: string | null
+```
+
+---
+
+### Step 3 — Server Actions
+**New file:** `src/lib/actions/projects/approval.ts`
+
+Four exported functions following the pattern of existing actions (see `src/lib/actions/milestones/update-milestone.ts`):
+
+| Function | Role | DB operation | Activity action |
+|---|---|---|---|
+| `giveAdminApproval(projectId)` | requireAdmin | `admin_approved=true, approved_by_admin=user.id, admin_approved_at=now()` | `admin_final_approval` |
+| `revokeAdminApproval(projectId)` | requireAdmin | `admin_approved=false, approved_by_admin=null, admin_approved_at=null` (trigger auto-reverts status) | `admin_approval_revoked` |
+| `adminApproveAndFinalize(projectId)` | requireAdmin | Both approval fields + `status='completed'` in one UPDATE | `admin_final_approval` + `project_finalized` |
+| `finalizeProject(projectId)` | requireTeamMember | `status='completed'` (trigger blocks if not approved) | `project_finalized` |
+
+All use `createServerClient()` (user JWT) so `auth.uid()` is correct in the trigger. Activity logging uses `logActivity()` from `src/lib/actions/activity.ts`.
+
+Revalidate: `/admin/projects/${projectId}`, `/team/projects/${projectId}`, `/admin/projects`.
+
+---
+
+### Step 4 — Query Update
+**File:** `src/lib/queries/projects.ts` — `getProjectById`
+
+Extend the select to join the approver's name:
+```ts
+.select('*, client:profiles!projects_client_id_fkey(id, full_name, email, company_name), approver:profiles!projects_approved_by_admin_fkey(id, full_name)')
+```
+
+---
+
+### Step 5 — Admin UI Component
+**New file:** `src/app/admin/projects/[id]/AdminApprovalPanel.tsx`
+
+`'use client'` component receiving `project` (with `admin_approved`, `approved_by_admin`, `status`, and joined `approver` name).
+
+Render logic:
+- **Status is `final_review`, not yet approved:** Show `"Give Final Approval"` button (calls `giveAdminApproval`) + `"Approve & Finalize"` button (calls `adminApproveAndFinalize`). Badge: `Pending Admin Approval` (orange).
+- **Status is `final_review`, approved:** Show `"Finalize Project"` button (calls `updateProject({status:'completed'})` via existing action, or a thin wrapper) + `"Revoke Approval"` button (calls `revokeAdminApproval`). Badge: `Approved by {approver.full_name}` (green).
+- **Status is `completed`:** Show `"Revoke Approval"` button. Badge: `Approved by {approver.full_name}` (green).
+
+Use `useTransition()` + `isPending` on buttons. Inline styles matching `project_dashboard_design` memory (dark surfaces, teal accent).
+
+**Wire into:** `src/app/admin/projects/[id]/page.tsx` — render `<AdminApprovalPanel project={project} />` in the Overview tab's details panel when `project.status` is `final_review` or `completed`.
+
+---
+
+### Step 6 — Team Member UI Component
+**New file:** `src/app/team/projects/[id]/FinalizeProjectPanel.tsx`
+
+`'use client'` component receiving `project`.
+
+Render logic (only when `project.status === 'final_review'`):
+- **`admin_approved = false`:** Disabled `"Finalize Project"` button, badge `Pending Admin Approval` (orange). Add a `title` tooltip: `"Waiting for admin final approval"`.
+- **`admin_approved = true`:** Active `"Finalize Project"` button (calls `finalizeProject`), badge `Approved by {approver.full_name}` (green).
+
+**Wire into:** `src/app/team/projects/[id]/page.tsx` — render `<FinalizeProjectPanel project={project} />` in the header area (below the status badge) when status is `final_review`.
+
+---
+
+## Files Modified / Created
+
+| File | Action |
+|---|---|
+| `supabase/migrations/20260612_21_admin_approval_gate.sql` | Create |
+| `src/lib/types/database.ts` | Update (add 3 columns to projects Row/Update) |
+| `src/lib/actions/projects/approval.ts` | Create |
+| `src/lib/queries/projects.ts` | Update (join approver profile in `getProjectById`) |
+| `src/app/admin/projects/[id]/AdminApprovalPanel.tsx` | Create |
+| `src/app/admin/projects/[id]/page.tsx` | Update (add AdminApprovalPanel) |
+| `src/app/team/projects/[id]/FinalizeProjectPanel.tsx` | Create |
+| `src/app/team/projects/[id]/page.tsx` | Update (add FinalizeProjectPanel) |
+
+---
+
+## Verification
+
+1. **Apply migration** via Supabase MCP (`apply_migration` tool).
+2. **DB smoke test** via `execute_sql`:
+   - `UPDATE projects SET status = 'completed' WHERE id = <any>` → should fail with constraint or trigger error.
+   - Set `admin_approved = true` as admin → then set `status = 'completed'` → should succeed.
+   - Set `admin_approved = false` on a `completed` project → status should auto-revert to `final_review`.
+3. **Milestone all-done test:** Set all milestones to `done` on a project in `in_progress` → status should become `final_review` (not `completed`).
+4. **UI test:** Log in as team member → open a `final_review` project → see disabled Finalize button. Log in as admin → give approval. Log back in as team member → Finalize button is now active.
+5. **Activity log check:** After approval and finalization, query `activity_log` to confirm `admin_final_approval` and `project_finalized` entries exist.
