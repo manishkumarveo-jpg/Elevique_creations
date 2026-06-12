@@ -198,8 +198,13 @@
 
 .loc-map-underline {
   height: 1px;
-  width: 50%; /* Underline half the text block width */
-  background: linear-gradient(to right, #00e699 0%, transparent 100%);
+  width: 50%;
+  background: linear-gradient(
+    to right,
+    #14B8A6 0%,
+    #14B8A6B3 60%,
+    transparent 100%
+  );
   margin-top: 0.25rem;
 }
 

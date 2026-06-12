@@ -169,18 +169,34 @@
   position: absolute;
   inset: -150%;
   z-index: -2;
+
   background: conic-gradient(
     from 0deg,
-    transparent 0deg,
-    transparent 240deg,
-    rgba(155, 249, 88, 0.6) 265deg,
-    rgb(114, 239, 68) 270deg,
-    rgba(77, 231, 77, 0.6) 275deg,
-    transparent 300deg
-  );
-  animation: border-beam-rotate 15s linear infinite;
-}
 
+    transparent 0deg,
+    transparent 220deg,
+
+    rgba(20, 184, 166, 0.05) 225deg,
+    rgba(20, 184, 166, 0.15) 235deg,
+    rgba(20, 184, 166, 0.35) 245deg,
+    rgba(20, 184, 166, 0.60) 255deg,
+    rgba(20, 184, 166, 0.85) 265deg,
+
+    #14B8A6 270deg,
+
+    rgba(20, 184, 166, 0.85) 275deg,
+    rgba(20, 184, 166, 0.60) 285deg,
+    rgba(20, 184, 166, 0.35) 295deg,
+    rgba(20, 184, 166, 0.15) 305deg,
+    rgba(20, 184, 166, 0.05) 315deg,
+
+    transparent 320deg,
+    transparent 360deg
+  );
+
+  filter: blur(14px);
+  animation: border-beam-rotate 12s linear infinite;
+}
 /* Card content body mask */
 .ct-form-wrap::after {
   content: "";

@@ -17,7 +17,7 @@ function getRatelimit(): Ratelimit | null {
   return ratelimit
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   let response = NextResponse.next({
     request: { headers: request.headers },

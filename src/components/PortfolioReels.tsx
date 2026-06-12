@@ -13,41 +13,25 @@ import {
   Play,
   Pause,
 } from "lucide-react";
+import { REEL_VIDEOS, type ReelVideo } from "@/data/reelVideos";
 
-interface Project {
-  id: number;
-  title: string;
-  category: string;
-  year: string;
-  role: string;
-  description: string;
-  techStack: string[];
-  colorFrom: string;
-  colorTo: string;
-  videoSrc?: string;
-  verticalVideoSrc?: string;
-}
-
-const DEFAULT_VIDEO =
-  "https://res.cloudinary.com/dpaoerbde/video/upload/v1780379272/hero-video_pxivlu.mp4";
+// kept for onViewDetails compatibility with parent (FeaturedShowcase passes Project-typed handler)
+type Project = ReelVideo;
 
 interface PortfolioReelsProps {
-  projects: Project[];
   onViewDetails: (project: Project) => void;
 }
 
-export default function PortfolioReels({ projects, onViewDetails }: PortfolioReelsProps) {
+export default function PortfolioReels({ onViewDetails }: PortfolioReelsProps) {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [isMuted, setIsMuted] = useState<boolean>(true);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Toggle local mute state across all videos
   const toggleMute = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     setIsMuted((prev) => !prev);
   }, []);
 
-  // Set up Intersection Observer to track which Reel is active
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -55,7 +39,7 @@ export default function PortfolioReels({ projects, onViewDetails }: PortfolioRee
     const observerOptions = {
       root: container,
       rootMargin: "0px",
-      threshold: 0.6, // Fire when 60% of the slide is visible
+      threshold: 0.6,
     };
 
     const handleIntersection = (entries: IntersectionObserverEntry[]) => {
@@ -75,38 +59,34 @@ export default function PortfolioReels({ projects, onViewDetails }: PortfolioRee
       childElements.forEach((el) => observer.unobserve(el));
       observer.disconnect();
     };
-  }, [projects]);
+  }, []);
 
-  const activeProject = projects[activeIndex] || projects[0];
+  const activeReel = REEL_VIDEOS[activeIndex] || REEL_VIDEOS[0];
 
   return (
     <div className="reels-feed-section">
-      {/* Ambient background blur glowing with the active project's custom theme color */}
       <div
         className="reels-ambient-backdrop"
         style={{
-          backgroundColor: activeProject ? `${activeProject.colorFrom}1A` : "rgba(0,0,0,0.5)",
-          boxShadow: activeProject ? `inset 0 0 100px ${activeProject.colorFrom}1F` : "none",
+          backgroundColor: activeReel ? `${activeReel.colorFrom}1A` : "rgba(0,0,0,0.5)",
+          boxShadow: activeReel ? `inset 0 0 100px ${activeReel.colorFrom}1F` : "none",
         }}
       />
 
-      {/* Main smartphone frame for desktop view */}
-      <div 
+      <div
         className="reels-chassis"
         style={{
-          borderColor: activeProject ? `${activeProject.colorFrom}2B` : "#1a1a1a",
+          borderColor: activeReel ? `${activeReel.colorFrom}2B` : "#1a1a1a",
         }}
       >
-        {/* Glow border ring */}
-        <div 
+        <div
           className="reels-chassis-glow"
           style={{
-            borderColor: activeProject ? `${activeProject.colorFrom}33` : "transparent",
-            boxShadow: activeProject ? `0 0 30px ${activeProject.colorFrom}15` : "none",
+            borderColor: activeReel ? `${activeReel.colorFrom}33` : "transparent",
+            boxShadow: activeReel ? `0 0 30px ${activeReel.colorFrom}15` : "none",
           }}
         />
 
-        {/* Top Status Bar UI Decorator */}
         <div className="reels-status-bar">
           <span>10:09</span>
           <div className="reels-status-icons">
@@ -115,18 +95,17 @@ export default function PortfolioReels({ projects, onViewDetails }: PortfolioRee
           </div>
         </div>
 
-        {/* Snap-scrolling reels viewport */}
         <div ref={containerRef} className="reels-snap-container" data-lenis-prevent>
-          {projects.map((project, idx) => (
+          {REEL_VIDEOS.map((reel, idx) => (
             <ReelCard
-              key={project.id}
-              project={project}
+              key={reel.id}
+              reel={reel}
               index={idx}
               isActive={idx === activeIndex}
               isMuted={isMuted}
               toggleMute={toggleMute}
               onViewDetails={onViewDetails}
-              isLast={idx === projects.length - 1}
+              isLast={idx === REEL_VIDEOS.length - 1}
             />
           ))}
         </div>
@@ -137,7 +116,7 @@ export default function PortfolioReels({ projects, onViewDetails }: PortfolioRee
 
 /* ─── Individual Reel Card ─────────────────────────────────────────── */
 interface ReelCardProps {
-  project: Project;
+  reel: ReelVideo;
   index: number;
   isActive: boolean;
   isMuted: boolean;
@@ -153,7 +132,7 @@ interface FloatingHeartItem {
 }
 
 function ReelCard({
-  project,
+  reel,
   index,
   isActive,
   isMuted,
@@ -270,7 +249,7 @@ function ReelCard({
   // Handle Share link copy
   const handleShare = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    const url = `${window.location.origin}/portfolio?project=${project.id}`;
+    const url = `${window.location.origin}/portfolio?project=${reel.id}`;
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
@@ -279,25 +258,25 @@ function ReelCard({
       setCopied('error');
       setTimeout(() => setCopied(false), 2000);
     });
-  }, [project.id]);
+  }, [reel.id]);
 
   const handleOpenDetails = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    onViewDetails(project);
-  }, [project, onViewDetails]);
+    onViewDetails(reel as unknown as Project);
+  }, [reel, onViewDetails]);
 
   return (
     <div className="reel-card" data-index={index}>
       {/* Immersive Video element */}
       <video
         ref={videoRef}
-        src={project.verticalVideoSrc || DEFAULT_VIDEO}
+        src={reel.videoSrc}
         loop
         muted={isMuted}
         playsInline
         className="reel-video-element"
         onClick={handleVideoInteraction}
-        aria-label={`Video demo for ${project.title}`}
+        aria-label={`Video demo for ${reel.title}`}
       />
 
       {/* Atmospheric gradients */}
@@ -338,17 +317,17 @@ function ReelCard({
         <span
           className="reel-meta-badge"
           style={{
-            borderColor: `${project.colorFrom}99`,
-            background: `${project.colorFrom}1A`,
-            color: project.colorFrom,
+            borderColor: `${reel.colorFrom}99`,
+            background: `${reel.colorFrom}1A`,
+            color: reel.colorFrom,
           }}
         >
-          {project.category}
+          {reel.category}
         </span>
-        <h4 className="reel-meta-title">{project.title}</h4>
-        <p className="reel-meta-desc">{project.description}</p>
+        <h4 className="reel-meta-title">{reel.title}</h4>
+        <p className="reel-meta-desc">{reel.description}</p>
         <div className="reel-meta-tags">
-          {project.techStack.slice(0, 3).map((tech) => (
+          {reel.techStack.slice(0, 3).map((tech) => (
             <span key={tech} className="reel-meta-tag">
               {tech}
             </span>
@@ -367,7 +346,7 @@ function ReelCard({
               e.stopPropagation();
               handleLike();
             }}
-            aria-label={`Like ${project.title}`}
+            aria-label={`Like ${reel.title}`}
           >
             <Heart size={20} fill={liked ? "currentColor" : "none"} />
           </button>

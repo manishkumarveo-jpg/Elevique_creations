@@ -79,30 +79,7 @@ const PROJECTS: Project[] = [
     colorTo: "#ec4899",
     videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781090224/Its_me_music_video_compressed_ug7wwp.mp4",
   },
-  {
-    id: 5,
-    title: "Vessel OS",
-    category: "Tech / UI",
-    year: "2023",
-    role: "Lead Systems Architecture",
-    description: "A futuristic interface reveal blending hardware aesthetics with software poetry.",
-    techStack: ["UI Animation", "AI Design", "WebGL", "Data Viz"],
-    colorFrom: "#10b981",
-    colorTo: "#3b82f6",
-    videoSrc: "",
-  },
-  {
-    id: 6,
-    title: "AI World",
-    category: "Experimental",
-    year: "2024",
-    role: "Machine Learning Arts",
-    description: "A generative art odyssey where machine imagination meets human emotional depth.",
-    techStack: ["Stable Diffusion", "ControlNet", "Python", "TouchDesigner"],
-    colorFrom: "#8b5cf6",
-    colorTo: "#ec4899",
-    videoSrc: "",
-  },
+  
 ];
 
 interface PopupState {
@@ -416,7 +393,7 @@ export default function FeaturedShowcase() {
           </div>
         </>
       ) : (
-        <PortfolioReels projects={PROJECTS} onViewDetails={openBottomSheet as any} />
+        <PortfolioReels onViewDetails={openBottomSheet as any} />
       )}
 
       {/* ══ POPUP ═══════════════════════════════════════════════ */}

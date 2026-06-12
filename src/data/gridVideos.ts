@@ -66,7 +66,7 @@ export const AI_VISUALS: GridProject[] = [
 // ── 2. Editorial ──────────────────────────────────────────────
 export const EDITORIAL: GridProject[] = [
   {
-    id: 5,
+    id: 1,
     title: "Fashion Film",
     category: "Editorial",
     year: "2023",
@@ -78,7 +78,7 @@ export const EDITORIAL: GridProject[] = [
     videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001716/Aar_Kay_Vox_UK_-_Legacy_story_lvcljy.mov",
   },
   {
-    id: 6,
+    id: 2,
     title: "Future Cities",
     category: "Editorial",
     year: "2024",
@@ -90,7 +90,7 @@ export const EDITORIAL: GridProject[] = [
     videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781002041/Forbes_properties_-_Real_estate_2_syk2io.mp4",
   },
   {
-    id: 7,
+    id: 3,
     title: "Legacy Story",
     category: "Editorial",
     year: "2023",
@@ -102,7 +102,7 @@ export const EDITORIAL: GridProject[] = [
     videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001716/Aar_Kay_Vox_UK_-_Legacy_story_lvcljy.mov",
   },
   {
-    id: 8,
+    id: 4,
     title: "Legacy Story",
     category: "Editorial",
     year: "2023",
@@ -118,7 +118,7 @@ export const EDITORIAL: GridProject[] = [
 // ── 3. Product Film ───────────────────────────────────────────
 export const PRODUCT_FILM: GridProject[] = [
   {
-    id: 9,
+    id: 1,
     title: "Automotive Launch",
     category: "Product Film",
     year: "2024",
@@ -130,7 +130,7 @@ export const PRODUCT_FILM: GridProject[] = [
     videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001794/Aar_Kay_Vox_UK_-_Luxury_joqd3i.mov",
   },
   {
-    id: 10,
+    id: 2,
     title: "Product Render",
     category: "Product Film",
     year: "2023",
@@ -142,7 +142,7 @@ export const PRODUCT_FILM: GridProject[] = [
     videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001994/Forbes_properties_-_Real_estate_1_yliuyb.mp4",
   },
   {
-    id: 11,
+    id: 3,
     title: "Cooler Ad",
     category: "Product Film",
     year: "2023",
@@ -154,7 +154,7 @@ export const PRODUCT_FILM: GridProject[] = [
     videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001911/Electronics_-_Cooler_Ad_kf7caf.mp4",
   },
   {
-    id: 12,
+    id: 4,
     title: "Cooler Ad",
     category: "Product Film",
     year: "2023",
@@ -170,7 +170,7 @@ export const PRODUCT_FILM: GridProject[] = [
 // ── 4. Brand Film ─────────────────────────────────────────────
 export const BRAND_FILM: GridProject[] = [
   {
-    id: 13,
+    id: 1,
     title: "Luxury Perfume",
     category: "Brand Film",
     year: "2024",
@@ -182,7 +182,7 @@ export const BRAND_FILM: GridProject[] = [
     videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001863/Bulgari_premium_concept_azbzdo.mov",
   },
   {
-    id: 14,
+    id: 2,
     title: "Bulgari Concept",
     category: "Brand Film",
     year: "2024",
@@ -194,7 +194,7 @@ export const BRAND_FILM: GridProject[] = [
     videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001863/Bulgari_premium_concept_azbzdo.mov",
   },
   {
-    id: 15,
+    id: 3,
     title: "Luxury Spot",
     category: "Brand Film",
     year: "2024",
@@ -206,7 +206,7 @@ export const BRAND_FILM: GridProject[] = [
     videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001794/Aar_Kay_Vox_UK_-_Luxury_joqd3i.mov",
   },
   {
-    id: 16,
+    id: 4,
     title: "Luxury Spot",
     category: "Brand Film",
     year: "2024",
@@ -222,7 +222,7 @@ export const BRAND_FILM: GridProject[] = [
 // ── 5. Tech / UI ──────────────────────────────────────────────
 export const TECH_UI: GridProject[] = [
   {
-    id: 17,
+    id: 1,
     title: "Vessel OS",
     category: "Tech / UI",
     year: "2023",
@@ -234,7 +234,7 @@ export const TECH_UI: GridProject[] = [
     videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001911/Electronics_-_Cooler_Ad_kf7caf.mp4",
   },
   {
-    id: 18,
+    id: 2,
     title: "Fan Interface",
     category: "Tech / UI",
     year: "2024",
@@ -246,7 +246,7 @@ export const TECH_UI: GridProject[] = [
     videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001957/Electronics_-_Fan_Ad_cto8wj.mp4",
   },
   {
-    id: 19,
+    id: 3,
     title: "Real Estate OS",
     category: "Tech / UI",
     year: "2024",
@@ -257,12 +257,24 @@ export const TECH_UI: GridProject[] = [
     colorTo: "#3b82f6",
     videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001994/Forbes_properties_-_Real_estate_1_yliuyb.mp4",
   },
+  {
+    id: 4,
+    title: "Real Estate OS",
+    category: "Tech / UI",
+    year: "2024",
+    role: "WebGL Developer",
+    description: "An interactive property platform where architecture meets data visualisation.",
+    techStack: ["WebGL", "Three.js", "GLSL", "React"],
+    colorFrom: "#10b981",
+    colorTo: "#3b82f6",
+    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781250745/KM_Hospital_-_scenario_stories_5_odnsrj.mov",
+  },
 ];
 
 // ── 6. Experimental ───────────────────────────────────────────
 export const EXPERIMENTAL: GridProject[] = [
   {
-    id: 20,
+    id: 1,
     title: "AI World",
     category: "Experimental",
     year: "2024",
@@ -274,7 +286,7 @@ export const EXPERIMENTAL: GridProject[] = [
     videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001957/Electronics_-_Fan_Ad_cto8wj.mp4",
   },
   {
-    id: 21,
+    id: 2,
     title: "Multivitamin Caps",
     category: "Experimental",
     year: "2024",
@@ -286,7 +298,7 @@ export const EXPERIMENTAL: GridProject[] = [
     videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001396/Health_-_Multivitamin_caps_tvauww.mov",
   },
   {
-    id: 22,
+    id: 3,
     title: "Multivitamin Caps",
     category: "Experimental",
     year: "2024",
@@ -296,6 +308,18 @@ export const EXPERIMENTAL: GridProject[] = [
     colorFrom: "#8b5cf6",
     colorTo: "#ec4899",
     videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781093426/Cosmetics_-_Premium_1_jzchj9.mp4",
+  },
+   {
+    id: 4,
+    title: "Multivitamin Caps",
+    category: "Experimental",
+    year: "2024",
+    role: "Visual Alchemist",
+    description: "Abstract product imagery where science and surrealism blur into visual poetry.",
+    techStack: ["Macro Photography", "AI Enhancement", "Color Grading", "VFX"],
+    colorFrom: "#8b5cf6",
+    colorTo: "#ec4899",
+    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781250872/Forbes_properties_-_Real_estate_latcub.mp4",
   },
 ];
 

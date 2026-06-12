@@ -83,7 +83,7 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-size: 0.55rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.32em;
   text-transform: uppercase;
@@ -467,8 +467,8 @@
   gap: 8px;
 }
 .anim-video .video-player {
-  width: 90px;
-  height: 56px;
+  width: 100px;
+  height: 75px;
   border: 1.2px solid rgba(20, 184, 166, 0.4);
   border-radius: 9px;
   background: rgba(20, 184, 166, 0.03);
@@ -590,8 +590,8 @@
 }
 .anim-content .doc-shadow {
   position: absolute;
-  width: 60px;
-  height: 80px;
+  width: 75px;
+  height: 95px;
   border: 1.2px solid rgba(20, 184, 166, 0.18);
   border-radius: 8px;
   background: rgba(20, 184, 166, 0.02);
@@ -689,8 +689,8 @@
 }
 .anim-graphic .design-canvas {
   position: relative;
-  width: 55px;
-  height: 55px;
+  width: 70px;
+  height: 70px;
 }
 .anim-graphic .canvas-svg {
   display: block;
@@ -753,8 +753,8 @@
 }
 .anim-lead .funnel-wrap {
   position: relative;
-  width: 80px;
-  height: 62px;
+  width: 90px;
+  height: 80px;
 }
 .anim-lead .lead-funnel {
   filter: drop-shadow(0 3px 10px rgba(20, 184, 166, 0.2));
@@ -824,8 +824,8 @@
   height: 76px;
 }
 .anim-social .phone-outline {
-  width: 46px;
-  height: 76px;
+  width: 66px;
+  height: 96px;
   border: 1.2px solid rgba(20, 184, 166, 0.42);
   border-radius: 10px;
   background: rgba(20, 184, 166, 0.03);
@@ -924,16 +924,16 @@
 .anim-meta .rings-container {
   position: absolute;
   z-index: 1;
-  width: 58px;
-  height: 58px;
+  width: 68px;
+  height: 68px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .anim-meta .meta-ring {
   position: absolute;
-  width: 58px;
-  height: 58px;
+  width: 68px;
+  height: 68px;
   border: 1px solid rgba(20, 184, 166, 0.35);
   border-radius: 50%;
   opacity: 0;
