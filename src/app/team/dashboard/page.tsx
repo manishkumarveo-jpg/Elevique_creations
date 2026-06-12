@@ -29,7 +29,7 @@ export default async function TeamDashboardPage() {
       ) : (
         <div className="p-card-grid">
           {projects.map(project => {
-            const client = project.client as { full_name?: string; company_name?: string } | null
+            const client = (project as { client?: { full_name?: string; company_name?: string } | null }).client ?? null
             return (
               <Link key={project.id} href={`/team/projects/${project.id}`} className="p-project-card">
                 <div className="p-project-card-header">
@@ -41,9 +41,9 @@ export default async function TeamDashboardPage() {
                     {client?.company_name ?? client?.full_name}
                   </p>
                 )}
-                {project.deadline && (
+                {project.internal_deadline && (
                   <div className="p-project-card-footer">
-                    <span className="p-project-card-date">Due {project.deadline}</span>
+                    <span className="p-project-card-date">Due {project.internal_deadline}</span>
                   </div>
                 )}
               </Link>

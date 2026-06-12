@@ -13,21 +13,27 @@ function CheckIcon() {
 export function PipelineSteps({
   milestones,
   teamInitials,
+  adminApproved,
+  projectStatus,
 }: {
   milestones: Milestone[]
   teamInitials?: string[]
+  adminApproved?: boolean
+  projectStatus?: string
 }) {
   return (
     <div className="p-pipeline">
       {milestones.map((m) => {
         const isDone   = m.status === 'done'
         const isActive = m.status === 'in_progress'
+        const pendingApproval = isDone && projectStatus === 'final_review' && !adminApproved
 
         return (
           <div key={m.id} className="p-pipeline-step">
             {/* Icon */}
-            <div className={`p-pipeline-icon ${isDone ? 'p-pipeline-icon--done' : isActive ? 'p-pipeline-icon--active' : 'p-pipeline-icon--pending'}`}>
-              {isDone && <CheckIcon />}
+            <div className={`p-pipeline-icon ${isDone && !pendingApproval ? 'p-pipeline-icon--done' : isActive ? 'p-pipeline-icon--active' : 'p-pipeline-icon--pending'}`}>
+              {isDone && !pendingApproval && <CheckIcon />}
+              {pendingApproval && <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#f97316' }} />}
               {isActive && <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--p-purple)' }} />}
             </div>
 
@@ -43,7 +49,7 @@ export function PipelineSteps({
                 </p>
               )}
 
-              {isDone && m.completed_date && (
+              {isDone && !pendingApproval && m.completed_date && (
                 <p className="p-pipeline-meta">
                   Completed on {new Date(m.completed_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}.
                 </p>
@@ -55,9 +61,15 @@ export function PipelineSteps({
                 </p>
               )}
 
-              {isDone && (
+              {pendingApproval && (
                 <div className="p-pipeline-tags">
-                  <span className="p-pipeline-tag" style={{ background: 'rgba(20,184,166,0.10)', color: '#5eead4', border: '1px solid rgba(20,184,166,0.22)' }}>Approved</span>
+                  <span className="p-pipeline-tag" style={{ background: 'rgba(251,146,60,0.10)', color: '#fb923c', border: '1px solid rgba(251,146,60,0.22)' }}>In Review</span>
+                </div>
+              )}
+
+              {isDone && !pendingApproval && (
+                <div className="p-pipeline-tags">
+                  <span className="p-pipeline-tag" style={{ background: 'rgba(20,184,166,0.10)', color: '#5eead4', border: '1px solid rgba(20,184,166,0.22)' }}>Completed</span>
                 </div>
               )}
 

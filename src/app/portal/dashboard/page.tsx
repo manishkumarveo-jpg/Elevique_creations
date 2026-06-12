@@ -101,8 +101,8 @@ export default async function ClientDashboardPage() {
 
                 <div className="p-project-card-footer">
                   <span className="p-project-card-date">
-                    {project.deadline
-                      ? `Deadline: ${new Date(project.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
+                    {project.client_deadline
+                      ? `Deadline: ${new Date(project.client_deadline + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
                       : `Started ${new Date(project.created_at).toLocaleDateString()}`
                     }
                   </span>

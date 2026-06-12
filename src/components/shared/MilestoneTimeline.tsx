@@ -28,65 +28,92 @@ const statusLabel: Record<string, string> = {
   done: 'Done', in_progress: 'In Progress', pending: 'Pending',
 }
 
-export function MilestoneTimeline({ milestones }: { milestones: Milestone[] }) {
+const pendingApprovalDot: React.CSSProperties = {
+  background: 'rgba(251,146,60,0.15)',
+  borderColor: 'rgba(251,146,60,0.5)',
+}
+
+const pendingApprovalChip: React.CSSProperties = {
+  background: 'rgba(251,146,60,0.10)',
+  color: '#fb923c',
+  border: '1px solid rgba(251,146,60,0.22)',
+}
+
+export function MilestoneTimeline({
+  milestones,
+  adminApproved,
+  projectStatus,
+}: {
+  milestones: Milestone[]
+  adminApproved?: boolean
+  projectStatus?: string
+}) {
   return (
     <ol style={{ position: 'relative', borderLeft: '2px solid rgba(255,255,255,0.08)', marginLeft: '0.875rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-      {milestones.map(m => (
-        <li key={m.id} style={{ marginLeft: '1.5rem', position: 'relative' }}>
-          {/* Timeline dot */}
-          <span style={{
-            position: 'absolute',
-            left: -27,
-            top: 2,
-            width: 20,
-            height: 20,
-            borderRadius: '50%',
-            border: '2px solid',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            ...dotBg[m.status],
-          }}>
-            {statusDot[m.status]}
-          </span>
+      {milestones.map(m => {
+        const isDone = m.status === 'done'
+        const pendingApproval = isDone && projectStatus === 'final_review' && !adminApproved
 
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-            <div style={{ flex: 1 }}>
-              <p style={{
-                fontSize: '0.82rem',
-                fontWeight: 500,
-                color: m.status === 'done' ? 'rgba(255,255,255,0.28)' : 'rgba(255,255,255,0.85)',
-                textDecoration: m.status === 'done' ? 'line-through' : 'none',
-                margin: 0,
-              }}>
-                Phase {m.phase_number}: {m.phase_name}
-              </p>
-              {m.scheduled_date && (
-                <p style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.28)', margin: '0.2rem 0 0' }}>
-                  {m.status === 'done' ? `Completed ${m.completed_date}` : `Due ${m.scheduled_date}`}
-                </p>
-              )}
-              {m.notes && (
-                <p style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.22)', margin: '0.25rem 0 0', fontStyle: 'italic' }}>
-                  {m.notes}
-                </p>
-              )}
-            </div>
+        return (
+          <li key={m.id} style={{ marginLeft: '1.5rem', position: 'relative' }}>
+            {/* Timeline dot */}
             <span style={{
-              fontSize: '0.62rem',
-              fontWeight: 600,
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              borderRadius: 20,
-              padding: '0.2rem 0.6rem',
-              flexShrink: 0,
-              ...statusChip[m.status],
+              position: 'absolute',
+              left: -27,
+              top: 2,
+              width: 20,
+              height: 20,
+              borderRadius: '50%',
+              border: '2px solid',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              ...(pendingApproval ? pendingApprovalDot : dotBg[m.status]),
             }}>
-              {statusLabel[m.status]}
+              {pendingApproval
+                ? <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#fb923c' }} />
+                : statusDot[m.status]
+              }
             </span>
-          </div>
-        </li>
-      ))}
+
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
+              <div style={{ flex: 1 }}>
+                <p style={{
+                  fontSize: '0.82rem',
+                  fontWeight: 500,
+                  color: isDone && !pendingApproval ? 'rgba(255,255,255,0.28)' : 'rgba(255,255,255,0.85)',
+                  textDecoration: isDone && !pendingApproval ? 'line-through' : 'none',
+                  margin: 0,
+                }}>
+                  Phase {m.phase_number}: {m.phase_name}
+                </p>
+                {m.scheduled_date && (
+                  <p style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.28)', margin: '0.2rem 0 0' }}>
+                    {isDone && !pendingApproval ? `Completed ${m.completed_date}` : `Due ${m.scheduled_date}`}
+                  </p>
+                )}
+                {m.notes && (
+                  <p style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.22)', margin: '0.25rem 0 0', fontStyle: 'italic' }}>
+                    {m.notes}
+                  </p>
+                )}
+              </div>
+              <span style={{
+                fontSize: '0.62rem',
+                fontWeight: 600,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                borderRadius: 20,
+                padding: '0.2rem 0.6rem',
+                flexShrink: 0,
+                ...(pendingApproval ? pendingApprovalChip : statusChip[m.status]),
+              }}>
+                {pendingApproval ? 'Pending Approval' : statusLabel[m.status]}
+              </span>
+            </div>
+          </li>
+        )
+      })}
     </ol>
   )
 }
