@@ -8,7 +8,7 @@ export interface ReelVideo {
   techStack: string[];
   colorFrom: string;
   colorTo: string;
-  videoSrc: string;
+  videoSrc: string | undefined;
 }
 
 export const REEL_VIDEOS: ReelVideo[] = [
@@ -130,7 +130,7 @@ export const REEL_VIDEOS: ReelVideo[] = [
     techStack: ["Product Viz", "AI Styling", "Motion Graphics"],
     colorFrom: "#f59e0b",
     colorTo: "#ec4899",
-    videoSrc: "",
+    videoSrc: undefined,
   },
   {
     id: 11,
@@ -250,7 +250,7 @@ export const REEL_VIDEOS: ReelVideo[] = [
     techStack: ["Product Viz", "AI Styling", "Motion Graphics"],
     colorFrom: "#f59e0b",
     colorTo: "#ec4899",
-    videoSrc: "",
+    videoSrc: undefined,
   },
   {
     id: 21,

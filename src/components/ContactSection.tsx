@@ -100,10 +100,10 @@ export default function ContactSection() {
             </ul>
 
             <div className="ct-map-wrapper">
-              <LocationMap 
-                location="Vishkarma colony, New delhi" 
-                coordinates="28.4978° N, 77.2947° E" 
-                mapUrl="https://www.google.com/maps/search/?api=1&query=Vishwakarma+Colony,+Pul+Pehladpur,+New+Delhi"
+              <LocationMap
+                location="Vishwakarma colony, Pul Pehladpur, New Delhi 110044"
+                coordinates="28.4978° N, 77.2947° E"
+                mapUrl="https://www.google.com/maps/search/?api=1&query=Vishwakarma+Colony+Pul+Pehladpur+New+Delhi+110044"
               />
             </div>
           </div>

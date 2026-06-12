@@ -9,15 +9,15 @@ export async function POST(request: Request) {
       videos_count,
       budget_per_video,
       requirement_brief,
-      full_name,
-      email,
       phone,
       city,
       company_name,
       website,
     } = body;
 
-    // Validation
+    const full_name = body.full_name?.trim();
+    const email = body.email?.trim();
+
     if (!full_name || !email) {
       return NextResponse.json(
         { ok: false, error: "Name and Email are required fields." },

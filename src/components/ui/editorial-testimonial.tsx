@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
 import "@/styles/testimonial.css";
@@ -94,7 +93,6 @@ const testimonials = [
     author: "Rahul Singh",
     role: "Creative Director",
     company: "Dumanera Shoes",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900&auto=format&fit=crop&q=60",
     Logo: DumaneraLogo,
   },
   {
@@ -103,7 +101,6 @@ const testimonials = [
     author: "Prashant Sharma",
     role: "Head of Design",
     company: "FITVITTLE",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=900&auto=format&fit=crop&q=60",
     Logo: FitvittleLogo,
   },
   {
@@ -112,7 +109,6 @@ const testimonials = [
     author: "David Holder",
     role: "Art Director",
     company: "Titan Bros USA",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900&auto=format&fit=crop&q=60",
     Logo: TitanBrosLogo,
   },
   {
@@ -121,7 +117,6 @@ const testimonials = [
     author: "Sharad Patel",
     role: "Art Director",
     company: "Gauddly Fashion",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900&auto=format&fit=crop&q=60",
     Logo: GauddlyLogo,
   },
   {
@@ -130,7 +125,6 @@ const testimonials = [
     author: "Sneha Kapoor",
     role: "Co-founder",
     company: "EL'CASA LIVING SPACES",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900&auto=format&fit=crop&q=60",
     Logo: ElCasaLogo,
   },
   {
@@ -139,7 +133,6 @@ const testimonials = [
     author: "Mehul Shah",
     role: "Director",
     company: "Shree Buildcon Realty",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900&auto=format&fit=crop&q=60",
     Logo: ShreeBuildconLogo,
   },
   {
@@ -148,7 +141,6 @@ const testimonials = [
     author: "Isha Malhotra",
     role: "Founder",
     company: "The Skin Ritual Co.",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900&auto=format&fit=crop&q=60",
     Logo: SkinRitualLogo,
   },
   {
@@ -157,7 +149,6 @@ const testimonials = [
     author: "Vilis Oza",
     role: "Founder",
     company: "ITSME COSMETICS",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900&auto=format&fit=crop&q=60",
     Logo: ItsmeLogo,
   },
   {
@@ -166,7 +157,6 @@ const testimonials = [
     author: "Priyanka Jain",
     role: "Co-founder",
     company: "Sweet Thrills",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=900&auto=format&fit=crop&q=60",
     Logo: SweetThrillsLogo,
   },
 ];
@@ -471,13 +461,11 @@ export default function TestimonialsEditorial() {
                       variants={avatarRingVariants}
                     />
                     <div className="te-avatar">
-                      <Image
-                        src={current.image}
-                        alt={current.author}
-                        fill
-                        sizes="52px"
-                        className="te-avatar-img object-cover"
-                      />
+                      <svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg" width="38" height="38" aria-hidden="true">
+                        <rect width="38" height="38" rx="19" fill="rgba(20,184,166,0.08)" />
+                        <circle cx="19" cy="15" r="6.5" fill="rgba(255,255,255,0.22)" />
+                        <path d="M4 36c0-8.284 6.716-15 15-15s15 6.716 15 15" fill="rgba(255,255,255,0.18)" />
+                      </svg>
                     </div>
                   </div>
                   <div>
