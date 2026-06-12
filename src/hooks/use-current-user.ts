@@ -12,7 +12,12 @@ export function useCurrentUser() {
 
   useEffect(() => {
     async function load() {
-      const { data: { user } } = await supabase.auth.getUser()
+      const { data: { user }, error } = await supabase.auth.getUser()
+      if (error?.name === 'AuthApiError') {
+        await supabase.auth.signOut()
+        setLoading(false)
+        return
+      }
       if (!user) { setLoading(false); return }
 
       const { data } = await supabase

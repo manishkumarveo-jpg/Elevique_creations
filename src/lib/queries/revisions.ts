@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { createServerClient } from '@/lib/supabase/server'
 
 export type ProjectRevision = {
@@ -12,7 +13,7 @@ export type ProjectRevision = {
   submitter: { full_name: string } | null
 }
 
-export async function getRevisionsForProject(projectId: string): Promise<ProjectRevision[]> {
+export const getRevisionsForProject = cache(async (projectId: string): Promise<ProjectRevision[]> => {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('project_revisions')
@@ -21,4 +22,4 @@ export async function getRevisionsForProject(projectId: string): Promise<Project
     .order('created_at', { ascending: false })
   if (error) throw error
   return data as unknown as ProjectRevision[]
-}
+})

@@ -1,7 +1,8 @@
+import { cache } from 'react'
 import { createServerClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 
-export async function getAllProfiles() {
+export const getAllProfiles = cache(async () => {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('profiles')
@@ -9,9 +10,9 @@ export async function getAllProfiles() {
     .order('created_at', { ascending: false })
   if (error) throw error
   return data
-}
+})
 
-export async function getProfileById(id: string) {
+export const getProfileById = cache(async (id: string) => {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('profiles')
@@ -20,9 +21,9 @@ export async function getProfileById(id: string) {
     .single()
   if (error) throw error
   return data
-}
+})
 
-export async function getTeamMembers() {
+export const getTeamMembers = cache(async () => {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('profiles')
@@ -32,9 +33,9 @@ export async function getTeamMembers() {
     .order('full_name')
   if (error) throw error
   return data
-}
+})
 
-export async function getClients() {
+export const getClients = cache(async () => {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('profiles')
@@ -44,7 +45,7 @@ export async function getClients() {
     .order('full_name')
   if (error) throw error
   return data
-}
+})
 
 export type ClientWithAssignment = {
   id: string
@@ -55,7 +56,7 @@ export type ClientWithAssignment = {
   assigned_team_member_id: string | null
 }
 
-export async function getClientsWithAssignment(): Promise<ClientWithAssignment[]> {
+export const getClientsWithAssignment = cache(async (): Promise<ClientWithAssignment[]> => {
   const supabase = createAdminClient()
   const { data, error } = await supabase
     .from('profiles')
@@ -64,4 +65,4 @@ export async function getClientsWithAssignment(): Promise<ClientWithAssignment[]
     .order('full_name')
   if (error) throw error
   return (data ?? []) as ClientWithAssignment[]
-}
+})

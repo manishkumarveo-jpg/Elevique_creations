@@ -1,6 +1,7 @@
+import { cache } from 'react'
 import { createServerClient } from '@/lib/supabase/server'
 
-export async function getRecentActivity(limit = 10) {
+export const getRecentActivity = cache(async (limit = 10) => {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('activity_log')
@@ -9,9 +10,9 @@ export async function getRecentActivity(limit = 10) {
     .limit(limit)
   if (error) throw error
   return data
-}
+})
 
-export async function getActivityForProject(projectId: string, limit = 20) {
+export const getActivityForProject = cache(async (projectId: string, limit = 20) => {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('activity_log')
@@ -21,4 +22,4 @@ export async function getActivityForProject(projectId: string, limit = 20) {
     .limit(limit)
   if (error) throw error
   return data
-}
+})

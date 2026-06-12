@@ -1,6 +1,7 @@
+import { cache } from 'react'
 import { createServerClient } from '@/lib/supabase/server'
 
-export async function getProjectsForAdmin() {
+export const getProjectsForAdmin = cache(async () => {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('projects')
@@ -9,7 +10,7 @@ export async function getProjectsForAdmin() {
     .order('created_at', { ascending: false })
   if (error) throw error
   return data
-}
+})
 
 export type ProjectWithTeam = {
   id: string
@@ -25,7 +26,7 @@ export type ProjectWithTeam = {
   milestone_done: number
 }
 
-export async function getProjectsWithTeam(): Promise<ProjectWithTeam[]> {
+export const getProjectsWithTeam = cache(async (): Promise<ProjectWithTeam[]> => {
   const supabase = await createServerClient()
 
   const [projectsRes, assignmentsRes, milestonesRes] = await Promise.all([
@@ -78,10 +79,10 @@ export async function getProjectsWithTeam(): Promise<ProjectWithTeam[]> {
       milestone_done: projectMilestones.filter(m => m.status === 'done').length,
     }
   })
-}
+})
 
 // Team members: explicit column selection excludes client_deadline
-export async function getProjectsForTeam(userId: string) {
+export const getProjectsForTeam = cache(async (userId: string) => {
   const supabase = await createServerClient()
   const assignedIds = (
     await supabase
@@ -100,10 +101,10 @@ export async function getProjectsForTeam(userId: string) {
     .order('created_at', { ascending: false })
   if (error) throw error
   return data
-}
+})
 
 // Clients: explicit column selection excludes internal_deadline
-export async function getProjectsForClient(userId: string) {
+export const getProjectsForClient = cache(async (userId: string) => {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('projects')
@@ -113,10 +114,10 @@ export async function getProjectsForClient(userId: string) {
     .order('created_at', { ascending: false })
   if (error) throw error
   return data
-}
+})
 
 // Admin: full project data with both deadlines
-export async function getProjectById(id: string) {
+export const getProjectById = cache(async (id: string) => {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('projects')
@@ -125,10 +126,10 @@ export async function getProjectById(id: string) {
     .single()
   if (error) throw error
   return data
-}
+})
 
 // Team member: project detail without client_deadline
-export async function getProjectByIdForTeam(id: string) {
+export const getProjectByIdForTeam = cache(async (id: string) => {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('projects')
@@ -137,10 +138,10 @@ export async function getProjectByIdForTeam(id: string) {
     .single()
   if (error) throw error
   return data
-}
+})
 
 // Client: project detail without internal_deadline
-export async function getProjectByIdForClient(id: string) {
+export const getProjectByIdForClient = cache(async (id: string) => {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('projects')
@@ -149,7 +150,7 @@ export async function getProjectByIdForClient(id: string) {
     .single()
   if (error) throw error
   return data
-}
+})
 
 export type DeadlineExtension = {
   id: string
@@ -162,7 +163,7 @@ export type DeadlineExtension = {
   created_at: string
 }
 
-export async function getDeadlineExtensions(projectId: string): Promise<DeadlineExtension[]> {
+export const getDeadlineExtensions = cache(async (projectId: string): Promise<DeadlineExtension[]> => {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('deadline_extensions')
@@ -171,4 +172,4 @@ export async function getDeadlineExtensions(projectId: string): Promise<Deadline
     .order('created_at', { ascending: false })
   if (error) throw error
   return (data ?? []) as DeadlineExtension[]
-}
+})

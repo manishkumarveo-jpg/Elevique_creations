@@ -1,6 +1,7 @@
+import { cache } from 'react'
 import { createServerClient } from '@/lib/supabase/server'
 
-export async function getDeliverablesForProject(projectId: string) {
+export const getDeliverablesForProject = cache(async (projectId: string) => {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('deliverables')
@@ -9,4 +10,4 @@ export async function getDeliverablesForProject(projectId: string) {
     .order('created_at', { ascending: false })
   if (error) throw error
   return data
-}
+})

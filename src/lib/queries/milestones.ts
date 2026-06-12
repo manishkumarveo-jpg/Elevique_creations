@@ -1,6 +1,7 @@
+import { cache } from 'react'
 import { createServerClient } from '@/lib/supabase/server'
 
-export async function getMilestonesForProject(projectId: string) {
+export const getMilestonesForProject = cache(async (projectId: string) => {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('milestones')
@@ -9,4 +10,4 @@ export async function getMilestonesForProject(projectId: string) {
     .order('phase_number')
   if (error) throw error
   return data
-}
+})

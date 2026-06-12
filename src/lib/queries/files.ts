@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { createServerClient } from '@/lib/supabase/server'
 import type { Database } from '@/lib/types/database'
 
@@ -9,7 +10,7 @@ export type FileWithMeta = FileRow & {
   folder?: { id: string; name: string; icon: string | null } | null
 }
 
-export async function getFoldersForProject(projectId: string): Promise<FolderRow[]> {
+export const getFoldersForProject = cache(async (projectId: string): Promise<FolderRow[]> => {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('folders')
@@ -18,9 +19,9 @@ export async function getFoldersForProject(projectId: string): Promise<FolderRow
     .order('sort_order')
   if (error) throw error
   return data
-}
+})
 
-export async function getFilesForFolder(folderId: string): Promise<FileWithMeta[]> {
+export const getFilesForFolder = cache(async (folderId: string): Promise<FileWithMeta[]> => {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('files')
@@ -30,9 +31,9 @@ export async function getFilesForFolder(folderId: string): Promise<FileWithMeta[
     .order('created_at', { ascending: false })
   if (error) throw error
   return data as unknown as FileWithMeta[]
-}
+})
 
-export async function getFilesForProject(projectId: string): Promise<FileWithMeta[]> {
+export const getFilesForProject = cache(async (projectId: string): Promise<FileWithMeta[]> => {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('files')
@@ -42,4 +43,4 @@ export async function getFilesForProject(projectId: string): Promise<FileWithMet
     .order('created_at', { ascending: false })
   if (error) throw error
   return data as unknown as FileWithMeta[]
-}
+})

@@ -1,6 +1,7 @@
+import { cache } from 'react'
 import { createServerClient } from '@/lib/supabase/server'
 
-export async function getChecklistForProject(projectId: string) {
+export const getChecklistForProject = cache(async (projectId: string) => {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('asset_checklist')
@@ -9,4 +10,4 @@ export async function getChecklistForProject(projectId: string) {
     .order('sort_order')
   if (error) throw error
   return data
-}
+})
