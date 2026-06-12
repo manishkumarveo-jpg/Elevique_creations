@@ -4,17 +4,18 @@
 
 .leads-container-outer {
   position: relative;
-  min-height: 100vh; /* Centers content when it fits, scrolls naturally when it doesn't */
+  min-height: 100vh;
+  min-height: 100dvh; /* Prevents mobile toolbar show/hide from causing layout jumps */
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2.5rem 1.5rem; /* Clean breathing room top and bottom */
+  padding: 2.5rem 1.5rem;
   z-index: 1;
-  background: #141416; /* Matches the contact section background */
+  background: #141416;
   color: var(--white);
-  overflow-y: auto; /* Let the container handle scrolling to prevent border-beam clipping bugs */
+  overflow-y: auto;
   box-sizing: border-box;
 }
 
@@ -185,6 +186,7 @@
   );
   filter: blur(14px);
   animation: border-beam-rotate 12s linear infinite;
+  will-change: transform; /* Promotes to GPU compositor layer to prevent paint jitter */
 }
 
 /* Card content body mask */
@@ -366,7 +368,6 @@
 .leads-select-option:hover {
   background: rgba(255, 255, 255, 0.05);
   color: var(--white);
-  padding-left: 12px;
 }
 
 .leads-select-option--selected {
