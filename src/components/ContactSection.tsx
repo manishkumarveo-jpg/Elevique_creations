@@ -72,7 +72,17 @@ export default function ContactSection() {
                 <div className="ct-detail-content">
                   <h3 className="ct-detail-title">Don&apos;t hesitate to reach out!</h3>
                   <span className="ct-detail-text">Phone : +91 7217832613</span>
-
+                  <span className="ct-detail-text">
+                    WhatsApp:{" "}
+                    <a
+                      href="https://wa.me/917217832613"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="ct-inline-link"
+                    >
+                      +91 7217832613
+                    </a>
+                  </span>
                 </div>
               </li>
 
@@ -83,16 +93,20 @@ export default function ContactSection() {
                 </div>
                 <div className="ct-detail-content">
                   <h3 className="ct-detail-title">How can we assist you?</h3>
-                  <span className="ct-detail-text">johndoe@gmail.com</span>
-                  <span className="ct-detail-text">smithjohn@gmail.com</span>
+                  <span className="ct-detail-text">eleviquecreations.ai@gmail.com</span>
+                 
                 </div>
               </li>
             </ul>
 
             <div className="ct-map-wrapper">
-              <LocationMap location="Vishkarma colony, New delhi" coordinates="51.5074° N, 0.1278° W" />
+              <LocationMap 
+                location="Vishkarma colony, New delhi" 
+                coordinates="28.4978° N, 77.2947° E" 
+                mapUrl="https://www.google.com/maps/search/?api=1&query=Vishwakarma+Colony,+Pul+Pehladpur,+New+Delhi"
+              />
             </div>
-            </div>
+          </div>
 
           {/* Right Column: Contact Form */}
           <div className="ct-form-wrap">
@@ -198,6 +212,11 @@ export default function ContactSection() {
               <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
               <rect x="2" y="9" width="4" height="12"></rect>
               <circle cx="4" cy="4" r="2"></circle>
+            </svg>
+          </a>
+          <a href="https://wa.me/917217832613" target="_blank" rel="noopener noreferrer" className="ct-social-btn" aria-label="WhatsApp">
+            <svg viewBox="0 0 16 16" width="18" height="18" fill="currentColor">
+              <path d="M13.601 2.326A7.85 7.85 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.9 7.9 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.9 7.9 0 0 0 13.6 2.326zM7.994 14.521a6.6 6.6 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.56 6.56 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592m3.69-3.146c-.202-.101-1.202-.593-1.385-.658-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.73.73 0 0 0-.529.247c-.182.198-.691.677-.691 1.654s.71 1.916.81 2.049c.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.202-.493 1.37-.967.165-.473.165-.88.115-.967-.049-.088-.182-.133-.381-.233"/>
             </svg>
           </a>
           {/* <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="ct-social-btn" aria-label="GitHub">

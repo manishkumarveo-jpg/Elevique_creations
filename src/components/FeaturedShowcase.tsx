@@ -9,6 +9,7 @@ import {
   ThumbsUp,
   ChevronDown,
   ExternalLink,
+  ArrowLeft,
 } from "lucide-react";
 import PortfolioReels from "./PortfolioReels";
 import "@/styles/portfolio-reels.css";
@@ -393,7 +394,9 @@ export default function FeaturedShowcase() {
           </div>
         </>
       ) : (
-        <PortfolioReels onViewDetails={openBottomSheet as any} />
+        <div className="reels-feed-wrapper">
+          <PortfolioReels onViewDetails={openBottomSheet as any} onBack={() => setViewMode("grid")} />
+        </div>
       )}
 
       {/* ══ POPUP ═══════════════════════════════════════════════ */}

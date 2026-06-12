@@ -355,6 +355,18 @@
   max-width: 320px;
 }
 
+.ct-inline-link {
+  color: #00e699;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.ct-inline-link:hover {
+  color: #00ffaa;
+  text-decoration: underline;
+}
+
 /* ─── Social Links ───────────────────────────────────────────── */
 .ct-socials {
   display: flex;

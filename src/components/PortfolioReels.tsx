@@ -12,6 +12,7 @@ import {
   Battery,
   Play,
   Pause,
+  ArrowLeft,
 } from "lucide-react";
 import { REEL_VIDEOS, type ReelVideo } from "@/data/reelVideos";
 
@@ -20,9 +21,10 @@ type Project = ReelVideo;
 
 interface PortfolioReelsProps {
   onViewDetails: (project: Project) => void;
+  onBack: () => void;
 }
 
-export default function PortfolioReels({ onViewDetails }: PortfolioReelsProps) {
+export default function PortfolioReels({ onViewDetails, onBack }: PortfolioReelsProps) {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const [isMuted, setIsMuted] = useState<boolean>(true);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -94,6 +96,16 @@ export default function PortfolioReels({ onViewDetails }: PortfolioReelsProps) {
             <Battery size={14} />
           </div>
         </div>
+
+        {/* Back Button inside phone frame */}
+        <button
+          type="button"
+          className="reels-back-btn-chassis"
+          onClick={onBack}
+          aria-label="Back to Showcase"
+        >
+          <ArrowLeft size={16} />
+        </button>
 
         <div ref={containerRef} className="reels-snap-container" data-lenis-prevent>
           {REEL_VIDEOS.map((reel, idx) => (
@@ -270,7 +282,7 @@ function ReelCard({
       {/* Immersive Video element */}
       <video
         ref={videoRef}
-        src={reel.videoSrc}
+        src={reel.videoSrc || undefined}
         loop
         muted={isMuted}
         playsInline
