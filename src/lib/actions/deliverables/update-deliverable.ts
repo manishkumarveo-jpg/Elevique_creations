@@ -44,7 +44,7 @@ export async function markDelivered(deliverableId: string, projectId: string) {
 
   const { error } = await supabase.from('deliverables').update({
     status: 'delivered',
-    delivered_on: new Date().toISOString(),
+    delivered_on: new Date().toISOString().split('T')[0],
     revision_note: null,
   }).eq('id', deliverableId)
 

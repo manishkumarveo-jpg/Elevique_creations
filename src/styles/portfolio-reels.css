@@ -511,3 +511,43 @@
     padding-bottom: 2rem;
   }
 }
+
+/* ─── Reels Back Button inside Chassis ────────────────────────────────────────── */
+.reels-back-btn-chassis {
+  position: absolute;
+  top: 40px; /* Directly below the reels status bar (30px high) */
+  left: 20px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(20, 20, 22, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--white);
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.22s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+}
+
+.reels-back-btn-chassis:hover {
+  background: rgba(40, 40, 42, 0.85);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: scale(1.06);
+}
+
+.reels-back-btn-chassis:active {
+  transform: scale(0.94);
+}
+
+/* Adjust top position on mobile devices for screen safe areas (notch/status bar) */
+@media (max-width: 480px) {
+  .reels-back-btn-chassis {
+    top: 45px;
+    left: 16px;
+  }
+}

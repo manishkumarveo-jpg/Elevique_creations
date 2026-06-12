@@ -59,6 +59,7 @@
   border: 1px solid rgba(255, 255, 255, 0.04);
   overflow: hidden;
   position: relative;
+  min-height: 380px;
   box-shadow:
     0 30px 80px -25px rgba(0, 0, 0, 0.85),
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
@@ -380,6 +381,7 @@
   }
   .te-card-inner {
     padding: 40px 32px 32px;
+    min-height: 440px;
   }
   .te-quote-row {
     gap: 20px;
@@ -413,6 +415,7 @@
   }
   .te-card-inner {
     padding: 32px 20px 24px;
+    min-height: 460px;
   }
   .te-logo-wrapper {
     margin-left: 0;

@@ -3,18 +3,21 @@
 import type React from "react";
 import { useState, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
+import { ExternalLink } from "lucide-react";
 import "@/styles/location.css";
 
 interface LocationMapProps {
   location?: string;
   coordinates?: string;
   className?: string;
+  mapUrl?: string;
 }
 
 export function LocationMap({
   location = "San Francisco, CA",
   coordinates = "37.7749° N, 122.4194° W",
   className = "",
+  mapUrl = "https://www.google.com/maps/search/?api=1&query=San+Francisco,+CA",
 }: LocationMapProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -314,15 +317,33 @@ export function LocationMap({
 
               <AnimatePresence>
                 {isExpanded && (
-                  <motion.p
-                    className="loc-map-coords"
+                  <motion.div
+                    className="loc-map-expanded-content"
                     initial={{ opacity: 0, y: -10, height: 0 }}
                     animate={{ opacity: 1, y: 0, height: "auto" }}
                     exit={{ opacity: 0, y: -10, height: 0 }}
                     transition={{ duration: 0.25 }}
                   >
-                    {coordinates}
-                  </motion.p>
+                    <p className="loc-map-coords">
+                      {coordinates}
+                    </p>
+                    {mapUrl && (
+                      <motion.a
+                        href={mapUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="loc-map-link"
+                        onClick={(e) => e.stopPropagation()}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.2, delay: 0.1 }}
+                      >
+                        <span>Open in Maps</span>
+                        <ExternalLink size={12} className="loc-map-link-icon" />
+                      </motion.a>
+                    )}
+                  </motion.div>
                 )}
               </AnimatePresence>
 

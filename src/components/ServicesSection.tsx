@@ -107,10 +107,36 @@ function InquiryModal({
 }) {
   const [sent, setSent] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setSent(true);
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const enrichedMessage = `[Service Inquiry: ${service.title}]\n\n${form.message}`;
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          message: enrichedMessage,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || "Failed to submit inquiry.");
+
+      setSent(true);
+      setForm({ name: "", email: "", message: "" });
+    } catch (err: any) {
+      setError(err.message || "Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -150,6 +176,11 @@ function InquiryModal({
           </div>
         ) : (
           <form className="svc-modal-form" onSubmit={handleSubmit}>
+            {error && (
+              <p className="svc-modal-error" style={{ color: "#ff5a5a", fontSize: "0.8rem", margin: "0 0 0.8rem 0", textAlign: "left" }}>
+                {error}
+              </p>
+            )}
             <div className="svc-modal-field">
               <label htmlFor={`modal-name-${service.id}`}>Name</label>
               <input
@@ -183,9 +214,9 @@ function InquiryModal({
                 required
               />
             </div>
-            <button type="submit" className="svc-modal-submit">
-              Send Inquiry
-              <ChevronRight size={15} />
+            <button type="submit" className="svc-modal-submit" disabled={isSubmitting}>
+              {isSubmitting ? "Sending..." : "Send Inquiry"}
+              {!isSubmitting && <ChevronRight size={15} />}
             </button>
           </form>
         )}

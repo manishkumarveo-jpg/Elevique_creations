@@ -83,7 +83,7 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-size: 0.55rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.32em;
   text-transform: uppercase;
@@ -438,6 +438,159 @@
   animation: blink 1.6s ease-in-out infinite;
 }
 
+.svc-modal-title {
+  font-family: "Outfit", "Hanken Grotesk", "Inter", sans-serif;
+  font-size: clamp(1.4rem, 2vw, 1.85rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--white);
+  text-transform: uppercase;
+  margin: 0.5rem 0 0.25rem;
+  line-height: 1.1;
+  text-align: left;
+}
+
+.svc-modal-subtitle {
+  font-size: 0.85rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--muted);
+  margin-bottom: 1.8rem;
+  text-align: left;
+}
+
+.svc-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.svc-modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  text-align: left;
+}
+
+.svc-modal-field label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: 0.01em;
+}
+
+.svc-modal-field input,
+.svc-modal-field textarea {
+  background: rgba(16, 16, 18, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  padding: 11px 14px;
+  font-size: 0.85rem;
+  font-weight: 300;
+  color: var(--white);
+  font-family: inherit;
+  outline: none;
+  resize: none;
+  transition: all 0.25s ease;
+}
+
+.svc-modal-field input::placeholder,
+.svc-modal-field textarea::placeholder {
+  color: rgba(255, 255, 255, 0.22);
+}
+
+.svc-modal-field input:focus,
+.svc-modal-field textarea:focus {
+  border-color: rgba(20, 184, 166, 0.4);
+  background: rgba(10, 10, 12, 0.9);
+  box-shadow: 0 0 12px rgba(20, 184, 166, 0.1);
+}
+
+.svc-modal-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+  padding: 13px;
+  margin-top: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #0c0c0e;
+  background: #e2e8f0;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.svc-modal-submit:hover:not(:disabled) {
+  background: #ffffff;
+  border-color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(255, 255, 255, 0.1);
+}
+
+.svc-modal-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.svc-modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.svc-modal-close:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--white);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.svc-modal-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2.5rem 1rem;
+  gap: 1rem;
+}
+
+.svc-modal-success-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(20, 184, 166, 0.1);
+  border: 1px solid rgba(20, 184, 166, 0.25);
+  color: rgb(20, 184, 166);
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.svc-modal-success p {
+  font-size: 0.9rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 280px;
+  margin: 0;
+}
+
 /* ─── Front face micro-animations ────────────────────────────── */
 .svc-card--front > .svc-front-animation {
   position: absolute !important;
@@ -467,8 +620,8 @@
   gap: 8px;
 }
 .anim-video .video-player {
-  width: 90px;
-  height: 56px;
+  width: 100px;
+  height: 75px;
   border: 1.2px solid rgba(20, 184, 166, 0.4);
   border-radius: 9px;
   background: rgba(20, 184, 166, 0.03);
@@ -590,8 +743,8 @@
 }
 .anim-content .doc-shadow {
   position: absolute;
-  width: 60px;
-  height: 80px;
+  width: 75px;
+  height: 95px;
   border: 1.2px solid rgba(20, 184, 166, 0.18);
   border-radius: 8px;
   background: rgba(20, 184, 166, 0.02);
@@ -689,8 +842,8 @@
 }
 .anim-graphic .design-canvas {
   position: relative;
-  width: 55px;
-  height: 55px;
+  width: 70px;
+  height: 70px;
 }
 .anim-graphic .canvas-svg {
   display: block;
@@ -753,8 +906,8 @@
 }
 .anim-lead .funnel-wrap {
   position: relative;
-  width: 80px;
-  height: 62px;
+  width: 90px;
+  height: 80px;
 }
 .anim-lead .lead-funnel {
   filter: drop-shadow(0 3px 10px rgba(20, 184, 166, 0.2));
@@ -824,8 +977,8 @@
   height: 76px;
 }
 .anim-social .phone-outline {
-  width: 46px;
-  height: 76px;
+  width: 66px;
+  height: 96px;
   border: 1.2px solid rgba(20, 184, 166, 0.42);
   border-radius: 10px;
   background: rgba(20, 184, 166, 0.03);
@@ -924,16 +1077,16 @@
 .anim-meta .rings-container {
   position: absolute;
   z-index: 1;
-  width: 58px;
-  height: 58px;
+  width: 68px;
+  height: 68px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .anim-meta .meta-ring {
   position: absolute;
-  width: 58px;
-  height: 58px;
+  width: 68px;
+  height: 68px;
   border: 1px solid rgba(20, 184, 166, 0.35);
   border-radius: 50%;
   opacity: 0;
