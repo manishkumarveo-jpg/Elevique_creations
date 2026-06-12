@@ -158,7 +158,7 @@ export default function NewUserPage() {
     full_name: '',
     email: '',
     temporary_password: '',
-    role: 'client' as 'admin' | 'team_member' | 'client',
+    role: 'client' as 'team_member' | 'client',
     company_name: '',
     phone: '',
   })
@@ -292,7 +292,6 @@ export default function NewUserPage() {
             >
               <option value="client">Client</option>
               <option value="team_member">Team Member</option>
-              <option value="admin">Admin</option>
             </select>
           </Field>
 

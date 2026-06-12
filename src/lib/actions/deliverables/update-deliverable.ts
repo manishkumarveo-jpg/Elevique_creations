@@ -63,6 +63,55 @@ export async function markDelivered(deliverableId: string, projectId: string) {
   revalidatePath(`/portal/projects/${projectId}`)
 }
 
+export async function addDeliverableTeam(input: unknown) {
+  const user = await (await import('@/lib/auth/require-role')).requireTeamMember()
+  const parsed = AddDeliverableSchema.parse(input)
+  const supabase = await createServerClient()
+
+  const { data, error } = await supabase.from('deliverables').insert(parsed).select().single()
+  if (error) throw new Error(error.message)
+
+  await logActivity({
+    actor_id: user.id,
+    actor_role: 'team_member',
+    action: 'deliverable.added',
+    project_id: parsed.project_id,
+    entity_type: 'deliverable',
+    entity_id: data.id,
+    entity_name: parsed.file_name,
+  })
+
+  revalidatePath(`/team/projects/${parsed.project_id}`)
+  revalidatePath(`/admin/projects/${parsed.project_id}`)
+  revalidatePath(`/portal/projects/${parsed.project_id}`)
+}
+
+export async function markDeliveredTeam(deliverableId: string, projectId: string) {
+  const user = await (await import('@/lib/auth/require-role')).requireTeamMember()
+  const supabase = await createServerClient()
+
+  const { error } = await supabase.from('deliverables').update({
+    status: 'delivered',
+    delivered_on: new Date().toISOString().split('T')[0],
+    revision_note: null,
+  }).eq('id', deliverableId)
+
+  if (error) throw new Error(error.message)
+
+  await logActivity({
+    actor_id: user.id,
+    actor_role: 'team_member',
+    action: 'deliverable.delivered',
+    project_id: projectId,
+    entity_type: 'deliverable',
+    entity_id: deliverableId,
+  })
+
+  revalidatePath(`/team/projects/${projectId}`)
+  revalidatePath(`/admin/projects/${projectId}`)
+  revalidatePath(`/portal/projects/${projectId}`)
+}
+
 export async function approveDeliverable(deliverableId: string, projectId: string) {
   const user = await (await import('@/lib/auth/require-role')).requireClient()
   const supabase = await createServerClient()

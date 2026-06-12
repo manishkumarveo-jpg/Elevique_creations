@@ -166,8 +166,9 @@ export default function NewProjectPage() {
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([])
   const [selectedTeam, setSelectedTeam] = useState<string[]>([])
   const [form, setForm] = useState({
-    name: '', client_id: '', package: '', deadline: '', description: '',
+    name: '', client_id: '', package: '', internal_deadline: '', client_deadline: '', description: '',
   })
+  const [deadlineError, setDeadlineError] = useState('')
 
   useEffect(() => {
     const supabase = createClientSupabase()
@@ -194,6 +195,11 @@ export default function NewProjectPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
+    setDeadlineError('')
+    if (form.internal_deadline && form.client_deadline && form.internal_deadline > form.client_deadline) {
+      setDeadlineError('Internal deadline must be on or before the client deadline')
+      return
+    }
     setLoading(true)
     try {
       const result = await createProject({ ...form, team_member_ids: selectedTeam })
@@ -293,32 +299,56 @@ export default function NewProjectPage() {
             </select>
           </Field>
 
+          <Field label="Package">
+            <input
+              style={inputStyle}
+              value={form.package}
+              onChange={set('package')}
+              placeholder="Starter / Growth / Enterprise"
+              autoComplete="off"
+              onFocus={focusOn}
+              onBlur={focusOff}
+            />
+          </Field>
+
           <div style={twoCol}>
-            {/* Package */}
-            <Field label="Package">
+            {/* Internal deadline */}
+            <Field label="Internal Deadline (Team)">
               <input
                 style={inputStyle}
-                value={form.package}
-                onChange={set('package')}
-                placeholder="Starter / Growth / Enterprise"
-                autoComplete="off"
+                type="date"
+                value={form.internal_deadline}
+                onChange={set('internal_deadline')}
                 onFocus={focusOn}
                 onBlur={focusOff}
               />
             </Field>
 
-            {/* Deadline */}
-            <Field label="Deadline">
+            {/* Client deadline */}
+            <Field label="Final Deadline (Client)">
               <input
                 style={inputStyle}
                 type="date"
-                value={form.deadline}
-                onChange={set('deadline')}
+                value={form.client_deadline}
+                onChange={set('client_deadline')}
                 onFocus={focusOn}
                 onBlur={focusOff}
               />
             </Field>
           </div>
+          {deadlineError && (
+            <p style={{
+              fontSize: '0.73rem',
+              color: 'rgba(248,113,113,0.90)',
+              background: 'rgba(248,113,113,0.07)',
+              border: '1px solid rgba(248,113,113,0.16)',
+              borderRadius: 10,
+              padding: '0.5rem 0.875rem',
+              margin: 0,
+            }}>
+              {deadlineError}
+            </p>
+          )}
 
           {/* Description */}
           <Field label="Description">

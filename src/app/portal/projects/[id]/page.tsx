@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import { createServerClient } from '@/lib/supabase/server'
-import { getProjectById } from '@/lib/queries/projects'
+import { getProjectByIdForClient } from '@/lib/queries/projects'
 import { getMilestonesForProject } from '@/lib/queries/milestones'
 import { getFoldersForProject, getFilesForProject } from '@/lib/queries/files'
 import { getDeliverablesForProject } from '@/lib/queries/deliverables'
@@ -25,7 +25,7 @@ export default async function ClientProjectPage({ params }: Props) {
   if (!user) notFound()
 
   const [project, milestones, folders, files, deliverables, checklist, revisions, assignments] = await Promise.all([
-    getProjectById(id).catch(() => null),
+    getProjectByIdForClient(id).catch(() => null),
     getMilestonesForProject(id),
     getFoldersForProject(id),
     getFilesForProject(id),
@@ -50,7 +50,12 @@ export default async function ClientProjectPage({ params }: Props) {
         {milestones.length === 0 ? (
           <p style={{ fontSize: '0.78rem', color: 'var(--p-t3)', fontStyle: 'italic' }}>No milestones set yet.</p>
         ) : (
-          <PipelineSteps milestones={milestones} teamInitials={teamInitials} />
+          <PipelineSteps
+            milestones={milestones}
+            teamInitials={teamInitials}
+            adminApproved={project.admin_approved}
+            projectStatus={project.status}
+          />
         )}
       </div>
 
@@ -69,10 +74,10 @@ export default async function ClientProjectPage({ params }: Props) {
               </span>
             </div>
             <div className="p-info-row">
-              <span className="p-info-key">Est. Completion</span>
+              <span className="p-info-key">Delivery Date</span>
               <span className="p-info-val">
-                {project.deadline
-                  ? new Date(project.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                {project.client_deadline
+                  ? new Date(project.client_deadline + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
                   : '—'}
               </span>
             </div>

@@ -11,9 +11,18 @@ const CreateProjectSchema = z.object({
   client_id: z.string().uuid(),
   team_member_ids: z.array(z.string().uuid()).optional().default([]),
   package: z.string().optional(),
-  deadline: z.string().optional(),
+  internal_deadline: z.string().optional(),
+  client_deadline: z.string().optional(),
   description: z.string().optional(),
-})
+}).refine(
+  data => {
+    if (data.internal_deadline && data.client_deadline) {
+      return data.internal_deadline <= data.client_deadline
+    }
+    return true
+  },
+  { message: 'Internal deadline must be on or before the client deadline', path: ['internal_deadline'] }
+)
 
 export async function createProject(input: unknown) {
   const user = await requireAdmin()

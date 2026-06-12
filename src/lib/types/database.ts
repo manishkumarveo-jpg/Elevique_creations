@@ -61,11 +61,15 @@ export type Database = {
           client_id: string
           package: string | null
           status: 'briefing' | 'in_progress' | 'final_review' | 'completed' | 'paused'
-          deadline: string | null
+          internal_deadline: string | null
+          client_deadline: string | null
           description: string | null
           client_note: string | null
           created_by: string
           is_archived: boolean
+          admin_approved: boolean
+          approved_by_admin: string | null
+          admin_approved_at: string | null
           created_at: string
           updated_at: string
         }
@@ -75,11 +79,15 @@ export type Database = {
           client_id: string
           package?: string | null
           status?: 'briefing' | 'in_progress' | 'final_review' | 'completed' | 'paused'
-          deadline?: string | null
+          internal_deadline?: string | null
+          client_deadline?: string | null
           description?: string | null
           client_note?: string | null
           created_by: string
           is_archived?: boolean
+          admin_approved?: boolean
+          approved_by_admin?: string | null
+          admin_approved_at?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -89,13 +97,50 @@ export type Database = {
           client_id?: string
           package?: string | null
           status?: 'briefing' | 'in_progress' | 'final_review' | 'completed' | 'paused'
-          deadline?: string | null
+          internal_deadline?: string | null
+          client_deadline?: string | null
           description?: string | null
           client_note?: string | null
           created_by?: string
           is_archived?: boolean
+          admin_approved?: boolean
+          approved_by_admin?: string | null
+          admin_approved_at?: string | null
           created_at?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      deadline_extensions: {
+        Row: {
+          id: string
+          project_id: string
+          deadline_type: 'internal' | 'client'
+          old_date: string | null
+          new_date: string
+          reason: string | null
+          extended_by: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          project_id: string
+          deadline_type: 'internal' | 'client'
+          old_date?: string | null
+          new_date: string
+          reason?: string | null
+          extended_by: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          project_id?: string
+          deadline_type?: 'internal' | 'client'
+          old_date?: string | null
+          new_date?: string
+          reason?: string | null
+          extended_by?: string
+          created_at?: string
         }
         Relationships: []
       }
@@ -512,7 +557,39 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      projects_team: {
+        Row: {
+          id: string
+          name: string
+          client_id: string
+          package: string | null
+          status: 'briefing' | 'in_progress' | 'final_review' | 'completed' | 'paused'
+          internal_deadline: string | null
+          description: string | null
+          client_note: string | null
+          created_by: string
+          is_archived: boolean
+          admin_approved: boolean
+          created_at: string
+          updated_at: string
+        }
+        Relationships: []
+      }
+      projects_client: {
+        Row: {
+          id: string
+          name: string
+          client_id: string
+          package: string | null
+          status: 'briefing' | 'in_progress' | 'final_review' | 'completed' | 'paused'
+          client_deadline: string | null
+          description: string | null
+          is_archived: boolean
+          created_at: string
+          updated_at: string
+        }
+        Relationships: []
+      }
     }
     Functions: {
       get_user_role: {

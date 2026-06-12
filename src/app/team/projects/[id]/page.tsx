@@ -1,16 +1,19 @@
 import { notFound } from 'next/navigation'
 import { createServerClient } from '@/lib/supabase/server'
-import { getProjectById } from '@/lib/queries/projects'
+import { getProjectByIdForTeam } from '@/lib/queries/projects'
 import { getMilestonesForProject } from '@/lib/queries/milestones'
 import { getFoldersForProject, getFilesForProject } from '@/lib/queries/files'
 import { getChecklistForProject } from '@/lib/queries/checklist'
 import { getRevisionsForProject } from '@/lib/queries/revisions'
+import { getDeliverablesForProject } from '@/lib/queries/deliverables'
 import { Tabs } from '@/components/ui/Tabs'
 import { ProjectStatusBadge } from '@/components/shared/StatusBadge'
 import { MilestoneTimeline } from '@/components/shared/MilestoneTimeline'
 import { TeamMilestoneControls } from './TeamMilestoneControls'
 import { FilesSection } from '@/app/admin/projects/[id]/FilesSection'
 import { AssetChecklist } from '@/components/shared/AssetChecklist'
+import { FinalizeProjectPanel } from './FinalizeProjectPanel'
+import { TeamDeliverablesSection } from './TeamDeliverablesSection'
 
 interface Props { params: Promise<{ id: string }> }
 
@@ -35,13 +38,14 @@ export default async function TeamProjectPage({ params }: Props) {
   const supabase = await createServerClient()
   await supabase.auth.getUser()
 
-  const [project, milestones, folders, files, checklist, revisions] = await Promise.all([
-    getProjectById(id).catch(() => null),
+  const [project, milestones, folders, files, checklist, revisions, deliverables] = await Promise.all([
+    getProjectByIdForTeam(id).catch(() => null),
     getMilestonesForProject(id),
     getFoldersForProject(id),
     getFilesForProject(id),
     getChecklistForProject(id),
     getRevisionsForProject(id),
+    getDeliverablesForProject(id),
   ])
 
   if (!project) notFound()
@@ -55,7 +59,11 @@ export default async function TeamProjectPage({ params }: Props) {
       content: (
         <div style={panel}>
           <p style={panelLabel}>Milestones</p>
-          <MilestoneTimeline milestones={milestones} />
+          <MilestoneTimeline
+            milestones={milestones}
+            adminApproved={project.admin_approved}
+            projectStatus={project.status}
+          />
           <TeamMilestoneControls milestones={milestones} projectId={id} />
         </div>
       ),
@@ -78,6 +86,11 @@ export default async function TeamProjectPage({ params }: Props) {
         </div>
       ),
     },
+    {
+      key: 'deliverables',
+      label: 'Deliverables',
+      content: <TeamDeliverablesSection deliverables={deliverables} projectId={id} />,
+    },
   ]
 
   return (
@@ -92,10 +105,19 @@ export default async function TeamProjectPage({ params }: Props) {
           </h1>
           <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.32)', marginTop: '0.2rem' }}>
             {client?.company_name ?? client?.full_name ?? '—'}
+            {project.internal_deadline ? ` · Due ${new Date(project.internal_deadline + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}` : ''}
           </p>
         </div>
         <ProjectStatusBadge status={project.status} />
       </div>
+      {project.status === 'final_review' && (
+        <FinalizeProjectPanel project={{
+          id: project.id,
+          status: project.status,
+          admin_approved: project.admin_approved,
+          approver: project.approver as unknown as { id: string; full_name: string } | null,
+        }} />
+      )}
       {revisions.length > 0 && (
         <div style={{
           background: '#0f1220',
@@ -110,7 +132,7 @@ export default async function TeamProjectPage({ params }: Props) {
             Client Revision Requests
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-            {revisions.map(r => (
+            {revisions.map((r: { id: string; status: string; note: string; created_at: string }) => (
               <div key={r.id} style={{
                 opacity: r.status === 'resolved' ? 0.45 : 1,
                 padding: '0.5rem 0.75rem',

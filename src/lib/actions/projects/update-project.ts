@@ -8,10 +8,19 @@ import { revalidatePath } from 'next/cache'
 const UpdateProjectSchema = z.object({
   name: z.string().min(1).max(200).optional(),
   package: z.string().optional(),
-  deadline: z.string().nullable().optional(),
+  internal_deadline: z.string().nullable().optional(),
+  client_deadline: z.string().nullable().optional(),
   description: z.string().nullable().optional(),
   status: z.enum(['briefing', 'in_progress', 'final_review', 'completed', 'paused']).optional(),
-})
+}).refine(
+  data => {
+    if (data.internal_deadline && data.client_deadline) {
+      return data.internal_deadline <= data.client_deadline
+    }
+    return true
+  },
+  { message: 'Internal deadline must be on or before the client deadline', path: ['internal_deadline'] }
+)
 
 export async function updateProject(id: string, input: unknown) {
   await requireAdmin()

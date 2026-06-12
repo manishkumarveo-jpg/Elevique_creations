@@ -62,7 +62,7 @@ export default async function AdminDashboardPage() {
 
   const activeProjects = projects.filter(p => p.status !== 'completed')
   const noTeam   = projects.filter(p => p.team.length === 0 && p.status !== 'completed')
-  const overdue  = projects.filter(p => p.deadline && new Date(p.deadline) < new Date() && p.status !== 'completed')
+  const overdue  = projects.filter(p => p.client_deadline && new Date(p.client_deadline) < new Date() && p.status !== 'completed')
   const attention = noTeam.length + overdue.length
 
   const totalMilestones = projects.reduce((s, p) => s + p.milestone_total, 0)
@@ -238,7 +238,7 @@ export default async function AdminDashboardPage() {
 
                     <div className="p-project-card-footer">
                       <span className="p-project-card-date">
-                        {project.deadline ? `Deadline: ${new Date(project.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}` : 'No deadline'}
+                        {project.client_deadline ? `Deadline: ${new Date(project.client_deadline + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}` : 'No deadline'}
                       </span>
                       <span className="p-link-teal" style={{ fontSize: '0.72rem' }}>View details →</span>
                     </div>
@@ -265,7 +265,7 @@ export default async function AdminDashboardPage() {
                       </div>
                       <p className="p-project-meta">
                         {project.client?.company_name ?? project.client?.full_name ?? '—'}
-                        {project.deadline ? ` · Due ${project.deadline}` : ''}
+                        {project.client_deadline ? ` · Due ${project.client_deadline}` : ''}
                       </p>
                     </div>
                     <div style={{ flexShrink: 0 }}>

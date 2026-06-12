@@ -50,7 +50,7 @@ export default async function AdminProjectsPage() {
                   <p className="p-project-meta">
                     {project.client?.company_name ?? project.client?.full_name ?? '—'}
                     {project.package ? ` · ${project.package}` : ''}
-                    {project.deadline ? ` · Due ${project.deadline}` : ''}
+                    {project.client_deadline ? ` · Due ${project.client_deadline}` : ''}
                   </p>
                 </div>
 
