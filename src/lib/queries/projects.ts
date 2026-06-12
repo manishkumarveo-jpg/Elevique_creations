@@ -16,7 +16,8 @@ export type ProjectWithTeam = {
   name: string
   status: 'briefing' | 'in_progress' | 'final_review' | 'completed' | 'paused'
   package: string | null
-  deadline: string | null
+  internal_deadline: string | null
+  client_deadline: string | null
   created_at: string
   client: { id: string; full_name: string; company_name: string | null } | null
   team: { id: string; full_name: string }[]
@@ -30,7 +31,7 @@ export async function getProjectsWithTeam(): Promise<ProjectWithTeam[]> {
   const [projectsRes, assignmentsRes, milestonesRes] = await Promise.all([
     supabase
       .from('projects')
-      .select('id, name, status, package, deadline, created_at, client_id')
+      .select('id, name, status, package, internal_deadline, client_deadline, created_at, client_id')
       .eq('is_archived', false)
       .order('created_at', { ascending: false }),
     supabase
@@ -47,7 +48,6 @@ export async function getProjectsWithTeam(): Promise<ProjectWithTeam[]> {
   const assignments = assignmentsRes.data ?? []
   const milestones = milestonesRes.data ?? []
 
-  // Collect all unique user ids (clients + team members)
   const clientIds = [...new Set(projects.map(p => p.client_id))]
   const teamIds = [...new Set(assignments.map(a => a.user_id))]
   const allIds = [...new Set([...clientIds, ...teamIds])]
@@ -67,7 +67,8 @@ export async function getProjectsWithTeam(): Promise<ProjectWithTeam[]> {
       name: p.name,
       status: p.status as ProjectWithTeam['status'],
       package: p.package,
-      deadline: p.deadline,
+      internal_deadline: p.internal_deadline,
+      client_deadline: p.client_deadline,
       created_at: p.created_at,
       client: clientProfile
         ? { id: p.client_id, full_name: clientProfile.full_name, company_name: clientProfile.company_name ?? null }
@@ -79,28 +80,34 @@ export async function getProjectsWithTeam(): Promise<ProjectWithTeam[]> {
   })
 }
 
+// Team members: explicit column selection excludes client_deadline
 export async function getProjectsForTeam(userId: string) {
   const supabase = await createServerClient()
+  const assignedIds = (
+    await supabase
+      .from('project_assignments')
+      .select('project_id')
+      .eq('user_id', userId)
+  ).data?.map(a => a.project_id) ?? []
+
+  if (assignedIds.length === 0) return []
+
   const { data, error } = await supabase
     .from('projects')
-    .select('*, client:profiles!projects_client_id_fkey(id, full_name, email)')
+    .select('id, name, client_id, package, status, internal_deadline, description, client_note, created_by, is_archived, admin_approved, created_at, updated_at, client:profiles!projects_client_id_fkey(id, full_name, email, company_name)')
     .eq('is_archived', false)
-    .in('id', (
-      await supabase
-        .from('project_assignments')
-        .select('project_id')
-        .eq('user_id', userId)
-    ).data?.map(a => a.project_id) ?? [])
+    .in('id', assignedIds)
     .order('created_at', { ascending: false })
   if (error) throw error
   return data
 }
 
+// Clients: explicit column selection excludes internal_deadline
 export async function getProjectsForClient(userId: string) {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('projects')
-    .select('*')
+    .select('id, name, client_id, package, status, client_deadline, description, is_archived, admin_approved, created_at, updated_at')
     .eq('client_id', userId)
     .eq('is_archived', false)
     .order('created_at', { ascending: false })
@@ -108,13 +115,60 @@ export async function getProjectsForClient(userId: string) {
   return data
 }
 
+// Admin: full project data with both deadlines
 export async function getProjectById(id: string) {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('projects')
-    .select('*, client:profiles!projects_client_id_fkey(id, full_name, email, company_name)')
+    .select('*, client:profiles!projects_client_id_fkey(id, full_name, email, company_name), approver:profiles!projects_approved_by_admin_fkey(id, full_name)')
     .eq('id', id)
     .single()
   if (error) throw error
   return data
+}
+
+// Team member: project detail without client_deadline
+export async function getProjectByIdForTeam(id: string) {
+  const supabase = await createServerClient()
+  const { data, error } = await supabase
+    .from('projects')
+    .select('id, name, client_id, package, status, description, internal_deadline, client_note, created_by, is_archived, admin_approved, created_at, updated_at, client:profiles!projects_client_id_fkey(id, full_name, email, company_name), approver:profiles!projects_approved_by_admin_fkey(id, full_name)')
+    .eq('id', id)
+    .single()
+  if (error) throw error
+  return data
+}
+
+// Client: project detail without internal_deadline
+export async function getProjectByIdForClient(id: string) {
+  const supabase = await createServerClient()
+  const { data, error } = await supabase
+    .from('projects')
+    .select('id, name, client_id, package, status, description, client_deadline, client_note, is_archived, admin_approved, created_at, updated_at')
+    .eq('id', id)
+    .single()
+  if (error) throw error
+  return data
+}
+
+export type DeadlineExtension = {
+  id: string
+  project_id: string
+  deadline_type: 'internal' | 'client'
+  old_date: string | null
+  new_date: string
+  reason: string | null
+  extended_by: string
+  created_at: string
+}
+
+export async function getDeadlineExtensions(projectId: string): Promise<DeadlineExtension[]> {
+  const supabase = await createServerClient()
+  const { data, error } = await supabase
+    .from('deadline_extensions')
+    .select('id, project_id, deadline_type, old_date, new_date, reason, extended_by, created_at')
+    .eq('project_id', projectId)
+    .order('created_at', { ascending: false })
+  if (error) throw error
+  return (data ?? []) as DeadlineExtension[]
 }

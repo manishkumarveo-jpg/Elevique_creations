@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { getProjectById } from '@/lib/queries/projects'
+import { getProjectById, getDeadlineExtensions } from '@/lib/queries/projects'
 import { getMilestonesForProject } from '@/lib/queries/milestones'
 import { getFoldersForProject, getFilesForProject } from '@/lib/queries/files'
 import { getDeliverablesForProject } from '@/lib/queries/deliverables'
@@ -14,12 +14,14 @@ import { FilesSection } from './FilesSection'
 import { AssignmentsSection } from './AssignmentsSection'
 import { DeliverablesSection } from './DeliverablesSection'
 import { ClientNoteAlert } from './ClientNoteAlert'
+import { AdminApprovalPanel } from './AdminApprovalPanel'
+import { AdminDeadlinePanel } from './AdminDeadlinePanel'
 
 interface Props { params: Promise<{ id: string }> }
 
 export default async function AdminProjectPage({ params }: Props) {
   const { id } = await params
-  const [project, milestones, folders, files, deliverables, checklist, assignments, revisions] = await Promise.all([
+  const [project, milestones, folders, files, deliverables, checklist, assignments, revisions, deadlineExtensions] = await Promise.all([
     getProjectById(id).catch(() => null),
     getMilestonesForProject(id),
     getFoldersForProject(id),
@@ -28,6 +30,7 @@ export default async function AdminProjectPage({ params }: Props) {
     getChecklistForProject(id),
     getAssignmentsForProject(id),
     getRevisionsForProject(id),
+    getDeadlineExtensions(id).catch(() => []),
   ])
 
   if (!project) notFound()
@@ -44,14 +47,31 @@ export default async function AdminProjectPage({ params }: Props) {
       key: 'overview',
       label: 'Overview',
       content: (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {(project.status === 'final_review' || project.status === 'completed') && (
+            <AdminApprovalPanel project={{
+              id: project.id,
+              status: project.status,
+              admin_approved: project.admin_approved,
+              approved_by_admin: project.approved_by_admin,
+              approver: project.approver as unknown as { id: string; full_name: string } | null,
+            }} />
+          )}
+          <AdminDeadlinePanel
+            projectId={id}
+            internal_deadline={project.internal_deadline ?? null}
+            client_deadline={project.client_deadline ?? null}
+            extensions={deadlineExtensions}
+          />
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <div className="p-info-panel">
             <p className="p-info-panel-label">Project Details</p>
             {[
               { key: 'Status',   val: <ProjectStatusBadge status={project.status} /> },
               { key: 'Client',   val: client?.company_name ?? client?.full_name ?? '—' },
               { key: 'Package',  val: project.package ?? '—' },
-              { key: 'Deadline', val: project.deadline ?? '—' },
+              { key: 'Internal Deadline', val: project.internal_deadline ?? '—' },
+              { key: 'Client Deadline',   val: project.client_deadline ?? '—' },
               { key: 'Created',  val: new Date(project.created_at).toLocaleDateString() },
             ].map(row => (
               <div key={row.key} className="p-info-row">
@@ -78,6 +98,7 @@ export default async function AdminProjectPage({ params }: Props) {
             <p style={{ fontSize: '0.82rem', color: project.description ? 'var(--p-t2)' : 'var(--p-t3)', lineHeight: 1.6, fontStyle: project.description ? 'normal' : 'italic' }}>
               {project.description ?? 'No description provided.'}
             </p>
+          </div>
           </div>
         </div>
       ),
@@ -182,7 +203,7 @@ export default async function AdminProjectPage({ params }: Props) {
           </h1>
           <p style={{ fontSize: '0.75rem', color: 'var(--p-t3)', marginTop: '0.25rem' }}>
             {client?.company_name ?? client?.full_name ?? 'No client'}
-            {project.deadline ? ` · Due ${project.deadline}` : ''}
+            {project.client_deadline ? ` · Client due ${project.client_deadline}` : ''}
           </p>
         </div>
         <ProjectStatusBadge status={project.status} />
