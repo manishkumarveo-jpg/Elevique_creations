@@ -80,9 +80,10 @@ interface DeadlineSectionProps {
   deadlineType: 'internal' | 'client'
   projectId: string
   extensions: DeadlineExtension[]
+  otherDeadline?: string | null
 }
 
-function DeadlineSection({ label, badge, current, deadlineType, projectId, extensions }: DeadlineSectionProps) {
+function DeadlineSection({ label, badge, current, deadlineType, projectId, extensions, otherDeadline }: DeadlineSectionProps) {
   const [open, setOpen] = useState(false)
   const [newDate, setNewDate] = useState('')
   const [reason, setReason] = useState('')
@@ -94,6 +95,37 @@ function DeadlineSection({ label, badge, current, deadlineType, projectId, exten
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
+
+    const newTime = new Date(newDate + 'T00:00:00').getTime()
+    if (isNaN(newTime)) {
+      setError('Invalid date.')
+      return
+    }
+
+    if (current) {
+      const currentTime = new Date(current + 'T00:00:00').getTime()
+      if (newTime <= currentTime) {
+        setError('New date must be after the current deadline.')
+        return
+      }
+    }
+
+    if (deadlineType === 'internal' && otherDeadline) {
+      const clientTime = new Date(otherDeadline + 'T00:00:00').getTime()
+      if (!isNaN(clientTime) && newTime > clientTime) {
+        setError('Internal deadline cannot be later than the client deadline.')
+        return
+      }
+    }
+
+    if (deadlineType === 'client' && otherDeadline) {
+      const internalTime = new Date(otherDeadline + 'T00:00:00').getTime()
+      if (!isNaN(internalTime) && newTime < internalTime) {
+        setError('Client deadline cannot be earlier than the internal deadline.')
+        return
+      }
+    }
+
     startTransition(async () => {
       try {
         await extendDeadline(projectId, { deadline_type: deadlineType, new_date: newDate, reason })
@@ -221,6 +253,7 @@ export function AdminDeadlinePanel({ projectId, internal_deadline, client_deadli
         deadlineType="internal"
         projectId={projectId}
         extensions={extensions}
+        otherDeadline={client_deadline}
       />
       <div style={{ borderBottom: 'none', paddingBottom: 0, marginBottom: 0 }}>
         <DeadlineSection
@@ -230,6 +263,7 @@ export function AdminDeadlinePanel({ projectId, internal_deadline, client_deadli
           deadlineType="client"
           projectId={projectId}
           extensions={extensions}
+          otherDeadline={internal_deadline}
         />
       </div>
     </div>

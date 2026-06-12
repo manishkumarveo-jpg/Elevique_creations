@@ -15,7 +15,10 @@ const UpdateProjectSchema = z.object({
 }).refine(
   data => {
     if (data.internal_deadline && data.client_deadline) {
-      return data.internal_deadline <= data.client_deadline
+      const internalTime = new Date(data.internal_deadline).getTime()
+      const clientTime = new Date(data.client_deadline).getTime()
+      if (isNaN(internalTime) || isNaN(clientTime)) return true
+      return internalTime <= clientTime
     }
     return true
   },

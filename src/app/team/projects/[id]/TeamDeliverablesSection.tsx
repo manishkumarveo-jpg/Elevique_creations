@@ -62,6 +62,7 @@ export function TeamDeliverablesSection({ deliverables, projectId }: { deliverab
   const [isPending, startTransition] = useTransition()
   const [form, setForm] = useState({ file_name: '', deliverable_type: 'video', format: '', duration: '', dimensions: '', drive_link: '' })
   const [error, setError] = useState('')
+  const [markError, setMarkError] = useState('')
 
   function set(key: keyof typeof form) {
     return (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
@@ -171,6 +172,9 @@ export function TeamDeliverablesSection({ deliverables, projectId }: { deliverab
       <div style={{ ...panel, padding: 0 }}>
         <div style={{ padding: '1.125rem 1.25rem', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
           <p style={{ ...panelLabel, margin: 0 }}>Deliverables ({deliverables.length})</p>
+          {markError && (
+            <p style={{ fontSize: '0.72rem', color: 'rgba(248,113,113,0.85)', margin: '0.5rem 0 0' }}>{markError}</p>
+          )}
         </div>
 
         {deliverables.length === 0 ? (
@@ -251,7 +255,16 @@ export function TeamDeliverablesSection({ deliverables, projectId }: { deliverab
                           <button
                             type="button"
                             disabled={isPending}
-                            onClick={() => startTransition(() => markDeliveredTeam(d.id, projectId))}
+                            onClick={() => {
+                              setMarkError('')
+                              startTransition(async () => {
+                                try {
+                                  await markDeliveredTeam(d.id, projectId)
+                                } catch (err: unknown) {
+                                  setMarkError(err instanceof Error ? err.message : 'Failed to mark as delivered')
+                                }
+                              })
+                            }}
                             style={{
                               background: 'rgba(52,211,153,0.07)',
                               border: '1px solid rgba(52,211,153,0.22)',

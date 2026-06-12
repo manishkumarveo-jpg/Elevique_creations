@@ -105,6 +105,24 @@ export async function finalizeProject(projectId: string) {
   const user = await requireTeamMember()
   const supabase = await createServerClient()
 
+  const { data: project, error: fetchError } = await supabase
+    .from('projects')
+    .select('id, status, admin_approved')
+    .eq('id', projectId)
+    .single()
+
+  if (fetchError || !project) throw new Error('Project not found')
+  if (project.status !== 'final_review') throw new Error('Project is not in final review')
+  if (!project.admin_approved) throw new Error('Project has not been approved by admin')
+
+  const { data: assignment } = await supabase
+    .from('project_assignments')
+    .select('project_id')
+    .eq('project_id', projectId)
+    .eq('user_id', user.id)
+    .maybeSingle()
+  if (!assignment) throw new Error('You are not assigned to this project')
+
   const { error } = await supabase
     .from('projects')
     .update({ status: 'completed' })

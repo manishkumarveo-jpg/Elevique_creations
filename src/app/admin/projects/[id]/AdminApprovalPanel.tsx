@@ -82,7 +82,7 @@ export function AdminApprovalPanel({ project }: Props) {
           <>
             <button
               disabled={isPending}
-              onClick={() => startTransition(() => giveAdminApproval(project.id))}
+              onClick={() => startTransition(() => adminApproveAndFinalize(project.id))}
               style={{
                 padding: '0.5rem 1rem', borderRadius: 8, fontSize: '0.78rem', fontWeight: 600,
                 background: '#14B8A6', color: '#07080c',

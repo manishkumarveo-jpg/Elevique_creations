@@ -41,7 +41,7 @@ BEGIN
 
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_catalog;
 
 CREATE TRIGGER trg_enforce_admin_approval
   BEFORE UPDATE ON public.projects

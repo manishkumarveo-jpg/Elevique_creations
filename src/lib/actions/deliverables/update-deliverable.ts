@@ -68,6 +68,14 @@ export async function addDeliverableTeam(input: unknown) {
   const parsed = AddDeliverableSchema.parse(input)
   const supabase = await createServerClient()
 
+  const { data: assignment } = await supabase
+    .from('project_assignments')
+    .select('project_id')
+    .eq('project_id', parsed.project_id)
+    .eq('user_id', user.id)
+    .maybeSingle()
+  if (!assignment) throw new Error('You are not assigned to this project')
+
   const { data, error } = await supabase.from('deliverables').insert(parsed).select().single()
   if (error) throw new Error(error.message)
 
@@ -89,6 +97,14 @@ export async function addDeliverableTeam(input: unknown) {
 export async function markDeliveredTeam(deliverableId: string, projectId: string) {
   const user = await (await import('@/lib/auth/require-role')).requireTeamMember()
   const supabase = await createServerClient()
+
+  const { data: assignment } = await supabase
+    .from('project_assignments')
+    .select('project_id')
+    .eq('project_id', projectId)
+    .eq('user_id', user.id)
+    .maybeSingle()
+  if (!assignment) throw new Error('You are not assigned to this project')
 
   const { error } = await supabase.from('deliverables').update({
     status: 'delivered',

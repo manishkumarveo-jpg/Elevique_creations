@@ -30,8 +30,12 @@ export async function extendDeadline(projectId: string, input: unknown) {
   const other_internal = deadline_type === 'internal' ? new_date : (project.internal_deadline ?? null)
   const other_client   = deadline_type === 'client'   ? new_date : (project.client_deadline   ?? null)
 
-  if (other_internal && other_client && other_internal > other_client) {
-    throw new Error('Internal deadline cannot be later than the client deadline')
+  if (other_internal && other_client) {
+    const internalTime = new Date(other_internal).getTime()
+    const clientTime = new Date(other_client).getTime()
+    if (!isNaN(internalTime) && !isNaN(clientTime) && internalTime > clientTime) {
+      throw new Error('Internal deadline cannot be later than the client deadline')
+    }
   }
 
   const updatePayload = deadline_type === 'internal'

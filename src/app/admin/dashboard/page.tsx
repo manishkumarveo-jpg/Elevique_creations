@@ -265,7 +265,7 @@ export default async function AdminDashboardPage() {
                       </div>
                       <p className="p-project-meta">
                         {project.client?.company_name ?? project.client?.full_name ?? '—'}
-                        {project.client_deadline ? ` · Due ${project.client_deadline}` : ''}
+                        {project.client_deadline ? ` · Due ${new Date(project.client_deadline + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}` : ''}
                       </p>
                     </div>
                     <div style={{ flexShrink: 0 }}>

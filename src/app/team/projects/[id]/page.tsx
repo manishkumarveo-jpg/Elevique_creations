@@ -115,7 +115,15 @@ export default async function TeamProjectPage({ params }: Props) {
           id: project.id,
           status: project.status,
           admin_approved: project.admin_approved,
-          approver: project.approver as unknown as { id: string; full_name: string } | null,
+          approver: (
+            project.approver &&
+            typeof project.approver === 'object' &&
+            'id' in project.approver &&
+            'full_name' in project.approver
+          ) ? {
+            id: String((project.approver as Record<string, unknown>).id),
+            full_name: String((project.approver as Record<string, unknown>).full_name),
+          } : null,
         }} />
       )}
       {revisions.length > 0 && (
