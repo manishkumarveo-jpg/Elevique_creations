@@ -192,16 +192,12 @@ export default async function AdminProjectPage({ params }: Props) {
   ]
 
   return (
-    <div style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
+    <div className="p-content-wrap">
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap', marginBottom: '1.75rem' }}>
         <div>
-          <p style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.28em', textTransform: 'uppercase', color: 'var(--p-teal)', margin: '0 0 0.3rem' }}>
-            Admin · Projects
-          </p>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--p-t1)', letterSpacing: '-0.01em', margin: 0 }}>
-            {project.name}
-          </h1>
-          <p style={{ fontSize: '0.75rem', color: 'var(--p-t3)', marginTop: '0.25rem' }}>
+          <p className="p-eyebrow" style={{ marginBottom: '0.3rem' }}>Admin · Projects</p>
+          <h1 className="p-page-title">{project.name}</h1>
+          <p className="p-page-sub">
             {client?.company_name ?? client?.full_name ?? 'No client'}
             {project.client_deadline ? ` · Client due ${project.client_deadline}` : ''}
           </p>
@@ -213,4 +209,5 @@ export default async function AdminProjectPage({ params }: Props) {
       <Tabs tabs={tabs} />
     </div>
   )
+
 }

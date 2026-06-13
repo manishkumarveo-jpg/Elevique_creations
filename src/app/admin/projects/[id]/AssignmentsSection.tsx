@@ -126,7 +126,7 @@ export function AssignmentsSection({ assignments, projectId }: { assignments: As
               })}
               style={{
                 padding: '0.6rem 1.125rem',
-                background: (!selectedId || isPending) ? 'rgba(20,184,166,0.3)' : '#14B8A6',
+                background: (!selectedId || isPending) ? 'rgba(20,184,166,0.3)' : 'var(--ds-white)',
                 color: '#07080c',
                 fontSize: '0.7rem',
                 fontWeight: 700,

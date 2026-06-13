@@ -42,9 +42,9 @@ const inputStyle: React.CSSProperties = {
 
 const btnTeal: React.CSSProperties = {
   padding: '0.45rem 0.9rem',
-  background: 'rgba(20,184,166,0.12)',
-  color: '#14B8A6',
-  border: '1px solid rgba(20,184,166,0.25)',
+  background: 'var(--ds-hover)',
+  color: 'var(--ds-white)',
+  border: '1px solid var(--ds-border-2)',
   borderRadius: 7,
   fontSize: '0.68rem',
   fontWeight: 700,
@@ -150,8 +150,8 @@ function DeadlineSection({ label, badge, current, deadlineType, projectId, exten
             textTransform: 'uppercase',
             padding: '0.15rem 0.45rem',
             borderRadius: 20,
-            background: deadlineType === 'internal' ? 'rgba(99,102,241,0.12)' : 'rgba(20,184,166,0.12)',
-            color: deadlineType === 'internal' ? '#a5b4fc' : '#14B8A6',
+            background: deadlineType === 'internal' ? 'rgba(99,102,241,0.12)' : 'var(--ds-hover)',
+            color: deadlineType === 'internal' ? '#a5b4fc' : 'var(--ds-white)',
             border: deadlineType === 'internal' ? '1px solid rgba(99,102,241,0.2)' : '1px solid rgba(20,184,166,0.2)',
           }}>
             {badge}

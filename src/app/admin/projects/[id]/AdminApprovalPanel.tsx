@@ -40,7 +40,7 @@ export function AdminApprovalPanel({ project }: Props) {
         <span style={{
           fontSize: '0.65rem', fontWeight: 700, padding: '0.2rem 0.65rem',
           borderRadius: 20,
-          background: isApproved ? 'rgba(20,184,166,0.12)' : 'rgba(251,146,60,0.12)',
+          background: isApproved ? 'var(--ds-hover)' : 'rgba(251,146,60,0.12)',
           color: isApproved ? '#2dd4bf' : '#fb923c',
           border: `1px solid ${isApproved ? 'rgba(20,184,166,0.22)' : 'rgba(251,146,60,0.22)'}`,
         }}>
@@ -56,7 +56,7 @@ export function AdminApprovalPanel({ project }: Props) {
               onClick={() => startTransition(() => giveAdminApproval(project.id))}
               style={{
                 padding: '0.5rem 1rem', borderRadius: 8, fontSize: '0.78rem', fontWeight: 600,
-                background: 'rgba(20,184,166,0.12)', color: '#2dd4bf',
+                background: 'var(--ds-hover)', color: '#2dd4bf',
                 border: '1px solid rgba(20,184,166,0.28)', cursor: isPending ? 'not-allowed' : 'pointer',
                 opacity: isPending ? 0.6 : 1,
               }}
@@ -68,8 +68,8 @@ export function AdminApprovalPanel({ project }: Props) {
               onClick={() => startTransition(() => adminApproveAndFinalize(project.id))}
               style={{
                 padding: '0.5rem 1rem', borderRadius: 8, fontSize: '0.78rem', fontWeight: 600,
-                background: '#14B8A6', color: '#07080c',
-                border: '1px solid #14B8A6', cursor: isPending ? 'not-allowed' : 'pointer',
+                background: 'var(--ds-white)', color: '#07080c',
+                border: '1px solid var(--ds-white)', cursor: isPending ? 'not-allowed' : 'pointer',
                 opacity: isPending ? 0.6 : 1,
               }}
             >
@@ -85,8 +85,8 @@ export function AdminApprovalPanel({ project }: Props) {
               onClick={() => startTransition(() => adminApproveAndFinalize(project.id))}
               style={{
                 padding: '0.5rem 1rem', borderRadius: 8, fontSize: '0.78rem', fontWeight: 600,
-                background: '#14B8A6', color: '#07080c',
-                border: '1px solid #14B8A6', cursor: isPending ? 'not-allowed' : 'pointer',
+                background: 'var(--ds-white)', color: '#07080c',
+                border: '1px solid var(--ds-white)', cursor: isPending ? 'not-allowed' : 'pointer',
                 opacity: isPending ? 0.6 : 1,
               }}
             >

@@ -8,7 +8,7 @@ import type { Database } from '@/lib/types/database'
 type Deliverable = Database['public']['Tables']['deliverables']['Row']
 
 const VideoIcon = () => (
-  <svg viewBox="0 0 20 20" fill="currentColor" style={{ width: 14, height: 14, color: '#14B8A6' }}>
+  <svg viewBox="0 0 20 20" fill="currentColor" style={{ width: 14, height: 14, color: 'var(--ds-white)' }}>
     <path d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zm12.553 1.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z" />
   </svg>
 )
@@ -124,11 +124,11 @@ export function ClientDeliverablesSection({ deliverables, projectId }: { deliver
                         onClick={() => startTransition(() => approveDeliverable(d.id, projectId))}
                         style={{
                           padding: '0.3rem 0.75rem',
-                          background: 'rgba(20,184,166,0.10)',
-                          color: '#14B8A6',
+                          background: 'var(--ds-hover)',
+                          color: 'var(--ds-white)',
                           fontSize: '0.65rem', fontWeight: 700,
                           letterSpacing: '0.08em', textTransform: 'uppercase',
-                          border: '1px solid rgba(20,184,166,0.25)',
+                          border: '1px solid var(--ds-border-2)',
                           borderRadius: 7, cursor: 'pointer', fontFamily: 'inherit',
                           opacity: isPending ? 0.5 : 1,
                         }}
@@ -205,7 +205,7 @@ export function ClientDeliverablesSection({ deliverables, projectId }: { deliver
                       onClick={() => handleRevisionSubmit(d.id)}
                       style={{
                         padding: '0.45rem 1rem',
-                        background: isPending ? 'rgba(20,184,166,0.3)' : '#14B8A6',
+                        background: isPending ? 'rgba(20,184,166,0.3)' : 'var(--ds-white)',
                         color: '#07080c', fontSize: '0.68rem', fontWeight: 700,
                         letterSpacing: '0.1em', textTransform: 'uppercase',
                         border: 'none', borderRadius: 7, cursor: isPending ? 'not-allowed' : 'pointer',

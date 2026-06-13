@@ -94,14 +94,14 @@ export function TeamDeliverablesSection({ deliverables, projectId }: { deliverab
             onClick={() => setShowForm(v => !v)}
             style={{
               background: showForm ? 'none' : 'rgba(20,184,166,0.1)',
-              border: '1px solid rgba(20,184,166,0.25)',
+              border: '1px solid var(--ds-border-2)',
               borderRadius: 8,
               padding: '0.3rem 0.875rem',
               fontSize: '0.68rem',
               fontWeight: 600,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
-              color: '#14B8A6',
+              color: 'var(--ds-white)',
               cursor: 'pointer',
               fontFamily: 'inherit',
             }}
@@ -150,7 +150,7 @@ export function TeamDeliverablesSection({ deliverables, projectId }: { deliverab
               style={{
                 alignSelf: 'flex-end',
                 padding: '0.5rem 1.25rem',
-                background: isPending ? 'rgba(20,184,166,0.3)' : '#14B8A6',
+                background: isPending ? 'rgba(20,184,166,0.3)' : 'var(--ds-white)',
                 color: '#07080c',
                 fontSize: '0.72rem',
                 fontWeight: 700,

@@ -4,33 +4,36 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { logoutTeam } from '@/lib/actions/auth/logout-admin'
+import {
+  LayoutDashboard,
+  Folder,
+  Milestone,
+  ChevronsUpDown,
+  Check,
+  X,
+  LogOut,
+} from 'lucide-react'
 
-const navItems = [
+const NAV_GROUPS = [
   {
-    href: '/team/dashboard',
-    label: 'Projects',
-    matchPrefix: '/team/projects',
-    icon: (
-      <svg className="p-nav-icon" viewBox="0 0 20 20" fill="currentColor">
-        <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
-      </svg>
-    ),
-  },
-  {
-    href: '/team/communications',
-    label: 'Communications',
-    icon: (
-      <svg className="p-nav-icon" viewBox="0 0 20 20" fill="currentColor">
-        <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z" />
-        <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z" />
-      </svg>
-    ),
+    label: 'Workspace',
+    items: [
+      { href: '/team/dashboard', label: 'My Work', icon: LayoutDashboard, matchPrefix: '/team/dashboard' },
+      { href: '/team/projects', label: 'My Projects', icon: Folder, matchPrefix: '/team/projects' },
+      { href: '/team/milestones', label: 'Milestones', icon: Milestone, matchPrefix: '/team/milestones' },
+    ],
   },
 ]
 
-export function TeamSidebar() {
+interface TeamSidebarProps {
+  userName?: string
+  userInitials?: string
+}
+
+export function TeamSidebar({ userName = 'Team Member', userInitials = 'T' }: TeamSidebarProps) {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [wsOpen, setWsOpen] = useState(false)
 
   useEffect(() => {
     const open = () => setMobileOpen(true)
@@ -49,51 +52,88 @@ export function TeamSidebar() {
           role="button"
           tabIndex={0}
           aria-label="Close sidebar"
-          onKeyDown={(e) => { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') setMobileOpen(false) }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') setMobileOpen(false)
+          }}
         />
       )}
       <aside className={`p-sidebar${mobileOpen ? ' open' : ''}`}>
+        {/* ── Workspace switcher ── */}
         <div className="p-sidebar-header">
-          <div className="p-sidebar-logo-box">
-            <span className="p-sidebar-logo-letter">E</span>
+          <div style={{ position: 'relative', width: '100%' }}>
+            <button
+              type="button"
+              className="p-ws-btn"
+              onClick={() => setWsOpen(v => !v)}
+              aria-label="Switch workspace"
+            >
+              <div className="p-ws-mark">T</div>
+              <div className="p-ws-name">
+                <span className="p-sidebar-brand-name">Elevique</span>
+                <span className="p-sidebar-role-tag">Team Workspace</span>
+              </div>
+              <ChevronsUpDown size={14} className="p-ws-chevron" />
+            </button>
+
+            {wsOpen && (
+              <div className="p-ws-dropdown">
+                <button type="button" className="p-ws-dropdown-item active">
+                  <div className="p-ws-mark" style={{ width: 22, height: 22, fontSize: '0.7rem' }}>T</div>
+                  Team Workspace
+                  <Check size={13} className="p-ws-dropdown-check" />
+                </button>
+              </div>
+            )}
           </div>
-          <div style={{ flex: 1 }}>
-            <p className="p-sidebar-brand-name">Elevique</p>
-            <p className="p-sidebar-role-tag">Team</p>
-          </div>
-          <button type="button" className="p-sidebar-close" onClick={() => setMobileOpen(false)} aria-label="Close menu">
-            <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-            </svg>
+          <button
+            type="button"
+            className="p-sidebar-close"
+            onClick={() => setMobileOpen(false)}
+            aria-label="Close menu"
+          >
+            <X size={14} />
           </button>
         </div>
 
+        {/* ── Navigation ── */}
         <nav className="p-sidebar-nav">
-          {navItems.map(item => {
-            const matchPath = 'matchPrefix' in item ? (item as { matchPrefix: string }).matchPrefix : item.href
-            const active = pathname === item.href || pathname.startsWith(matchPath + '/')
-            return (
-              <Link
-                key={item.href + item.label}
-                href={item.href}
-                className={`p-nav-item${active ? ' active' : ''}`}
-              >
-                {item.icon}
-                {item.label}
-              </Link>
-            )
-          })}
+          {NAV_GROUPS.map(group => (
+            <div key={group.label} className="p-nav-group">
+              <span className="p-nav-group-label">{group.label}</span>
+              <div className="p-nav-items">
+                {group.items.map(item => {
+                  const Icon = item.icon
+                  const active = pathname === item.href || pathname.startsWith(item.matchPrefix + '/')
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className={`p-nav-item${active ? ' active' : ''}`}
+                    >
+                      <Icon size={15} className="p-nav-icon" />
+                      {item.label}
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+          ))}
         </nav>
 
+        {/* ── User card ── */}
         <div className="p-sidebar-footer">
-          <form action={logoutTeam}>
-            <button type="submit" className="p-signout-btn">
-              <svg className="p-nav-icon" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clipRule="evenodd" />
-              </svg>
-              Sign out
-            </button>
-          </form>
+          <div className="p-user-card">
+            <div className="p-user-avatar">{userInitials}</div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div className="p-user-name">{userName}</div>
+              <div className="p-user-role">Team Member</div>
+            </div>
+            <form action={logoutTeam}>
+              <button type="submit" className="p-signout-btn" title="Sign out">
+                <LogOut size={14} />
+              </button>
+            </form>
+          </div>
         </div>
       </aside>
     </>

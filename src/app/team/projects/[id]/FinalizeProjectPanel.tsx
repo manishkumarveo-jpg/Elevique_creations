@@ -38,7 +38,7 @@ export function FinalizeProjectPanel({ project }: Props) {
           <span style={{
             fontSize: '0.65rem', fontWeight: 700, padding: '0.2rem 0.65rem',
             borderRadius: 20,
-            background: isApproved ? 'rgba(20,184,166,0.12)' : 'rgba(251,146,60,0.12)',
+            background: isApproved ? 'var(--ds-hover)' : 'rgba(251,146,60,0.12)',
             color: isApproved ? '#2dd4bf' : '#fb923c',
             border: `1px solid ${isApproved ? 'rgba(20,184,166,0.22)' : 'rgba(251,146,60,0.22)'}`,
           }}>
@@ -66,9 +66,9 @@ export function FinalizeProjectPanel({ project }: Props) {
           }}
           style={{
             padding: '0.5rem 1.25rem', borderRadius: 8, fontSize: '0.78rem', fontWeight: 600,
-            background: isApproved ? '#14B8A6' : 'rgba(255,255,255,0.04)',
+            background: isApproved ? 'var(--ds-white)' : 'rgba(255,255,255,0.04)',
             color: isApproved ? '#07080c' : 'rgba(255,255,255,0.2)',
-            border: isApproved ? '1px solid #14B8A6' : '1px solid rgba(255,255,255,0.08)',
+            border: isApproved ? '1px solid var(--ds-white)' : '1px solid rgba(255,255,255,0.08)',
             cursor: isApproved && !isPending ? 'pointer' : 'not-allowed',
             opacity: isPending ? 0.6 : 1,
             transition: 'opacity 0.15s',
