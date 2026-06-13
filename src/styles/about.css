@@ -249,16 +249,27 @@
 @media (max-width: 1024px) {
   .ab-grid { grid-template-columns: 1fr 1fr; gap: 4vw; }
   .ab-heading { font-size: clamp(2rem, 4vw, 3.4rem); }
+  .ab-pillar { padding: 1.4rem 1.5rem; }
 }
 
 @media (max-width: 768px) {
   .ab-section { padding: 6rem 0; }
   .ab-grid { grid-template-columns: 1fr; gap: 3.5rem; }
   .ab-bloom { width: 360px; height: 360px; top: -40px; right: -60px; }
+  .ab-heading { font-size: clamp(2rem, 7vw, 3rem); }
+}
+
+/* Mid-phone: stretch stats bar full width */
+@media (max-width: 600px) {
+  .ab-stats { width: 100%; justify-content: center; }
+  .ab-stat  { flex: 1; padding: 13px 12px; }
+  .ab-stat-value { font-size: 1.3rem; }
+  .ab-body { font-size: 0.84rem; }
 }
 
 @media (max-width: 480px) {
   .ab-stats { width: 100%; justify-content: center; }
-  .ab-stat  { flex: 1; padding: 12px 16px; }
-  .ab-stat-value { font-size: 1.25rem; }
+  .ab-stat  { flex: 1; padding: 12px 10px; }
+  .ab-stat-value { font-size: 1.2rem; }
+  .ab-stat-label { font-size: 0.44rem; letter-spacing: 0.12em; }
 }

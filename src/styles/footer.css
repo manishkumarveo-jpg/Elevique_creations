@@ -142,17 +142,25 @@
 }
 
 /* ─── Responsive Adjustments ────────────────────────────────── */
+@media (max-width: 1280px) {
+  .ft-right {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem 2.5rem;
+  }
+}
+
 @media (max-width: 1024px) {
   .ft-card {
     padding: 4rem 3rem;
   }
-  
+
   .ft-content {
     gap: 3rem;
   }
-  
+
   .ft-right {
     width: 75%;
+    grid-template-columns: repeat(2, 1fr);
     gap: 2.5rem 2rem;
   }
 }

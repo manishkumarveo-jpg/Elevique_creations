@@ -1177,6 +1177,18 @@
   .svc-diff-card--4 { grid-column: auto; }
 }
 
+/* Tablet landscape / 13" laptop — 2-column service grid */
+@media (max-width: 1024px) {
+  .svc-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+  .svc-flip-wrapper {
+    height: clamp(280px, 30vw, 360px);
+  }
+  .svc-heading { font-size: clamp(1.8rem, 4vw, 2.8rem); }
+}
+
 @media (max-width: 768px) {
   .svc-grid {
     grid-template-columns: 1fr;
@@ -1205,6 +1217,62 @@
     transform: translate(-50%, -50%) scale(0.9) !important;
     top: 53% !important;
   }
+}
+
+/* Touch devices — replace CSS hover-flip with a flat stacked card */
+@media (hover: none) {
+  .svc-flip-wrapper {
+    perspective: none;
+    height: auto;
+  }
+
+  .svc-flip-inner {
+    transform: none !important;
+    transform-style: flat;
+    position: static;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+  }
+
+  .svc-card {
+    position: static;
+    backface-visibility: visible;
+    -webkit-backface-visibility: visible;
+    transform: none !important;
+    inset: auto;
+    height: auto;
+    min-height: 160px;
+  }
+
+  .svc-card--front {
+    border-radius: 16px 16px 0 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: 1.5rem;
+  }
+
+  .svc-card--back {
+    border-radius: 0 0 16px 16px;
+    padding-top: 1.5rem;
+    justify-content: flex-start;
+  }
+
+  /* Animation widget takes up too much space when stacked */
+  .svc-front-animation {
+    position: static !important;
+    transform: none !important;
+    height: 80px !important;
+    top: auto !important;
+    left: auto !important;
+    margin-top: 0.75rem;
+    opacity: 0.6;
+  }
+
+  /* Hide "hover to learn more" badge on touch */
+  .svc-card-hover-badge { display: none; }
+
+  /* Always show the dot grid */
+  .svc-dot-grid { opacity: 0.6; }
 }
 
 /* Reduced Motion Override */

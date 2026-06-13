@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Syne, Space_Grotesk, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
@@ -35,6 +35,12 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   title: "Elevique | Creative AI Visuals Studio",
   description: "High-end AI visuals for premium brands.",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

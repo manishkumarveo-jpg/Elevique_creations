@@ -401,13 +401,14 @@
 @media (max-width: 1024px) {
   .ct-grid { gap: 4vw; }
   .ct-heading { font-size: clamp(1.8rem, 4vw, 2.6rem); }
+  .ct-form-wrap { max-width: 460px; }
 }
 
 @media (max-width: 768px) {
   .ct-grid { grid-template-columns: 1fr; gap: 3rem; }
-  .ct-form-wrap { padding: 2rem; border-radius: 16px; justify-self: center; }
+  .ct-form-wrap { padding: 2rem; border-radius: 16px; justify-self: center; max-width: 100%; }
   .ct-bloom { width: 400px; height: 400px; right: -10%; }
-  .ct-heading { margin-bottom: 2rem; }
+  .ct-heading { margin-bottom: 2rem; font-size: clamp(1.8rem, 7vw, 2.6rem); }
   .ct-details { gap: 1.5rem; }
 }
 
