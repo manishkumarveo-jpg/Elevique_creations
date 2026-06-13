@@ -14,6 +14,13 @@
 
 /* ─── Tokens ────────────────────────────────────────────────── */
 :root {
+  --container-max: 1400px;
+  --section-padding: clamp(4rem, 8vw, 10rem);
+  --container-padding: clamp(1rem, 4vw, 5rem);
+  --gap-lg: clamp(2rem, 4vw, 6rem);
+  --gap-md: clamp(1rem, 2vw, 3rem);
+  --radius-xl: clamp(20px, 2vw, 40px);
+
   --black:         #020203;
   --white:         #f8fafc;
   --gold:          #14B8A6;
@@ -222,5 +229,15 @@ body {
   }
   html {
     @apply font-sans;
+  }
+
+  :root {
+    --gradient-color: #14B8A6;
+    --sparkles-color: #14B8A6;
+  }
+
+  .dark {
+    --gradient-color: #14B8A6;
+    --sparkles-color: #5eead4;
   }
 }

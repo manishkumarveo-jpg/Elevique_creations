@@ -136,12 +136,6 @@ export default function FeaturedShowcase() {
   const switchProject = useCallback((p: Project) => {
     if (!heroVideoRef.current) return;
 
-    // Smoothly scroll back up to the main video player
-    const heroEl = document.querySelector(".portfolio-hero");
-    if (heroEl) {
-      heroEl.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-
     gsap.to(heroVideoRef.current, {
       opacity: 0, scale: 1.04, filter: "blur(10px)",
       duration: 0.25, ease: "power2.in",
@@ -155,17 +149,9 @@ export default function FeaturedShowcase() {
     });
   }, []);
 
-  /* ── Scroll to Reels Section on view change ─────────────────── */
+  /* ── Scroll to top on view change ───────────────────────────── */
   useEffect(() => {
-    if (viewMode === "reels") {
-      const timer = setTimeout(() => {
-        const el = document.querySelector(".reels-feed-section");
-        if (el) {
-          el.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      }, 100);
-      return () => clearTimeout(timer);
-    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [viewMode]);
 
   /* ══ VIDEO OVERLAY ══════════════════════════════════════════════ */
@@ -305,66 +291,99 @@ export default function FeaturedShowcase() {
     if (leaveTimer.current) clearTimeout(leaveTimer.current);
   }, []);
 
+  /* ──── Shared View Toggle ───────────────────────────────────── */
+  const ViewToggle = () => (
+    <div className="portfolio-view-toggle-wrap">
+      <div className="portfolio-view-toggle">
+        <button
+          type="button"
+          className={`portfolio-toggle-btn${viewMode === "grid" ? " active" : ""}`}
+          onClick={() => setViewMode("grid")}
+          style={{ width: "130px", justifyContent: "center" }}
+        >
+          Grid Showcase
+        </button>
+        <button
+          type="button"
+          className={`portfolio-toggle-btn${viewMode === "reels" ? " active" : ""}`}
+          onClick={() => setViewMode("reels")}
+          style={{ width: "130px", justifyContent: "center" }}
+        >
+          Reels Feed
+        </button>
+        <div
+          className="portfolio-toggle-pill"
+          style={{
+            width: "130px",
+            transform: viewMode === "grid" ? "translateX(0)" : "translateX(130px)",
+          }}
+        />
+      </div>
+    </div>
+  );
+
   /* ════════════════════════════════════════════════════════════ */
   return (
     <section id="work" style={{ background: "#000000" }}>
 
-      {/* ══ HERO ════════════════════════════════════════════════ */}
-      <div className="portfolio-hero">
-        <video ref={heroVideoRef} className="portfolio-hero-video" src={active.videoSrc} autoPlay loop muted playsInline aria-hidden="true" tabIndex={-1} />
-        <div className="portfolio-hero-gradient-b" />
-        <div className="portfolio-hero-gradient-l" />
-        <div className="portfolio-label">
-          <span className="portfolio-label-line" />
-          Portfolio Section
-        </div>
-        <div className="portfolio-hero-content">
-          <span className="portfolio-category-badge" style={{ borderColor: active.colorFrom + "99", background: active.colorFrom + "22", color: active.colorFrom }}>
-            {active.category}
-          </span>
-          <h2 className="portfolio-hero-title">{active.title}</h2>
-          <p className="portfolio-hero-desc">{active.description}</p>
-          <div className="portfolio-hero-actions">
-            <button type="button" className="portfolio-btn-primary" onClick={() => openVideoOverlay(active)}>
-              <Play size={15} fill="currentColor" />
-              Watch Film
-            </button>
-            <button type="button" className="portfolio-btn-ghost" onClick={() => openBottomSheet(active)}>
-              <ExternalLink size={15} />
-              View Case Study
-            </button>
+      {/* ══ HERO (grid mode only) ══════════════════════════════ */}
+      {viewMode === "grid" && (
+        <div className="portfolio-hero">
+          <video ref={heroVideoRef} className="portfolio-hero-video" src={active.videoSrc} autoPlay loop muted playsInline aria-hidden="true" tabIndex={-1} />
+          <div className="portfolio-hero-gradient-b" />
+          <div className="portfolio-hero-gradient-l" />
+          <div className="portfolio-label">
+            <span className="portfolio-label-line" />
+            Portfolio Section
           </div>
-        </div>
+          <div className="portfolio-hero-content">
+            <span className="portfolio-category-badge" style={{ borderColor: active.colorFrom + "99", background: active.colorFrom + "22", color: active.colorFrom }}>
+              {active.category}
+            </span>
+            <h2 className="portfolio-hero-title">{active.title}</h2>
+            <p className="portfolio-hero-desc">{active.description}</p>
+            <div className="portfolio-hero-actions">
+              <button type="button" className="portfolio-btn-primary" onClick={() => openVideoOverlay(active)}>
+                <Play size={15} fill="currentColor" />
+                Watch Film
+              </button>
+              <button type="button" className="portfolio-btn-ghost" onClick={() => openBottomSheet(active)}>
+                <ExternalLink size={15} />
+                View Case Study
+              </button>
+            </div>
+          </div>
 
-        {/* ══ VIEW TOGGLE ══════════════════════════════════════════ */}
-        <div className="portfolio-view-toggle-wrap hero-toggle-overlay">
-          <div className="portfolio-view-toggle">
-            <button
-              type="button"
-              className={`portfolio-toggle-btn${viewMode === "grid" ? " active" : ""}`}
-              onClick={() => setViewMode("grid")}
-              style={{ width: "130px", justifyContent: "center" }}
-            >
-              Grid Showcase
-            </button>
-            <button
-              type="button"
-              className={`portfolio-toggle-btn${viewMode === "reels" ? " active" : ""}`}
-              onClick={() => setViewMode("reels")}
-              style={{ width: "130px", justifyContent: "center" }}
-            >
-              Reels Feed
-            </button>
-            <div
-              className="portfolio-toggle-pill"
-              style={{
-                width: "130px",
-                transform: viewMode === "grid" ? "translateX(0)" : "translateX(130px)",
-              }}
-            />
+          {/* Toggle floats over the hero bottom */}
+          <div className="portfolio-view-toggle-wrap hero-toggle-overlay">
+            <div className="portfolio-view-toggle">
+              <button
+                type="button"
+                className={`portfolio-toggle-btn${viewMode === "grid" ? " active" : ""}`}
+                onClick={() => setViewMode("grid")}
+                style={{ width: "130px", justifyContent: "center" }}
+              >
+                Grid Showcase
+              </button>
+              <button
+                type="button"
+                className={`portfolio-toggle-btn${viewMode === "reels" ? " active" : ""}`}
+                onClick={() => setViewMode("reels")}
+                style={{ width: "130px", justifyContent: "center" }}
+              >
+                Reels Feed
+              </button>
+              <div
+                className="portfolio-toggle-pill"
+                style={{
+                  width: "130px",
+                  transform: viewMode === "grid" ? "translateX(0)" : "translateX(130px)",
+                }}
+              />
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {viewMode === "grid" ? (
         <>
@@ -394,7 +413,10 @@ export default function FeaturedShowcase() {
           </div>
         </>
       ) : (
+        /* Reels mode — standalone toggle header + feed */
         <div className="reels-feed-wrapper">
+          {/* Persistent toggle so user can always switch back */}
+          <ViewToggle />
           <PortfolioReels onViewDetails={openBottomSheet as any} onBack={() => setViewMode("grid")} />
         </div>
       )}

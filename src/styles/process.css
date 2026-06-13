@@ -5,7 +5,7 @@
   position: relative;
   background: var(--black);
   overflow: hidden;
-  padding: 7rem 0 8rem;
+  padding-block: var(--section-padding);
 }
 
 .proc-container {
@@ -33,7 +33,7 @@
 
 .proc-header {
   text-align: center;
-  margin-bottom: 5rem;
+  margin-bottom: clamp(3rem, 6vh, 5rem);
   position: relative;
   z-index: 2;
 }
@@ -49,7 +49,7 @@
   background: var(--glass-strong);
   border: 1px solid var(--glass-border);
   border-radius: 16px;
-  padding: 2rem 2.25rem;
+  padding: clamp(1.5rem, 2.2vw, 2.25rem) clamp(1.5rem, 2.5vw, 2.5rem);
   overflow: hidden;
   transition: border-color 0.35s ease, transform 0.35s ease, box-shadow 0.35s ease;
   cursor: default;
@@ -173,6 +173,12 @@
 }
 
 /* ─── Responsive ───────────────────────────────────────────────── */
+@media (max-width: 1440px) and (min-width: 1024px) {
+  .proc-card {
+    padding: clamp(1.2rem, 1.8vw, 1.75rem) clamp(1.2rem, 2vw, 2rem);
+  }
+}
+
 @media (max-width: 1023px) {
   .proc-section   { padding: 5rem 0 6rem; }
   .proc-container { padding: 0 4vw; }

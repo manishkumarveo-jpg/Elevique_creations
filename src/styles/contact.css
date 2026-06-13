@@ -6,7 +6,7 @@
   position: relative;
   background: #141416;
   overflow: hidden;
-  padding: 8rem 0;
+  padding-block: var(--section-padding);
   border-top: 1px solid var(--glass-border);
 }
 
@@ -404,7 +404,6 @@
 }
 
 @media (max-width: 768px) {
-  .ct-section { padding: 6rem 0; }
   .ct-grid { grid-template-columns: 1fr; gap: 3rem; }
   .ct-form-wrap { padding: 2rem; border-radius: 16px; justify-self: center; }
   .ct-bloom { width: 400px; height: 400px; right: -10%; }
@@ -413,7 +412,6 @@
 }
 
 @media (max-width: 480px) {
-  .ct-section { padding: 4.5rem 0; }
 
   .ct-heading  { font-size: clamp(1.6rem, 8vw, 2.2rem); }
   .ct-subtext  { font-size: 0.8rem; }

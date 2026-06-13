@@ -5,14 +5,19 @@ import ServicesSection from "@/components/ServicesSection";
 // Below-fold sections loaded only when needed — keeps the initial JS bundle small
 const ProcessSection = dynamic(() => import("@/components/ProcessSection"));
 const TestimonialsEditorial = dynamic(() => import("@/components/ui/editorial-testimonial"));
-const ClientsMap = dynamic(() => import("@/components/ClientsMap"));
+
 const ContactSection = dynamic(() => import("@/components/ContactSection"));
 const Footer = dynamic(() => import("@/components/ui/footer-section").then(m => ({ default: m.Footer })));
+
+const Demo = dynamic(() => import("@/components/ui/demo").then(m => ({ default: m.Demo })));
 
 export default function Home() {
   return (
     <main>
       <HeroSection />
+       <section id="demo" className="relative w-full">
+        <Demo />
+      </section>
       <ServicesSection />
       <ProcessSection />
       <section
@@ -25,7 +30,9 @@ export default function Home() {
       >
         <TestimonialsEditorial />
       </section>
-      <ClientsMap />
+      
+     
+
       <ContactSection />
       <Footer />
     </main>

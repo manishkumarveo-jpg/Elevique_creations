@@ -1,3 +1,18 @@
+/* ─── Reels Feed Wrapper (mode container) ───────────────────────── */
+.reels-feed-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: calc(var(--nav-h, 80px) + 16px);
+  background: #000;
+  min-height: 100vh;
+}
+
+/* When the toggle is inside the wrapper (reels mode), center it nicely */
+.reels-feed-wrapper .portfolio-view-toggle-wrap {
+  margin-bottom: 1.5rem;
+}
+
 /* ─── View Toggle Switch ────────────────────────────────────────── */
 .portfolio-view-toggle-wrap {
   display: flex;
@@ -105,9 +120,10 @@
 .reels-chassis {
   position: relative;
   z-index: 2;
-  width: 100%;
-  max-width: 420px;
-  height: 780px;
+  width: clamp(280px, 24vw, 380px);
+  max-width: 100%;
+  aspect-ratio: 9 / 19;
+  height: auto;
   background: #0d0d0d;
   border-radius: 36px;
   border: 8px solid #1a1a1a;
@@ -500,8 +516,9 @@
 /* Height-based desktop/tablet scaling for short screens */
 @media (max-height: 850px) and (min-width: 481px) {
   .reels-chassis {
-    height: calc(100vh - 140px);
-    width: calc((100vh - 140px) * 0.54);
+    height: clamp(500px, 75vh, 700px);
+    width: auto;
+    aspect-ratio: 9 / 19;
     max-width: 380px;
     border-radius: 28px;
   }

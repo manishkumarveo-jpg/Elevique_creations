@@ -157,7 +157,7 @@
 .navbar-logo {
   position: relative;
   z-index: 1;
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 800;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -174,7 +174,7 @@
   z-index: 1;
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: clamp(0.8rem, 1.8vw, 2rem);
   list-style: none;
 }
 
@@ -428,6 +428,29 @@
 /* ═══════════════════════════════════════════════════════════════
    RESPONSIVE
    ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 1440px) and (min-width: 769px) {
+  .navbar-container {
+    padding: 0 clamp(16px, 2vw, 24px);
+  }
+  .navbar-links {
+    gap: clamp(0.75rem, 1.5vw, 1.5rem);
+  }
+  .navbar-cta {
+    padding: 8px clamp(14px, 1.6vw, 18px);
+    font-size: 0.58rem;
+  }
+  .navbar-login {
+    padding: 6px clamp(10px, 1.2vw, 14px);
+    font-size: 0.58rem;
+  }
+  .navbar-logo {
+    font-size: 0.95rem;
+  }
+  .navbar-link {
+    font-size: 0.58rem;
+  }
+}
+
 @media (max-width: 768px) {
   .navbar-links         { display: none; }
   .navbar-cta           { display: none; }
