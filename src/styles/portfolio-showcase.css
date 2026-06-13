@@ -842,6 +842,18 @@
 }
 
 /* ─── Portfolio Responsive ───────────────────────────────────── */
+@media (max-width: 1440px) and (min-width: 1025px) {
+  .portfolio-feat-card {
+    width: clamp(280px, 23vw, 340px);
+    height: clamp(160px, 13vw, 192px);
+  }
+  .portfolio-grid-card {
+    flex: 0 0 clamp(280px, 23vw, 340px);
+    width: clamp(280px, 23vw, 340px);
+    height: clamp(160px, 13vw, 192px);
+  }
+}
+
 @media (max-width: 1024px) {
   .portfolio-feat-card { width: 300px; }
 }

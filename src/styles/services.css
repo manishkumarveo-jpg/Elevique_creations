@@ -8,7 +8,7 @@
   position: relative;
   background: #000000;
   overflow: hidden;
-  padding: 7rem 0;
+  padding-block: var(--section-padding);
 }
 
 .svc-container {
@@ -124,7 +124,7 @@
 /* ─── 3-column grid ──────────────────────────────────────────── */
 .svc-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.5rem;
   position: relative;
   z-index: 2;
@@ -133,7 +133,7 @@
 /* ─── Flip wrapper ────────────────────────────────────── */
 .svc-flip-wrapper {
   perspective: 1200px;
-  height: 380px;
+  height: clamp(300px, 25vw, 380px);
   cursor: pointer;
 }
 
@@ -211,7 +211,7 @@
 .svc-card--front {
   display: flex;
   flex-direction: column;
-  padding: 2.2rem 2rem;
+  padding: clamp(1.5rem, 2.5vw, 2.4rem) clamp(1.2rem, 2vw, 2rem);
 }
 
 .svc-card-icon {
@@ -259,8 +259,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2.4rem 2rem 2.2rem;
-  gap: 2rem;
+  padding: clamp(1.5rem, 2.5vw, 2.6rem) clamp(1.2rem, 2vw, 2rem) clamp(1.5rem, 2.5vw, 2.4rem);
+  gap: clamp(1rem, 2vw, 2rem);
 }
 
 .svc-card-synopsis {
@@ -1167,12 +1167,6 @@
 
 /* Responsive Scaling */
 @media (max-width: 1340px) {
-  .svc-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .svc-flip-wrapper {
-    height: 340px;
-  }
   .svc-diff-grid {
     grid-template-columns: repeat(2, 1fr);
   }
