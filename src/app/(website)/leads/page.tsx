@@ -47,11 +47,12 @@ export default function LeadsLandingPage() {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Dropdown click handlers
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  // Close active dropdown when clicking outside the form card container
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (cardRef.current && !cardRef.current.contains(event.target as Node)) {
         setActiveDropdown(null);
       }
     }
@@ -60,7 +61,7 @@ export default function LeadsLandingPage() {
   }, []);
 
   const toggleDropdown = (name: string) => {
-    setActiveDropdown(activeDropdown === name ? null : name);
+    setActiveDropdown((prev) => (prev === name ? null : name));
   };
 
   const handleSelectOption = (field: "service_type" | "videos_count" | "phone_code", value: string) => {
@@ -73,19 +74,19 @@ export default function LeadsLandingPage() {
     setIsSubmitting(true);
     setError(null);
 
-    // Basic Validation
+    // Basic client side validation matching contact schema expectations
     if (!form.full_name.trim() || !form.email.trim()) {
-      setError("Please fill out both Name and Email.");
+      setError("Please enter both Name and Email.");
       setIsSubmitting(false);
       return;
     }
 
     try {
-      const fullPhone = form.phone_number.trim() 
+      const fullPhone = form.phone_number.trim()
         ? `${form.phone_code} ${form.phone_number.trim()}`
         : "";
 
-      const res = await fetch("/api/leads", {
+      const response = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -102,8 +103,10 @@ export default function LeadsLandingPage() {
         }),
       });
 
-      const data = await res.json();
-      if (!res.ok || !data.ok) throw new Error(data.error || "Failed to submit form.");
+      const data = await response.json();
+      if (!response.ok || !data.ok) {
+        throw new Error(data.error || "Failed to submit lead submission.");
+      }
 
       setSent(true);
       setForm({
@@ -120,7 +123,7 @@ export default function LeadsLandingPage() {
         website: "",
       });
     } catch (err: any) {
-      setError(err.message || "Something went wrong. Please try again.");
+      setError(err.message || "An error occurred during submission. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -128,13 +131,12 @@ export default function LeadsLandingPage() {
 
   return (
     <div className="leads-container-outer">
-      {/* Background patterns */}
-      <div className="noise-overlay" aria-hidden="true" />
+      {/* Decorative patterns */}
       <div className="leads-grid-overlay" aria-hidden="true" />
       <div className="leads-bloom leads-bloom-top" aria-hidden="true" />
       <div className="leads-bloom leads-bloom-bottom" aria-hidden="true" />
 
-      {/* Header */}
+      {/* Header section */}
       <header className="leads-header">
         <Link href="/" className="leads-logo">
           Elevique
@@ -149,19 +151,26 @@ export default function LeadsLandingPage() {
         </p>
       </header>
 
-      {/* Form Container */}
-      <div className="leads-card" ref={dropdownRef}>
+      {/* Glassmorphic Form Card Wrapper */}
+      <div className="leads-card" ref={cardRef}>
         <AnimatePresence mode="wait">
           {sent ? (
-            <div className="leads-success">
+            <motion.div
+              key="success"
+              className="leads-success"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+            >
               <div className="leads-success-badge">
-                <CheckCircle2 size={30} strokeWidth={1.5} />
+                <CheckCircle2 size={32} strokeWidth={1.5} />
               </div>
               <h2 className="leads-success-title">Inquiry Submitted</h2>
               <p className="leads-success-body">
                 Thank you for reaching out. We have received your parameters and will get back to you within 24 hours.
               </p>
-              
+
               <div className="leads-success-actions">
                 <Link href="/portfolio" className="btn-leads-portfolio">
                   Visit Portfolio
@@ -170,24 +179,31 @@ export default function LeadsLandingPage() {
                   Visit Main Site
                 </Link>
               </div>
-            </div>
+            </motion.div>
           ) : (
-            <form
+            <motion.form
+              key="form"
               className="leads-form"
               onSubmit={handleSubmit}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
             >
               {error && (
-                <div className="leads-error-msg">
-                  ⚠️ {error}
+                <div className="leads-error-msg" role="alert">
+                  ⚠️ <span>{error}</span>
                 </div>
               )}
 
               {/* Row 1: Service Selection & Number of Videos */}
               <div className="leads-grid-row">
                 <div className="leads-field">
-                  <label>What service are you looking for?</label>
+                  <label htmlFor="service-type">What service are you looking for?</label>
                   <div className="leads-select-wrapper">
-                    <div
+                    <button
+                      id="service-type"
+                      type="button"
                       className={`leads-select-trigger ${
                         activeDropdown === "service" ? "leads-select-trigger--open" : ""
                       }`}
@@ -200,10 +216,10 @@ export default function LeadsLandingPage() {
                             : "leads-select-trigger-placeholder"
                         }
                       >
-                        {form.service_type || "Select"}
+                        {form.service_type || "Select a service"}
                       </span>
-                      <ChevronDown size={14} className="leads-select-trigger-chevron" />
-                    </div>
+                      <ChevronDown size={15} className="leads-select-trigger-chevron" />
+                    </button>
 
                     <AnimatePresence>
                       {activeDropdown === "service" && (
@@ -233,9 +249,11 @@ export default function LeadsLandingPage() {
                 </div>
 
                 <div className="leads-field">
-                  <label>Number of videos required?</label>
+                  <label htmlFor="videos-count">Number of videos required?</label>
                   <div className="leads-select-wrapper">
-                    <div
+                    <button
+                      id="videos-count"
+                      type="button"
                       className={`leads-select-trigger ${
                         activeDropdown === "videos" ? "leads-select-trigger--open" : ""
                       }`}
@@ -248,10 +266,10 @@ export default function LeadsLandingPage() {
                             : "leads-select-trigger-placeholder"
                         }
                       >
-                        {form.videos_count || "Select"}
+                        {form.videos_count || "Select video count"}
                       </span>
-                      <ChevronDown size={14} className="leads-select-trigger-chevron" />
-                    </div>
+                      <ChevronDown size={15} className="leads-select-trigger-chevron" />
+                    </button>
 
                     <AnimatePresence>
                       {activeDropdown === "videos" && (
@@ -281,27 +299,29 @@ export default function LeadsLandingPage() {
                 </div>
               </div>
 
-              {/* Row 2: Budget & Project Brief */}
+              {/* Row 2: Budget & Brief */}
               <div className="leads-grid-row">
                 <div className="leads-field">
-                  <label>BUDGET PER VIDEO</label>
+                  <label htmlFor="budget-per-video">Budget Per Video</label>
                   <input
+                    id="budget-per-video"
                     type="text"
                     className="leads-input"
                     placeholder="Enter your budget"
                     value={form.budget_per_video}
-                    onChange={(e) => setForm({ ...form, budget_per_video: e.target.value })}
+                    onChange={(e) => setForm((prev) => ({ ...prev, budget_per_video: e.target.value }))}
                   />
                 </div>
 
                 <div className="leads-field">
-                  <label>Tell us briefly about requirement</label>
+                  <label htmlFor="requirement-brief">Brief Requirement</label>
                   <textarea
+                    id="requirement-brief"
                     className="leads-textarea"
                     placeholder="goals, timeline, brand info..."
                     rows={1}
                     value={form.requirement_brief}
-                    onChange={(e) => setForm({ ...form, requirement_brief: e.target.value })}
+                    onChange={(e) => setForm((prev) => ({ ...prev, requirement_brief: e.target.value }))}
                   />
                 </div>
               </div>
@@ -309,29 +329,31 @@ export default function LeadsLandingPage() {
               {/* Contact Information Divider */}
               <div className="leads-field-group-title">Contact Information</div>
 
-              {/* Row 3: Full Name & Email */}
+              {/* Row 3: Name & Email */}
               <div className="leads-grid-row">
                 <div className="leads-field">
-                  <label>Full Name *</label>
+                  <label htmlFor="full-name">Full Name *</label>
                   <input
+                    id="full-name"
                     type="text"
                     required
                     className="leads-input"
                     placeholder="Your full name"
                     value={form.full_name}
-                    onChange={(e) => setForm({ ...form, full_name: e.target.value })}
+                    onChange={(e) => setForm((prev) => ({ ...prev, full_name: e.target.value }))}
                   />
                 </div>
 
                 <div className="leads-field">
-                  <label>Email *</label>
+                  <label htmlFor="email">Email *</label>
                   <input
+                    id="email"
                     type="email"
                     required
                     className="leads-input"
                     placeholder="you@company.com"
                     value={form.email}
-                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                    onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
                   />
                 </div>
               </div>
@@ -339,21 +361,22 @@ export default function LeadsLandingPage() {
               {/* Row 4: Phone & City */}
               <div className="leads-grid-row">
                 <div className="leads-field">
-                  <label>Phone Number</label>
+                  <label htmlFor="phone-number">Phone Number</label>
                   <div className="leads-phone-row">
                     <div className="leads-select-wrapper leads-country-code">
-                      <div
+                      <button
+                        type="button"
                         className={`leads-select-trigger ${
                           activeDropdown === "phone" ? "leads-select-trigger--open" : ""
                         }`}
                         onClick={() => toggleDropdown("phone")}
-                        style={{ paddingLeft: "10px", paddingRight: "10px" }}
+                        style={{ paddingLeft: "12px", paddingRight: "12px" }}
                       >
                         <span className="leads-select-trigger-text">
                           {form.phone_code}
                         </span>
-                        <ChevronDown size={12} className="leads-select-trigger-chevron" />
-                      </div>
+                        <ChevronDown size={13} className="leads-select-trigger-chevron" />
+                      </button>
 
                       <AnimatePresence>
                         {activeDropdown === "phone" && (
@@ -372,7 +395,7 @@ export default function LeadsLandingPage() {
                                 }`}
                                 onClick={() => handleSelectOption("phone_code", c.code)}
                               >
-                                <span style={{ fontSize: "0.78rem" }}>{c.label}</span>
+                                <span style={{ fontSize: "0.8rem" }}>{c.label}</span>
                               </div>
                             ))}
                           </motion.div>
@@ -381,24 +404,26 @@ export default function LeadsLandingPage() {
                     </div>
                     <div className="leads-phone-input-wrapper">
                       <input
+                        id="phone-number"
                         type="tel"
                         className="leads-input"
                         placeholder="Phone number"
                         value={form.phone_number}
-                        onChange={(e) => setForm({ ...form, phone_number: e.target.value })}
+                        onChange={(e) => setForm((prev) => ({ ...prev, phone_number: e.target.value }))}
                       />
                     </div>
                   </div>
                 </div>
 
                 <div className="leads-field">
-                  <label>City</label>
+                  <label htmlFor="city">City</label>
                   <input
+                    id="city"
                     type="text"
                     className="leads-input"
                     placeholder="Enter your city"
                     value={form.city}
-                    onChange={(e) => setForm({ ...form, city: e.target.value })}
+                    onChange={(e) => setForm((prev) => ({ ...prev, city: e.target.value }))}
                   />
                 </div>
               </div>
@@ -406,34 +431,40 @@ export default function LeadsLandingPage() {
               {/* Row 5: Company Name & Website */}
               <div className="leads-grid-row">
                 <div className="leads-field">
-                  <label>Company Name</label>
+                  <label htmlFor="company-name">Company Name</label>
                   <input
+                    id="company-name"
                     type="text"
                     className="leads-input"
                     placeholder="Enter company name"
                     value={form.company_name}
-                    onChange={(e) => setForm({ ...form, company_name: e.target.value })}
+                    onChange={(e) => setForm((prev) => ({ ...prev, company_name: e.target.value }))}
                   />
                 </div>
 
                 <div className="leads-field">
-                  <label>Website</label>
+                  <label htmlFor="website">Website</label>
                   <input
+                    id="website"
                     type="url"
                     className="leads-input"
                     placeholder="https://yourwebsite.com"
                     value={form.website}
-                    onChange={(e) => setForm({ ...form, website: e.target.value })}
+                    onChange={(e) => setForm((prev) => ({ ...prev, website: e.target.value }))}
                   />
                 </div>
               </div>
 
-              {/* Submit */}
-              <button type="submit" className="leads-submit-btn" disabled={isSubmitting}>
+              {/* Submit Button */}
+              <button
+                type="submit"
+                className="leads-submit-btn"
+                disabled={isSubmitting}
+              >
                 {isSubmitting ? "Sending..." : "Send Inquiry"}
-                {!isSubmitting && <ArrowRight size={14} />}
+                {!isSubmitting && <ArrowRight size={15} />}
               </button>
-            </form>
+            </motion.form>
           )}
         </AnimatePresence>
       </div>
