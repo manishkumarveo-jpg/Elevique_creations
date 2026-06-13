@@ -12,6 +12,42 @@
    ELEVIQUE — PREMIUM DESIGN SYSTEM v2
    ═══════════════════════════════════════════════════════════════ */
 
+/* ─── Monochrome Dashboard Design System ────────────────────── */
+:root {
+  /* Surfaces */
+  --ds-bg:            #000000;
+  --ds-bg-elevated:   #0a0a0a;
+  --ds-panel:         #0c0c0c;
+  --ds-panel-2:       #101010;
+  --ds-hover:         rgba(255,255,255,0.045);
+  --ds-active:        rgba(255,255,255,0.075);
+  /* Borders */
+  --ds-border:        #1f1f1f;
+  --ds-border-2:      #2a2a2a;
+  --ds-border-strong: #383838;
+  /* Text */
+  --ds-text:          #ededed;
+  --ds-text-2:        #9b9b9b;
+  --ds-text-3:        #6a6a6a;
+  --ds-text-4:        #4d4d4d;
+  --ds-white:         #fafafa;
+  /* Semantic — dots & badge text ONLY */
+  --ds-green:         #4ec77f;
+  --ds-green-dim:     #2c6e44;
+  --ds-amber:         #d9a441;
+  --ds-amber-dim:     #6e5524;
+  --ds-blue:          #5a9bf6;
+  --ds-blue-dim:      #2a4a78;
+  --ds-red:           #ef6a5e;
+  /* Layout */
+  --ds-sidebar-w:     256px;
+  --ds-header-h:      56px;
+  --ds-radius:        8px;
+  --ds-radius-sm:     6px;
+  --ds-radius-lg:     10px;
+  --ds-ease:          cubic-bezier(0.4,0,0.2,1);
+}
+
 /* ─── Tokens ────────────────────────────────────────────────── */
 :root {
   --container-max: 1400px;

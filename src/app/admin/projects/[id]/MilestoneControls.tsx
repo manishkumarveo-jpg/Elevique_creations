@@ -83,7 +83,7 @@ export function MilestoneControls({ milestones, projectId }: { milestones: Miles
           disabled={!selected || !status || isPending}
           style={{
             padding: '0.55rem 1.25rem',
-            background: (!selected || !status || isPending) ? 'rgba(20,184,166,0.3)' : '#14B8A6',
+            background: (!selected || !status || isPending) ? 'rgba(20,184,166,0.3)' : 'var(--ds-white)',
             color: '#07080c',
             fontSize: '0.7rem',
             fontWeight: 700,

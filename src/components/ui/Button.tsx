@@ -7,34 +7,70 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   ref?: Ref<HTMLButtonElement>
 }
 
-const variants = {
-  primary:   'bg-[#14B8A6] text-[#020203] font-semibold hover:bg-[#0fa697] focus:ring-[#14B8A6]',
-  secondary: 'bg-white/[0.06] text-white/80 border border-white/10 hover:bg-white/10 hover:text-white focus:ring-white/20',
-  ghost:     'text-white/60 hover:bg-white/[0.06] hover:text-white/90 focus:ring-white/20',
-  danger:    'bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 focus:ring-red-500/40',
-}
+const variants: Record<string, React.CSSProperties> = {}
 
-const sizes = {
-  sm: 'px-3 py-1.5 text-xs',
-  md: 'px-4 py-2 text-sm',
-  lg: 'px-6 py-3 text-sm',
-}
+export function Button({
+  variant = 'primary',
+  size = 'md',
+  loading,
+  disabled,
+  className = '',
+  style,
+  children,
+  ref,
+  ...props
+}: ButtonProps) {
+  const baseStyle: React.CSSProperties = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '0.5rem',
+    borderRadius: '6px',
+    fontWeight: 500,
+    fontFamily: 'inherit',
+    cursor: disabled || loading ? 'not-allowed' : 'pointer',
+    opacity: disabled || loading ? 0.4 : 1,
+    transition: 'all 0.13s cubic-bezier(0.4,0,0.2,1)',
+    outline: 'none',
+    whiteSpace: 'nowrap' as const,
+    flexShrink: 0,
+    ...(size === 'sm'
+      ? { padding: '0 0.75rem', height: '28px', fontSize: '12px' }
+      : size === 'lg'
+      ? { padding: '0 1.5rem', height: '40px', fontSize: '14px' }
+      : { padding: '0 1.25rem', height: '34px', fontSize: '13.5px' }),
+    ...(variant === 'primary'
+      ? { background: 'var(--ds-white)', color: '#0a0a0a', border: 'none' }
+      : variant === 'secondary'
+      ? {
+          background: 'var(--ds-bg-elevated)',
+          color: 'var(--ds-text-2)',
+          border: '1px solid var(--ds-border-2)',
+        }
+      : variant === 'danger'
+      ? {
+          background: 'rgba(239,106,94,0.08)',
+          color: 'var(--ds-red)',
+          border: '1px solid rgba(239,106,94,0.20)',
+        }
+      : {
+          background: 'transparent',
+          color: 'var(--ds-text-2)',
+          border: 'none',
+        }),
+    ...style,
+  }
 
-export function Button({ variant = 'primary', size = 'md', loading, disabled, className = '', children, ref, ...props }: ButtonProps) {
   return (
     <button
       type="button"
       ref={ref}
       disabled={disabled || loading}
-      className={`inline-flex items-center justify-center gap-2 rounded-lg font-medium tracking-wide transition-all focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-offset-[#020203] disabled:opacity-40 disabled:cursor-not-allowed ${variants[variant]} ${sizes[size]} ${className}`}
+      style={baseStyle}
+      className={className}
       {...props}
     >
-      {loading && (
-        <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-        </svg>
-      )}
+      {loading && <span className="p-spinner" />}
       {children}
     </button>
   )

@@ -1,0 +1,405 @@
+'use client'
+
+import { useState } from 'react'
+import Link from 'next/link'
+import { SegmentedControl } from '@/components/ui/SegmentedControl'
+import { FeaturedProjectCard } from '@/components/shared/FeaturedProjectCard'
+import { ProgressBar } from '@/components/ui/ProgressBar'
+import { ProjectStatusBadge, RoleBadge } from '@/components/shared/StatusBadge'
+import { Avatar } from '@/components/ui/Avatar'
+
+interface ProjectRow {
+  id: string
+  name: string
+  status: string
+  clientName: string
+  clientDeadline: string | null
+  internalDeadline: string | null
+  milestoneDone: number
+  milestoneTotal: number
+  team: { id: string; full_name: string }[]
+}
+
+interface ActivityRow {
+  id: string
+  actorName: string
+  actorInitial: string
+  actorRole: 'admin' | 'team_member' | 'client'
+  action: string
+  entityName: string | null
+  createdAt: string
+}
+
+interface DashboardViewsProps {
+  globalPct: number
+  awaitingApproval: number
+  attention: number
+  activeCount: number
+  doneMilestones: number
+  totalMilestones: number
+  projects: ProjectRow[]
+  activity: ActivityRow[]
+}
+
+function fmtDate(d: string | null) {
+  if (!d) return null
+  return new Date(d + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
+
+function pad2(n: number) {
+  return String(n).padStart(2, '0')
+}
+
+export default function DashboardViews({
+  globalPct,
+  awaitingApproval,
+  attention,
+  activeCount,
+  doneMilestones,
+  totalMilestones,
+  projects,
+  activity,
+}: DashboardViewsProps) {
+  const [view, setView] = useState('Cards')
+
+  const activeProjects = projects.filter(p => p.status !== 'completed')
+  const r = 36, circ = 2 * Math.PI * r
+  const dash = (globalPct / 100) * circ
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+      {/* Segmented control */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <SegmentedControl
+          options={['Cards', 'Operations', 'Editorial']}
+          value={view}
+          onChange={setView}
+        />
+        <Link href="/admin/projects/new" className="p-btn-primary" style={{ textDecoration: 'none' }}>
+          + New Project
+        </Link>
+      </div>
+
+      {/* ─── CARDS VIEW ─── */}
+      {view === 'Cards' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+          {/* Stat row */}
+          <div className="p-dash-stat-row">
+            {/* Circular progress */}
+            <div className="p-stat" style={{ alignItems: 'center', display: 'flex', flexDirection: 'column', padding: '1.25rem 1rem 1rem' }}>
+              <div className="p-stat-label" style={{ textAlign: 'center', marginBottom: '0.875rem' }}>Global Progress</div>
+              <div style={{ position: 'relative', width: 90, height: 90 }}>
+                <svg width="90" height="90" viewBox="0 0 90 90">
+                  <circle cx="45" cy="45" r={r} fill="none" stroke="var(--ds-border-2)" strokeWidth="7" />
+                  <circle
+                    cx="45" cy="45" r={r} fill="none"
+                    stroke="var(--ds-white)" strokeWidth="7"
+                    strokeLinecap="round"
+                    strokeDasharray={`${dash} ${circ}`}
+                    transform="rotate(-90 45 45)"
+                  />
+                </svg>
+                <div style={{
+                  position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontSize: '1.1rem', fontWeight: 600, color: 'var(--ds-text)',
+                  fontFamily: 'var(--font-mono), ui-monospace, monospace',
+                }}>
+                  {globalPct}%
+                </div>
+              </div>
+              <div className="p-stat-foot" style={{ marginTop: '0.5rem', textAlign: 'center' }}>
+                Across {projects.length} projects
+              </div>
+            </div>
+
+            <div className="p-stat">
+              <div className="p-stat-label">Awaiting Approval</div>
+              <div className="p-stat-value mono">{pad2(awaitingApproval)}</div>
+            </div>
+
+            <div className="p-stat">
+              <div className="p-stat-label">Needs Attention</div>
+              <div className={`p-stat-value mono${attention > 0 ? ' p-stat-value--warn' : ''}`}>{pad2(attention)}</div>
+              <div className="p-stat-foot">{activeCount} active projects</div>
+            </div>
+          </div>
+
+          {/* Two-col: cards + activity */}
+          <div className="p-dash-main-grid">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div className="p-section-header">
+                <span className="p-section-label">Active Projects</span>
+                <Link href="/admin/projects" className="p-link-teal">View all →</Link>
+              </div>
+
+              {activeProjects.length === 0 ? (
+                <div className="p-empty">
+                  <div className="p-empty-icon-wrap">
+                    <svg viewBox="0 0 20 20" fill="currentColor" style={{ width: 18, height: 18 }}>
+                      <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+                    </svg>
+                  </div>
+                  <p className="p-empty-title">No active projects</p>
+                </div>
+              ) : (
+                <div className="p-card-grid">
+                  {activeProjects.slice(0, 4).map(p => (
+                    <FeaturedProjectCard
+                      key={p.id}
+                      id={p.id}
+                      name={p.name}
+                      clientName={p.clientName}
+                      status={p.status}
+                      dueDate={p.clientDeadline}
+                      milestoneDone={p.milestoneDone}
+                      milestoneTotal={p.milestoneTotal}
+                      href={`/admin/projects/${p.id}`}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* All projects list */}
+              {projects.length > 0 && (
+                <div style={{ marginTop: '0.5rem' }}>
+                  <div className="p-section-label" style={{ marginBottom: '0.5rem' }}>All Projects</div>
+                  <div className="p-project-rows">
+                    {projects.map(p => {
+                      const pct = p.milestoneTotal > 0 ? Math.round((p.milestoneDone / p.milestoneTotal) * 100) : null
+                      return (
+                        <Link key={p.id} href={`/admin/projects/${p.id}`} className="p-project-row">
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                              <span className="p-project-name">{p.name}</span>
+                              <ProjectStatusBadge status={p.status as 'briefing' | 'in_progress' | 'final_review' | 'completed' | 'paused'} />
+                            </div>
+                            <div className="p-project-meta">
+                              {p.clientName}
+                              {p.clientDeadline ? ` · Due ${fmtDate(p.clientDeadline)}` : ''}
+                            </div>
+                          </div>
+                          <div style={{ flexShrink: 0 }}>
+                            {p.team.length > 0 ? (
+                              <div className="p-avatar-stack">
+                                {p.team.slice(0, 3).map(m => (
+                                  <Avatar key={m.id} name={m.full_name} size="sm" />
+                                ))}
+                                {p.team.length > 3 && (
+                                  <div className="p-avatar-sm p-avatar-overflow">+{p.team.length - 3}</div>
+                                )}
+                              </div>
+                            ) : (
+                              <span className="p-unassigned">Unassigned</span>
+                            )}
+                          </div>
+                          {pct !== null && (
+                            <div className="p-progress-wrap">
+                              <div className="p-progress-track">
+                                <div className="p-progress-fill" style={{ width: `${pct}%` }} />
+                              </div>
+                              <span className="p-progress-pct">{pct}%</span>
+                            </div>
+                          )}
+                        </Link>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Activity */}
+            <ActivityRail activity={activity} />
+          </div>
+        </div>
+      )}
+
+      {/* ─── OPERATIONS VIEW ─── */}
+      {view === 'Operations' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+          <div className="p-kpi-bar">
+            <div className="p-kpi-cell">
+              <div className="p-kpi-label">Global Progress</div>
+              <div className="p-kpi-value mono">{globalPct}%</div>
+              <ProgressBar value={globalPct} />
+            </div>
+            <div className="p-kpi-cell">
+              <div className="p-kpi-label">Awaiting Approval</div>
+              <div className="p-kpi-value mono">{pad2(awaitingApproval)}</div>
+              <div className="p-kpi-foot">deliverables pending</div>
+            </div>
+            <div className="p-kpi-cell">
+              <div className="p-kpi-label">Needs Attention</div>
+              <div className="p-kpi-value mono" style={attention > 0 ? { color: 'var(--ds-amber)' } : {}}>
+                {pad2(attention)}
+              </div>
+              <div className="p-kpi-foot">projects at risk</div>
+            </div>
+            <div className="p-kpi-cell">
+              <div className="p-kpi-label">Milestones Done</div>
+              <div className="p-kpi-value mono">{doneMilestones}<span style={{ fontSize: 16, color: 'var(--ds-text-3)' }}>/{totalMilestones}</span></div>
+              <div className="p-kpi-foot">across all projects</div>
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem', alignItems: 'start' }}>
+            <div>
+              <div className="p-section-label" style={{ marginBottom: '0.5rem' }}>All Projects</div>
+              <div className="p-table-wrap">
+                <table className="p-table">
+                  <thead>
+                    <tr>
+                      <th>Project</th>
+                      <th>Status</th>
+                      <th>Client</th>
+                      <th>Deadline</th>
+                      <th>Progress</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {projects.map(p => {
+                      const pct = p.milestoneTotal > 0 ? Math.round((p.milestoneDone / p.milestoneTotal) * 100) : 0
+                      return (
+                        <tr key={p.id}>
+                          <td>
+                            <Link href={`/admin/projects/${p.id}`} style={{ color: 'var(--ds-text)', textDecoration: 'none', fontWeight: 500 }}>
+                              {p.name}
+                            </Link>
+                          </td>
+                          <td><ProjectStatusBadge status={p.status as 'briefing' | 'in_progress' | 'final_review' | 'completed' | 'paused'} /></td>
+                          <td className="mono" style={{ color: 'var(--ds-text-3)' }}>{p.clientName}</td>
+                          <td className="mono" style={{ color: 'var(--ds-text-3)' }}>{fmtDate(p.clientDeadline) ?? '—'}</td>
+                          <td>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                              <div style={{ minWidth: 60 }}><ProgressBar value={pct} /></div>
+                              <span className="mono" style={{ fontSize: 12, color: 'var(--ds-text-3)' }}>{pct}%</span>
+                            </div>
+                          </td>
+                        </tr>
+                      )
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <ActivityRail activity={activity} />
+          </div>
+        </div>
+      )}
+
+      {/* ─── EDITORIAL VIEW ─── */}
+      {view === 'Editorial' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+          <div className="p-editorial-stats">
+            <div className="p-editorial-stat">
+              <div className="p-editorial-stat-value mono">
+                {globalPct}<span className="p-editorial-stat-unit">%</span>
+              </div>
+              <div className="p-editorial-stat-label">Global Progress</div>
+            </div>
+            <div className="p-editorial-stat">
+              <div className="p-editorial-stat-value mono">{activeCount}</div>
+              <div className="p-editorial-stat-label">Active Projects</div>
+            </div>
+            <div className="p-editorial-stat">
+              <div className="p-editorial-stat-value mono">{pad2(awaitingApproval)}</div>
+              <div className="p-editorial-stat-label">Awaiting Approval</div>
+            </div>
+            <div className="p-editorial-stat">
+              <div className="p-editorial-stat-value mono">{doneMilestones}</div>
+              <div className="p-editorial-stat-label">Milestones Done</div>
+            </div>
+          </div>
+
+          {/* Full project list */}
+          <div>
+            <div className="p-section-label" style={{ marginBottom: '0.5rem' }}>All Projects</div>
+            <div className="p-project-rows">
+              {projects.map(p => {
+                const pct = p.milestoneTotal > 0 ? Math.round((p.milestoneDone / p.milestoneTotal) * 100) : null
+                return (
+                  <Link key={p.id} href={`/admin/projects/${p.id}`} className="p-project-row">
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <span className="p-project-name">{p.name}</span>
+                        <ProjectStatusBadge status={p.status as 'briefing' | 'in_progress' | 'final_review' | 'completed' | 'paused'} />
+                      </div>
+                      <div className="p-project-meta">
+                        {p.clientName}{p.clientDeadline ? ` · Due ${fmtDate(p.clientDeadline)}` : ''}
+                      </div>
+                    </div>
+                    {pct !== null && (
+                      <div className="p-progress-wrap">
+                        <div className="p-progress-track">
+                          <div className="p-progress-fill" style={{ width: `${pct}%` }} />
+                        </div>
+                        <span className="p-progress-pct">{pct}%</span>
+                      </div>
+                    )}
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Timeline activity */}
+          <div>
+            <div className="p-section-label" style={{ marginBottom: '0.5rem' }}>Recent Activity</div>
+            <div className="p-feed p-feed-editorial">
+              {activity.length === 0 ? (
+                <p style={{ padding: '1rem', fontSize: '0.75rem', color: 'var(--ds-text-3)' }}>No activity yet.</p>
+              ) : (
+                activity.map(log => (
+                  <div key={log.id} className="p-feed-item">
+                    <div className="p-feed-avatar">{log.actorInitial}</div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div className="p-feed-text">
+                        <span className="p-feed-actor">{log.actorName}</span>
+                        {' '}{log.action.replace('.', ' ')}
+                        {log.entityName && <span className="p-feed-entity"> · {log.entityName}</span>}
+                      </div>
+                      <div className="p-feed-row">
+                        <span className="p-feed-time mono">{new Date(log.createdAt).toLocaleString()}</span>
+                        <RoleBadge role={log.actorRole} />
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function ActivityRail({ activity }: { activity: ActivityRow[] }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+      <div className="p-section-label">Recent Activity</div>
+      <div className="p-feed">
+        {activity.length === 0 ? (
+          <p style={{ padding: '1rem', fontSize: '0.75rem', color: 'var(--ds-text-3)' }}>No activity yet.</p>
+        ) : (
+          activity.map(log => (
+            <div key={log.id} className="p-feed-item">
+              <div className="p-feed-avatar">{log.actorInitial}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div className="p-feed-text">
+                  <span className="p-feed-actor">{log.actorName}</span>
+                  {' '}{log.action.replace('.', ' ')}
+                  {log.entityName && <span className="p-feed-entity"> · {log.entityName}</span>}
+                </div>
+                <div className="p-feed-row">
+                  <span className="p-feed-time mono">{new Date(log.createdAt).toLocaleString()}</span>
+                  <RoleBadge role={log.actorRole} />
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  )
+}

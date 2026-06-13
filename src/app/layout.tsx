@@ -1,9 +1,16 @@
 import type { Metadata } from "next";
-import { Inter, Syne, Space_Grotesk, Geist } from "next/font/google";
+import { Inter, Syne, Space_Grotesk, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  weight: ["400", "500", "600"],
+  display: "swap",
+});
 
 const inter = Inter({
   subsets: ["latin"],
@@ -41,6 +48,7 @@ export default function RootLayout({
         syne.variable,
         spaceGrotesk.variable,
         geist.variable,
+        geistMono.variable,
         "font-sans"
       )}
     >
