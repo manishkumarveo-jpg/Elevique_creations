@@ -16,6 +16,7 @@
   background: #141416;
   color: var(--white);
   overflow-y: auto;
+  scrollbar-gutter: stable;
   box-sizing: border-box;
 }
 

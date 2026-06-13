@@ -74,15 +74,25 @@ export async function proxy(request: NextRequest) {
   const { data: { user }, error: authError } = await supabase.auth.getUser()
 
   // Stale or invalid refresh token — clear session and send to login
-  if (authError?.name === 'AuthApiError') {
-    const loginUrl = new URL('/login', request.url)
-    const redirect = NextResponse.redirect(loginUrl)
-    // Clear all sb-* auth cookies so the client doesn't retry with the bad token
-    request.cookies.getAll()
-      .filter(c => c.name.startsWith('sb-'))
-      .forEach(c => redirect.cookies.delete(c.name))
-    return redirect
+  // Stale or invalid refresh token — clear session and either return 401 for API routes or redirect to login for pages
+if (authError?.name === 'AuthApiError') {
+  const isApi = pathname.startsWith('/api/')
+  const sbCookies = request.cookies.getAll().filter(c => c.name.startsWith('sb-'))
+
+  if (isApi) {
+    const res = new NextResponse(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
+      headers: { 'Content-Type': 'application/json' },
+    })
+    sbCookies.forEach(c => res.cookies.delete(c.name))
+    return res
   }
+
+  const loginUrl = new URL('/login', request.url)
+  const redirect = NextResponse.redirect(loginUrl)
+  sbCookies.forEach(c => redirect.cookies.delete(c.name))
+  return redirect
+}
 
   // Route protection
   if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
