@@ -141,7 +141,6 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html {
-  scrollbar-gutter: stable;
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -224,4 +223,39 @@ body {
   html {
     @apply font-sans;
   }
+}
+
+/* ─── Premium Glass, Glow and Hover Micro-Interactions ─────── */
+.premium-glass-card {
+  background: rgba(255, 255, 255, 0.02) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+}
+
+.theme-ultra-dark {
+  background-color: var(--ultra-dark) !important;
+}
+
+.bg-glow-green-mesh {
+  position: relative;
+}
+.bg-glow-green-mesh::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, var(--glow-green) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hover-glow-emerald {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+.hover-glow-emerald:hover {
+  transform: scale(1.025);
+  box-shadow: 0 0 30px 4px rgba(74, 222, 128, 0.35);
+  border-color: rgba(74, 222, 128, 0.5) !important;
 }
