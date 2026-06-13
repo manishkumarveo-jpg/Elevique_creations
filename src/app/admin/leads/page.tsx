@@ -1,7 +1,6 @@
 import { createServerClient } from "@/lib/supabase/server";
-import { Table, Thead, Tbody, Th, Tr } from "@/components/ui/Table";
 import { Avatar } from "@/components/ui/Avatar";
-import { Mail, Phone, Calendar, MapPin, Video, DollarSign, Globe, Building, MessageSquare, Briefcase } from "lucide-react";
+import { Mail, Phone, Calendar, MapPin, Video, DollarSign, Globe, Building, Briefcase } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -29,190 +28,144 @@ export default async function AdminLeadsPage() {
 
   if (dbError) {
     return (
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "2rem 0" }}>
+      <div className="p-content-wrap">
         <div className="p-warn-box">
           <h2 className="p-warn-box-title">Migration Required</h2>
           <p className="p-warn-box-sub">
-            The social leads table (`social_leads`) does not exist or has not been configured in your database yet.
-            Please apply the SQL migration in your Supabase SQL Editor:
+            The <code>social_leads</code> table does not exist yet. Apply the migration:
           </p>
-          <pre
-            style={{
-              background: "rgba(0,0,0,0.3)",
-              padding: "1rem",
-              borderRadius: "8px",
-              marginTop: "1rem",
-              fontSize: "0.8rem",
-              overflowX: "auto",
-              color: "#ff6b35",
-              border: "1px solid rgba(255,255,255,0.08)",
-            }}
-          >
-            supabase/migrations/20260612_20_social_leads.sql
-          </pre>
+          <pre>supabase/migrations/20260612_20_social_leads.sql</pre>
+          <p className="p-warn-box-hint">After running it, refresh this page.</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", flexDirection: "column", gap: "2rem", padding: "1rem" }}>
-      <div>
+    <div className="p-content-wrap">
+      <div style={{ marginBottom: "1.75rem" }}>
         <p className="p-eyebrow">Admin</p>
-        <h1 className="p-page-title">Social Campaign Leads</h1>
-        <p style={{ color: "var(--p-t3)", fontSize: "0.8rem", marginTop: "0.25rem" }}>
-          View and manage leads captured from your social media marketing campaigns.
+        <h1 className="p-page-title">Social Leads</h1>
+        <p className="p-page-sub">
+          {leads.length} lead{leads.length !== 1 ? "s" : ""} captured from your campaigns.
         </p>
       </div>
 
       {leads.length === 0 ? (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "5rem 2rem",
-            background: "rgba(255,255,255,0.02)",
-            border: "1px dashed rgba(255,255,255,0.08)",
-            borderRadius: "16px",
-            textAlign: "center",
-            gap: "1rem",
-          }}
-        >
-          <Briefcase size={40} style={{ opacity: 0.3, color: "var(--p-t3)" }} />
-          <div>
-            <h3 style={{ color: "var(--p-t1)", fontWeight: 600, fontSize: "1rem" }}>No Leads Yet</h3>
-            <p style={{ color: "var(--p-t3)", fontSize: "0.8rem", marginTop: "0.25rem" }}>
-              Submissions from the `/leads` landing page will appear here.
-            </p>
+        <div className="p-empty">
+          <div className="p-empty-icon-wrap">
+            <Briefcase size={20} />
           </div>
+          <p className="p-empty-title">No leads yet</p>
+          <p className="p-empty-sub">Submissions from the lead landing page will appear here.</p>
         </div>
       ) : (
-        <Table>
-          <Thead>
-            <tr>
-              <Th>Lead / Contact</Th>
-              <Th>Service / Videos</Th>
-              <Th>Budget</Th>
-              <Th>Brief & Requirement</Th>
-              <Th>Location & Company</Th>
-              <Th>Date</Th>
-            </tr>
-          </Thead>
-          <Tbody>
-            {leads.map((lead) => (
-              <Tr key={lead.id}>
-                {/* Lead / Contact */}
-                <td style={{ verticalAlign: "top", padding: "1rem 0.875rem" }}>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-                      <Avatar name={lead.full_name} size="sm" />
-                      <span className="p-table-name" style={{ fontWeight: 600 }}>
-                        {lead.full_name}
+        <div className="p-table-wrap">
+          <table className="p-table">
+            <thead>
+              <tr>
+                <th>Lead / Contact</th>
+                <th>Service</th>
+                <th>Budget</th>
+                <th>Brief</th>
+                <th>Location</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {leads.map((lead) => (
+                <tr key={lead.id}>
+                  <td style={{ verticalAlign: "top" }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "0.375rem" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
+                        <Avatar name={lead.full_name} size="sm" />
+                        <span className="p-table-name">{lead.full_name}</span>
+                      </div>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem", paddingLeft: "2rem" }}>
+                        <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "12px" }} className="mono">
+                          <Mail size={11} style={{ color: "var(--ds-text-3)", flexShrink: 0 }} />
+                          <a href={`mailto:${lead.email}`} style={{ color: "var(--ds-text-3)", textDecoration: "none" }}>
+                            {lead.email}
+                          </a>
+                        </span>
+                        {lead.phone && (
+                          <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "12px" }} className="mono">
+                            <Phone size={11} style={{ color: "var(--ds-text-3)", flexShrink: 0 }} />
+                            <a href={`tel:${lead.phone}`} style={{ color: "var(--ds-text-3)", textDecoration: "none" }}>
+                              {lead.phone}
+                            </a>
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </td>
+
+                  <td style={{ verticalAlign: "top" }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
+                      <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "13px", color: "var(--ds-text)", fontWeight: 500 }}>
+                        <Briefcase size={12} style={{ color: "var(--ds-text-3)", flexShrink: 0 }} />
+                        {lead.service_type || "—"}
+                      </span>
+                      <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "12px" }} className="mono">
+                        <Video size={11} style={{ color: "var(--ds-text-3)", flexShrink: 0 }} />
+                        <span style={{ color: "var(--ds-text-3)" }}>{lead.videos_count || "—"}</span>
                       </span>
                     </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem", fontSize: "0.75rem", paddingLeft: "2.1rem" }}>
-                      <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "var(--p-t2)" }}>
-                        <Mail size={12} style={{ opacity: 0.7 }} />
-                        <a href={`mailto:${lead.email}`} style={{ color: "inherit", textDecoration: "none" }}>
-                          {lead.email}
-                        </a>
-                      </span>
-                      {lead.phone && (
-                        <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "var(--p-t2)" }}>
-                          <Phone size={12} style={{ opacity: 0.7 }} />
-                          <a href={`tel:${lead.phone}`} style={{ color: "inherit", textDecoration: "none" }}>
-                            {lead.phone}
+                  </td>
+
+                  <td style={{ verticalAlign: "top" }}>
+                    <span style={{ display: "flex", alignItems: "center", gap: "0.3rem", fontWeight: 600 }} className="mono">
+                      <DollarSign size={13} style={{ color: "var(--ds-text-3)", flexShrink: 0 }} />
+                      {lead.budget_per_video || "—"}
+                    </span>
+                  </td>
+
+                  <td style={{ verticalAlign: "top", maxWidth: 280 }}>
+                    <p style={{ fontSize: "13px", lineHeight: "1.5", color: "var(--ds-text-2)", margin: 0, whiteSpace: "pre-wrap" }}>
+                      {lead.requirement_brief || <span style={{ color: "var(--ds-text-3)", fontStyle: "italic" }}>No brief provided</span>}
+                    </p>
+                  </td>
+
+                  <td style={{ verticalAlign: "top" }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
+                      {lead.city && (
+                        <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "13px", color: "var(--ds-text-2)" }}>
+                          <MapPin size={12} style={{ color: "var(--ds-text-3)", flexShrink: 0 }} />
+                          {lead.city}
+                        </span>
+                      )}
+                      {lead.company_name && (
+                        <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "13px", color: "var(--ds-text-2)" }}>
+                          <Building size={12} style={{ color: "var(--ds-text-3)", flexShrink: 0 }} />
+                          {lead.company_name}
+                        </span>
+                      )}
+                      {lead.website && (
+                        <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "13px", color: "var(--ds-text-2)" }}>
+                          <Globe size={12} style={{ color: "var(--ds-text-3)", flexShrink: 0 }} />
+                          <a href={lead.website} target="_blank" rel="noopener noreferrer" style={{ color: "var(--ds-text-2)", textDecoration: "underline", textUnderlineOffset: "2px" }}>
+                            Website
                           </a>
                         </span>
                       )}
                     </div>
-                  </div>
-                </td>
+                  </td>
 
-                {/* Service / Videos */}
-                <td style={{ verticalAlign: "top", padding: "1rem 0.875rem" }}>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", fontSize: "0.78rem" }}>
-                    <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "var(--p-t1)", fontWeight: 500 }}>
-                      <Briefcase size={12} style={{ color: "rgb(20, 184, 166)", opacity: 0.8 }} />
-                      {lead.service_type || "Unspecified Service"}
+                  <td style={{ verticalAlign: "top", whiteSpace: "nowrap" }}>
+                    <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "12px", color: "var(--ds-text-3)" }} className="mono">
+                      <Calendar size={11} style={{ flexShrink: 0 }} />
+                      {new Date(lead.created_at).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
                     </span>
-                    <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "var(--p-t2)" }}>
-                      <Video size={12} style={{ opacity: 0.7 }} />
-                      {lead.videos_count || "Unspecified Qty"}
-                    </span>
-                  </div>
-                </td>
-
-                {/* Budget */}
-                <td style={{ verticalAlign: "top", padding: "1rem 0.875rem" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.3rem", fontSize: "0.82rem", color: "var(--p-t1)", fontWeight: 600 }}>
-                    <DollarSign size={13} style={{ color: "rgb(20, 184, 166)" }} />
-                    <span>{lead.budget_per_video || "N/A"}</span>
-                  </div>
-                </td>
-
-                {/* Brief & Requirement */}
-                <td style={{ verticalAlign: "top", maxWidth: "300px", padding: "1rem 0.875rem" }}>
-                  <p
-                    style={{
-                      fontSize: "0.78rem",
-                      lineHeight: "1.5",
-                      color: "var(--p-t2)",
-                      whiteSpace: "pre-wrap",
-                      margin: 0,
-                    }}
-                  >
-                    {lead.requirement_brief || (
-                      <span style={{ color: "var(--p-t3)", fontStyle: "italic" }}>No brief provided</span>
-                    )}
-                  </p>
-                </td>
-
-                {/* Location & Company */}
-                <td style={{ verticalAlign: "top", padding: "1rem 0.875rem" }}>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem", fontSize: "0.78rem" }}>
-                    {lead.city && (
-                      <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "var(--p-t2)" }}>
-                        <MapPin size={12} style={{ opacity: 0.7 }} />
-                        {lead.city}
-                      </span>
-                    )}
-                    {lead.company_name && (
-                      <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "var(--p-t2)" }}>
-                        <Building size={12} style={{ opacity: 0.7 }} />
-                        {lead.company_name}
-                      </span>
-                    )}
-                    {lead.website && (
-                      <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", color: "var(--p-t2)" }}>
-                        <Globe size={12} style={{ opacity: 0.7 }} />
-                        <a href={lead.website} target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "underline" }}>
-                          Website
-                        </a>
-                      </span>
-                    )}
-                  </div>
-                </td>
-
-                {/* Date */}
-                <td style={{ verticalAlign: "top", whiteSpace: "nowrap", padding: "1rem 0.875rem" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "0.78rem", color: "var(--p-t3)" }}>
-                    <Calendar size={12} style={{ opacity: 0.7 }} />
-                    {new Date(lead.created_at).toLocaleString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </div>
-                </td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );
