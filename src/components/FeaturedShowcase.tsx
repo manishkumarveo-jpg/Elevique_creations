@@ -13,7 +13,7 @@ import {
 import PortfolioReels from "./PortfolioReels";
 import "@/styles/portfolio-reels.css";
 import "@/styles/portfolio-showcase.css";
-import { GRID_PROJECTS, type GridProject } from "@/data/gridVideos";
+import { GRID_PROJECTS, AI_VISUALS, EDITORIAL, PRODUCT_FILM, BRAND_FILM, TECH_UI, EXPERIMENTAL, type GridProject } from "@/data/gridVideos";
 
 /* ─── Data ───────────────────────────────────────────────────── */
 interface Project {
@@ -97,6 +97,14 @@ function groupByCategory(projects: GridProject[]) {
 }
 const CATEGORY_GROUPS = groupByCategory(GRID_PROJECTS);
 
+type PackageTab = "1" | "2" | "3";
+
+const PACKAGE_SECTIONS: Record<PackageTab, { rows: { category: string; items: GridProject[] }[] }> = {
+  "1": { rows: [{ category: "AI Visuals", items: AI_VISUALS }, { category: "Editorial", items: EDITORIAL }] },
+  "2": { rows: [{ category: "Product Film", items: PRODUCT_FILM }, { category: "Brand Film", items: BRAND_FILM }] },
+  "3": { rows: [{ category: "Tech / UI", items: TECH_UI }, { category: "Experimental", items: EXPERIMENTAL }] },
+};
+
 const VO_BACKDROP_CLICK_STYLE = {
   position: "absolute",
   inset: 0,
@@ -110,7 +118,7 @@ const VO_BACKDROP_CLICK_STYLE = {
 
 /* ════════════════════════════════════════════════════════════════ */
 export default function FeaturedShowcase() {
-  const [viewMode, setViewMode]         = useState<"grid" | "reels">("grid");
+  const [viewMode, setViewMode]         = useState<"grid" | "reels" | "packages">("grid");
   const [active, setActive]           = useState<Project>(PROJECTS[0]);
   const [videoOverlay, setVideoOverlay] = useState<Project | null>(null);
   const [bottomSheet, setBottomSheet]   = useState<Project | null>(null);
@@ -310,11 +318,19 @@ export default function FeaturedShowcase() {
         >
           Reels Feed
         </button>
+        <button
+          type="button"
+          className={`portfolio-toggle-btn${viewMode === "packages" ? " active" : ""}`}
+          onClick={() => setViewMode("packages")}
+          style={{ width: "130px", justifyContent: "center" }}
+        >
+          Packages
+        </button>
         <div
           className="portfolio-toggle-pill"
           style={{
             width: "130px",
-            transform: viewMode === "grid" ? "translateX(0)" : "translateX(130px)",
+            transform: viewMode === "grid" ? "translateX(0)" : viewMode === "reels" ? "translateX(130px)" : "translateX(260px)",
           }}
         />
       </div>
@@ -372,6 +388,14 @@ export default function FeaturedShowcase() {
               >
                 Reels Feed
               </button>
+              <button
+                type="button"
+                className="portfolio-toggle-btn"
+                onClick={() => setViewMode("packages")}
+                style={{ width: "130px", justifyContent: "center" }}
+              >
+                Packages
+              </button>
               <div
                 className="portfolio-toggle-pill"
                 style={{
@@ -411,12 +435,22 @@ export default function FeaturedShowcase() {
             ))}
           </div>
         </>
-      ) : (
+      ) : viewMode === "reels" ? (
         /* Reels mode — standalone toggle header + feed */
         <div className="reels-feed-wrapper">
           {/* Persistent toggle so user can always switch back */}
           <ViewToggle />
           <PortfolioReels onViewDetails={openBottomSheet as any} onBack={() => setViewMode("grid")} />
+        </div>
+      ) : (
+        /* Packages mode */
+        <div className="reels-feed-wrapper">
+          <ViewToggle />
+          <PackagesSection
+            onCardEnter={onCardEnter}
+            onCardLeave={onCardLeave}
+            onCardClick={(p: GridProject) => openVideoOverlay(p as Project)}
+          />
         </div>
       )}
 
@@ -730,5 +764,48 @@ function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject
         <span className="portfolio-grid-category">{project.category.toUpperCase()}</span>
       </div>
     </button>
+  );
+}
+
+/* ─── Packages Section ──────────────────────────────────────── */
+function PackagesSection({
+  onCardEnter,
+  onCardLeave,
+  onCardClick,
+}: {
+  onCardEnter: (p: GridProject, e: React.MouseEvent<HTMLDivElement>) => void;
+  onCardLeave: () => void;
+  onCardClick: (p: GridProject) => void;
+}) {
+  const [activeTab, setActiveTab] = useState<PackageTab>("1");
+  const section = PACKAGE_SECTIONS[activeTab];
+
+  return (
+    <div className="packages-section-wrap">
+      <div className="packages-tabs-wrap">
+        {(["1", "2", "3"] as PackageTab[]).map((tab) => (
+          <button
+            key={tab}
+            type="button"
+            className={`packages-tab-btn${activeTab === tab ? " active" : ""}`}
+            onClick={() => setActiveTab(tab)}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+      <div className="portfolio-rows-wrap" style={{ paddingTop: "0.5rem" }}>
+        {section.rows.map(({ category, items }) => (
+          <CategoryRow
+            key={category}
+            category={category}
+            projects={items}
+            onCardEnter={onCardEnter}
+            onCardLeave={onCardLeave}
+            onCardClick={onCardClick}
+          />
+        ))}
+      </div>
+    </div>
   );
 }
