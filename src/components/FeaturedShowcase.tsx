@@ -9,7 +9,6 @@ import {
   ThumbsUp,
   ChevronDown,
   ExternalLink,
-  ArrowLeft,
 } from "lucide-react";
 import PortfolioReels from "./PortfolioReels";
 import "@/styles/portfolio-reels.css";
@@ -359,7 +358,7 @@ export default function FeaturedShowcase() {
             <div className="portfolio-view-toggle">
               <button
                 type="button"
-                className={`portfolio-toggle-btn${viewMode === "grid" ? " active" : ""}`}
+                className="portfolio-toggle-btn active"
                 onClick={() => setViewMode("grid")}
                 style={{ width: "130px", justifyContent: "center" }}
               >
@@ -367,7 +366,7 @@ export default function FeaturedShowcase() {
               </button>
               <button
                 type="button"
-                className={`portfolio-toggle-btn${viewMode === "reels" ? " active" : ""}`}
+                className="portfolio-toggle-btn"
                 onClick={() => setViewMode("reels")}
                 style={{ width: "130px", justifyContent: "center" }}
               >
@@ -377,7 +376,7 @@ export default function FeaturedShowcase() {
                 className="portfolio-toggle-pill"
                 style={{
                   width: "130px",
-                  transform: viewMode === "grid" ? "translateX(0)" : "translateX(130px)",
+                  transform: "translateX(0)",
                 }}
               />
             </div>
