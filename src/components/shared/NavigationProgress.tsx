@@ -43,9 +43,11 @@ export function NavigationProgress() {
     // After bar reaches 100%, fade it out
     doneTimer.current = setTimeout(() => setPhase('idle'), 500)
 
+    const done = doneTimer.current
+    const hide = hideTimer.current
     return () => {
-      clearTimeout(doneTimer.current)
-      clearTimeout(hideTimer.current)
+      clearTimeout(done)
+      clearTimeout(hide)
     }
   }, [pathname])
 

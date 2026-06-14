@@ -4,9 +4,24 @@ import { Mail, Phone, Calendar, MapPin, Video, DollarSign, Globe, Building, Brie
 
 export const dynamic = "force-dynamic";
 
+type SocialLead = {
+  id: string;
+  full_name: string;
+  email: string;
+  phone?: string | null;
+  service_type?: string | null;
+  videos_count?: string | null;
+  budget_per_video?: string | null;
+  requirement_brief?: string | null;
+  city?: string | null;
+  company_name?: string | null;
+  website?: string | null;
+  created_at: string;
+};
+
 export default async function AdminLeadsPage() {
   const supabase = await createServerClient();
-  let leads: any[] = [];
+  let leads: SocialLead[] = [];
   let dbError = false;
 
   try {

@@ -26,7 +26,6 @@ function statusLabel(status: string) {
 }
 
 export function FeaturedProjectCard({
-  id,
   name,
   clientName,
   status,

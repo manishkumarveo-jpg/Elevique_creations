@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
+import { motion, AnimatePresence, useMotionValue, useTransform, useSpring, type PanInfo } from "framer-motion";
 import "@/styles/testimonial.css";
 
 // ── Client SVG Logos ───────────────────────────────────────────
@@ -303,7 +303,7 @@ export default function TestimonialsEditorial() {
     setIsHovered(false);
   };
 
-  const handleChange = (index: number) => {
+  const handleChange = useCallback((index: number) => {
     if (index === active || isTransitioning.current) return;
     isTransitioning.current = true;
     setProgress(0); // Reset timer
@@ -311,16 +311,18 @@ export default function TestimonialsEditorial() {
     setTimeout(() => {
       isTransitioning.current = false;
     }, 300);
-  };
+  }, [active]);
 
-  const handlePrev = () =>
-    handleChange(active === 0 ? testimonials.length - 1 : active - 1);
+  const handlePrev = useCallback(() =>
+    handleChange(active === 0 ? testimonials.length - 1 : active - 1),
+  [active, handleChange]);
 
-  const handleNext = () =>
-    handleChange(active === testimonials.length - 1 ? 0 : active + 1);
+  const handleNext = useCallback(() =>
+    handleChange(active === testimonials.length - 1 ? 0 : active + 1),
+  [active, handleChange]);
 
   // Swipe gesture support
-  const handleDragEnd = (event: any, info: any) => {
+  const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     const threshold = 60;
     if (info.offset.x < -threshold) {
       handleNext();
@@ -348,7 +350,7 @@ export default function TestimonialsEditorial() {
     }, intervalTime);
 
     return () => clearInterval(timer);
-  }, [active, isHovered]);
+  }, [active, isHovered, handleNext]);
 
   const current = testimonials[active];
   const words = current.quote.split(" ");
@@ -357,7 +359,7 @@ export default function TestimonialsEditorial() {
   const spotlightStyle = {
     background: useTransform(
       [spotlightX, spotlightY, spotlightOpacity],
-      ([sx, sy, op]) =>
+      ([sx, sy]) =>
         `radial-gradient(500px circle at ${sx}% ${sy}%, rgba(20, 184, 166, 0.1) 0%, transparent 80%)`
     ),
     opacity: spotlightOpacity,
@@ -366,7 +368,7 @@ export default function TestimonialsEditorial() {
   const borderSpotlightStyle = {
     background: useTransform(
       [spotlightX, spotlightY, spotlightOpacity],
-      ([sx, sy, op]) =>
+      ([sx, sy]) =>
         `radial-gradient(280px circle at ${sx}% ${sy}%, rgba(20, 184, 166, 0.38) 0%, transparent 100%)`
     ),
     opacity: spotlightOpacity,

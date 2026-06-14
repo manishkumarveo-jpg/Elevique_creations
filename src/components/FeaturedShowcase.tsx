@@ -116,9 +116,52 @@ const VO_BACKDROP_CLICK_STYLE = {
   zIndex: 1,
 } as const;
 
+/* ─── View Mode Toggle ──────────────────────────────────────── */
+type ViewMode = "grid" | "reels" | "packages";
+
+function ViewToggle({ viewMode, setViewMode }: { viewMode: ViewMode; setViewMode: (m: ViewMode) => void }) {
+  return (
+    <div className="portfolio-view-toggle-wrap">
+      <div className="portfolio-view-toggle">
+        <button
+          type="button"
+          className={`portfolio-toggle-btn${viewMode === "grid" ? " active" : ""}`}
+          onClick={() => setViewMode("grid")}
+          style={{ width: "130px", justifyContent: "center" }}
+        >
+          Grid Showcase
+        </button>
+        <button
+          type="button"
+          className={`portfolio-toggle-btn${viewMode === "reels" ? " active" : ""}`}
+          onClick={() => setViewMode("reels")}
+          style={{ width: "130px", justifyContent: "center" }}
+        >
+          Reels Feed
+        </button>
+        <button
+          type="button"
+          className={`portfolio-toggle-btn${viewMode === "packages" ? " active" : ""}`}
+          onClick={() => setViewMode("packages")}
+          style={{ width: "130px", justifyContent: "center" }}
+        >
+          Packages
+        </button>
+        <div
+          className="portfolio-toggle-pill"
+          style={{
+            width: "130px",
+            transform: viewMode === "grid" ? "translateX(0)" : viewMode === "reels" ? "translateX(130px)" : "translateX(260px)",
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
 /* ════════════════════════════════════════════════════════════════ */
 export default function FeaturedShowcase() {
-  const [viewMode, setViewMode]         = useState<"grid" | "reels" | "packages">("grid");
+  const [viewMode, setViewMode]         = useState<ViewMode>("grid");
   const [active, setActive]           = useState<Project>(PROJECTS[0]);
   const [videoOverlay, setVideoOverlay] = useState<Project | null>(null);
   const [bottomSheet, setBottomSheet]   = useState<Project | null>(null);
@@ -132,7 +175,7 @@ export default function FeaturedShowcase() {
   const overlayBoxRef = useRef<HTMLDivElement>(null);
 
   /* bottom sheet refs */
-  const sheetBgRef    = useRef<HTMLDivElement>(null);
+  const sheetBgRef    = useRef<HTMLButtonElement>(null);
   const sheetPanelRef = useRef<HTMLDialogElement>(null);
 
   const hoverTimer            = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -292,7 +335,7 @@ export default function FeaturedShowcase() {
     if (leaveTimer.current) { clearTimeout(leaveTimer.current); leaveTimer.current = null; }
   }, []);
 
-  const onCardEnter = useCallback((p: GridProject, e: React.MouseEvent<HTMLDivElement>) => {
+  const onCardEnter = useCallback((p: GridProject, e: React.MouseEvent<HTMLElement>) => {
     if (hoverTimer.current) clearTimeout(hoverTimer.current);
     const anchor = e.currentTarget;
     hoverTimer.current = setTimeout(() => showPopup(p as Project, anchor), 350);
@@ -307,45 +350,6 @@ export default function FeaturedShowcase() {
     if (hoverTimer.current) clearTimeout(hoverTimer.current);
     if (leaveTimer.current) clearTimeout(leaveTimer.current);
   }, []);
-
-  /* ──── Shared View Toggle ───────────────────────────────────── */
-  const ViewToggle = () => (
-    <div className="portfolio-view-toggle-wrap">
-      <div className="portfolio-view-toggle">
-        <button
-          type="button"
-          className={`portfolio-toggle-btn${viewMode === "grid" ? " active" : ""}`}
-          onClick={() => setViewMode("grid")}
-          style={{ width: "130px", justifyContent: "center" }}
-        >
-          Grid Showcase
-        </button>
-        <button
-          type="button"
-          className={`portfolio-toggle-btn${viewMode === "reels" ? " active" : ""}`}
-          onClick={() => setViewMode("reels")}
-          style={{ width: "130px", justifyContent: "center" }}
-        >
-          Reels Feed
-        </button>
-        <button
-          type="button"
-          className={`portfolio-toggle-btn${viewMode === "packages" ? " active" : ""}`}
-          onClick={() => setViewMode("packages")}
-          style={{ width: "130px", justifyContent: "center" }}
-        >
-          Packages
-        </button>
-        <div
-          className="portfolio-toggle-pill"
-          style={{
-            width: "130px",
-            transform: viewMode === "grid" ? "translateX(0)" : viewMode === "reels" ? "translateX(130px)" : "translateX(260px)",
-          }}
-        />
-      </div>
-    </div>
-  );
 
   /* ════════════════════════════════════════════════════════════ */
   return (
@@ -449,13 +453,13 @@ export default function FeaturedShowcase() {
         /* Reels mode — standalone toggle header + feed */
         <div className="reels-feed-wrapper reels-feed-wrapper--reels">
           {/* Persistent toggle so user can always switch back */}
-          <ViewToggle />
-          <PortfolioReels onViewDetails={openBottomSheet as any} onBack={() => setViewMode("grid")} />
+          <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
+          <PortfolioReels onViewDetails={(p) => openBottomSheet(p as Project)} onBack={() => setViewMode("grid")} />
         </div>
       ) : (
         /* Packages mode */
         <div className="reels-feed-wrapper">
-          <ViewToggle />
+          <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
           <PackagesSection
             onCardEnter={onCardEnter}
             onCardLeave={onCardLeave}
@@ -568,7 +572,7 @@ export default function FeaturedShowcase() {
       {bottomSheet && (
         <>
           <button
-            ref={sheetBgRef as any}
+            ref={sheetBgRef}
             type="button"
             className="bs-backdrop"
             onClick={closeBottomSheet}
@@ -646,7 +650,7 @@ export default function FeaturedShowcase() {
 
 /* ─── Featured Card ─────────────────────────────────────────── */
 function FeaturedCard({ project, isActive, onClick }: { project: Project; isActive: boolean; onClick: () => void }) {
-  const cardRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLButtonElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const onEnter = () => {
     if (!isActive) gsap.to(cardRef.current, { scale: 1.04, duration: 0.22, ease: "power4.out" });
@@ -658,7 +662,7 @@ function FeaturedCard({ project, isActive, onClick }: { project: Project; isActi
   };
   return (
     <button
-      ref={cardRef as any}
+      ref={cardRef}
       type="button"
       className={`portfolio-feat-card${isActive ? " portfolio-feat-card--active" : ""}`}
       style={{
@@ -701,7 +705,7 @@ function CategoryRow({
 }: {
   category: string;
   projects: GridProject[];
-  onCardEnter: (p: GridProject, e: React.MouseEvent<HTMLDivElement>) => void;
+  onCardEnter: (p: GridProject, e: React.MouseEvent<HTMLElement>) => void;
   onCardLeave: () => void;
   onCardClick: (p: GridProject) => void;
 }) {
@@ -732,11 +736,11 @@ function CategoryRow({
 }
 
 /* ─── Grid Card ─────────────────────────────────────────────── */
-function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject; onEnter: (p: GridProject, e: React.MouseEvent<HTMLDivElement>) => void; onLeave: () => void; onClick: () => void }) {
+function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject; onEnter: (p: GridProject, e: React.MouseEvent<HTMLElement>) => void; onLeave: () => void; onClick: () => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const handleEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (project.videoSrc) videoRef.current?.play().catch(() => {});
-    onEnter(project, e as any);
+    onEnter(project, e);
   };
   const handleLeave = () => {
     videoRef.current?.pause();
@@ -783,7 +787,7 @@ function PackagesSection({
   onCardLeave,
   onCardClick,
 }: {
-  onCardEnter: (p: GridProject, e: React.MouseEvent<HTMLDivElement>) => void;
+  onCardEnter: (p: GridProject, e: React.MouseEvent<HTMLElement>) => void;
   onCardLeave: () => void;
   onCardClick: (p: GridProject) => void;
 }) {

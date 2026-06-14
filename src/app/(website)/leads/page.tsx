@@ -122,8 +122,8 @@ export default function LeadsLandingPage() {
         company_name: "",
         website: "",
       });
-    } catch (err: any) {
-      setError(err.message || "An error occurred during submission. Please try again.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "An error occurred during submission. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

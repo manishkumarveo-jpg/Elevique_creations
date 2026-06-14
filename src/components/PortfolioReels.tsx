@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, startTransition } from "react";
 import {
   Heart,
   Volume2,
@@ -187,7 +187,7 @@ function ReelCard({
     } else {
       video.pause();
       video.currentTime = 0; // Rewind
-      setIsPlaying(false);
+      startTransition(() => setIsPlaying(false));
     }
   }, [isActive]);
 

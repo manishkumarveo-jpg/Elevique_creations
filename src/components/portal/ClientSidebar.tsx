@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, startTransition } from 'react'
 import { logoutClient } from '@/lib/actions/auth/logout-admin'
 import {
   Home,
@@ -51,7 +51,7 @@ export function ClientSidebar({
     return () => window.removeEventListener('p:open-sidebar', open)
   }, [])
 
-  useEffect(() => { setMobileOpen(false) }, [pathname])
+  useEffect(() => { startTransition(() => setMobileOpen(false)) }, [pathname])
 
   return (
     <>
