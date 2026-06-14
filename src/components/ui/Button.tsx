@@ -7,7 +7,6 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   ref?: Ref<HTMLButtonElement>
 }
 
-const variants: Record<string, React.CSSProperties> = {}
 
 export function Button({
   variant = 'primary',

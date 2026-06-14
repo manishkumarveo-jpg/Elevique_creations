@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, startTransition } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import "@/styles/location.css";
@@ -25,7 +25,7 @@ export function LocationMap({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setViewportWidth(window.innerWidth);
+    startTransition(() => setViewportWidth(window.innerWidth));
     const handleResize = () => {
       setViewportWidth(window.innerWidth);
     };

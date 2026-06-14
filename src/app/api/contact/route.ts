@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json({ ok: true });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("[API Contact] Uncaught handler error:", err);
     return NextResponse.json(
       { ok: false, error: "Internal server error" },

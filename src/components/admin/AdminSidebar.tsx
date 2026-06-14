@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, startTransition } from 'react'
 import { logoutAdmin } from '@/lib/actions/auth/logout-admin'
 import {
   LayoutGrid,
@@ -65,7 +65,7 @@ export function AdminSidebar({ userName = 'Admin', userInitials = 'A' }: AdminSi
     return () => window.removeEventListener('p:open-sidebar', open)
   }, [])
 
-  useEffect(() => { setMobileOpen(false) }, [pathname])
+  useEffect(() => { startTransition(() => setMobileOpen(false)) }, [pathname])
 
   return (
     <>

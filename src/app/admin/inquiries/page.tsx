@@ -4,9 +4,18 @@ import { Mail, Phone, Calendar, MessageCircle } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
+type ContactSubmission = {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string | null;
+  message: string;
+  created_at: string;
+};
+
 export default async function AdminInquiriesPage() {
   const supabase = await createServerClient();
-  let submissions: any[] = [];
+  let submissions: ContactSubmission[] = [];
   let dbError = false;
 
   try {

@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createClientSupabase } from '@/lib/supabase/client'
 import type { Database } from '@/lib/types/database'
 
@@ -8,9 +8,10 @@ type Profile = Database['public']['Tables']['profiles']['Row']
 export function useCurrentUser() {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
-  const supabase = createClientSupabase()
+  const supabaseRef = useRef(createClientSupabase())
 
   useEffect(() => {
+    const supabase = supabaseRef.current
     async function load() {
       const { data: { user }, error } = await supabase.auth.getUser()
       if (error?.name === 'AuthApiError') {

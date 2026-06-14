@@ -6,7 +6,7 @@ export default async function ClientsPage() {
   let clients: Awaited<ReturnType<typeof getClientsWithAssignment>> = []
   let teamMembers: Awaited<ReturnType<typeof getTeamMembers>> = []
   let migrationMissing = false
-  let projectCounts: Record<string, number> = {}
+  const projectCounts: Record<string, number> = {}
 
   try {
     const supabase = await createServerClient()

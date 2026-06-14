@@ -133,8 +133,8 @@ function InquiryModal({
 
       setSent(true);
       setForm({ name: "", email: "", message: "" });
-    } catch (err: any) {
-      setError(err.message || "Something went wrong. Please try again.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -474,7 +474,7 @@ function ServicesGrid({ onStart }: { onStart: (svc: (typeof SERVICES)[0]) => voi
     document.addEventListener("touchstart", handleOutsideClick, { passive: true });
     return () => {
       document.removeEventListener("click", handleOutsideClick);
-      document.removeEventListener("touchstart", handleOutsideClick, { passive: true } as any);
+      document.removeEventListener("touchstart", handleOutsideClick);
     };
   }, []);
 

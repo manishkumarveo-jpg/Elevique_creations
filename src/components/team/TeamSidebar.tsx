@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, startTransition } from 'react'
 import { logoutTeam } from '@/lib/actions/auth/logout-admin'
 import {
   LayoutDashboard,
@@ -41,7 +41,7 @@ export function TeamSidebar({ userName = 'Team Member', userInitials = 'T' }: Te
     return () => window.removeEventListener('p:open-sidebar', open)
   }, [])
 
-  useEffect(() => { setMobileOpen(false) }, [pathname])
+  useEffect(() => { startTransition(() => setMobileOpen(false)) }, [pathname])
 
   return (
     <>

@@ -2,7 +2,7 @@
 import { createServerClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 
-export async function logout(role: 'admin' | 'team_member' | 'client') {
+export async function logout() {
   const supabase = await createServerClient()
   await supabase.auth.signOut()
 
