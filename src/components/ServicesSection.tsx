@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import { motion, useInView } from "framer-motion";
 import {
   Video,
   PenTool,
@@ -187,6 +188,7 @@ function InquiryModal({
                 id={`modal-name-${service.id}`}
                 type="text"
                 placeholder="Your full name"
+                aria-label="Name"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 required
@@ -198,6 +200,7 @@ function InquiryModal({
                 id={`modal-email-${service.id}`}
                 type="email"
                 placeholder="you@company.com"
+                aria-label="Email"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 required
@@ -209,6 +212,7 @@ function InquiryModal({
                 id={`modal-msg-${service.id}`}
                 placeholder="Describe your project goals, timeline, and budget…"
                 rows={4}
+                aria-label="Project Brief"
                 value={form.message}
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                 required
@@ -262,13 +266,34 @@ function DotGrid() {
   );
 }
 
-/* ─── Flip Card — pure CSS hover, no React state ───────────────── */
-function FlipCard({ svc, onStart }: { svc: (typeof SERVICES)[0]; onStart: () => void }) {
+/* ─── Flip Card — hover on desktop, tap on touch ───────────────── */
+function FlipCard({
+  svc,
+  onStart,
+  isFlipped,
+  onFlipToggle,
+}: {
+  svc: (typeof SERVICES)[0];
+  onStart: () => void;
+  isFlipped: boolean;
+  onFlipToggle: (flipped: boolean) => void;
+}) {
   return (
     <div
-      className="svc-flip-wrapper"
-      role="article"
+      className={`svc-flip-wrapper${isFlipped ? " svc-flip-wrapper--tapped" : ""}`}
+      role="button"
+      tabIndex={0}
       aria-label={`Service: ${svc.title}`}
+      onClick={(e) => {
+        e.stopPropagation();
+        onFlipToggle(!isFlipped);
+      }}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onFlipToggle(!isFlipped);
+        }
+      }}
     >
       <div className="svc-flip-inner">
         {/* ── FRONT ── */}
@@ -419,12 +444,76 @@ function FlipCard({ svc, onStart }: { svc: (typeof SERVICES)[0]; onStart: () => 
               e.stopPropagation();
               onStart();
             }}
+            onTouchEnd={(e) => e.stopPropagation()}
             aria-label={`Start project for ${svc.title}`}
           >
             Start Now
           </button>
         </div>
       </div>
+    </div>
+  );
+}
+
+const CARD_EASE = [0.16, 1, 0.3, 1] as const;
+
+/* ─── Animated grid ─────────────────────────────────────────────── */
+function ServicesGrid({ onStart }: { onStart: (svc: (typeof SERVICES)[0]) => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-60px 0px" });
+  const [activeCardId, setActiveCardId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent | TouchEvent) => {
+      if (ref.current && ref.current.contains(e.target as Node)) {
+        return;
+      }
+      setActiveCardId(null);
+    };
+    document.addEventListener("click", handleOutsideClick);
+    document.addEventListener("touchstart", handleOutsideClick, { passive: true });
+    return () => {
+      document.removeEventListener("click", handleOutsideClick);
+      document.removeEventListener("touchstart", handleOutsideClick, { passive: true } as any);
+    };
+  }, []);
+
+  return (
+    <div ref={ref} className="svc-grid" role="list">
+      {SERVICES.map((svc, i) => {
+        const tilt = i % 2 === 0 ? -3 : 3;
+        return (
+          <motion.div
+            key={svc.id}
+            role="listitem"
+            initial={{
+              opacity: 0,
+              y: 80,
+              rotateX: 18,
+              rotateY: tilt * 3,
+              transformPerspective: 1200,
+            }}
+            animate={inView ? {
+              opacity: 1,
+              y: 0,
+              rotateX: 0,
+              rotateY: 0,
+            } : {}}
+            transition={{
+              duration: 0.95,
+              delay: i * 0.12,
+              ease: CARD_EASE,
+            }}
+          >
+            <FlipCard
+              svc={svc}
+              onStart={() => onStart(svc)}
+              isFlipped={activeCardId === svc.id}
+              onFlipToggle={(flipped) => setActiveCardId(flipped ? svc.id : null)}
+            />
+          </motion.div>
+        );
+      })}
     </div>
   );
 }
@@ -461,14 +550,8 @@ export default function ServicesSection() {
             </p>
           </div>
 
-          {/* 3-column flip card grid */}
-          <div className="svc-grid" role="list">
-            {SERVICES.map((svc) => (
-              <div key={svc.id} role="listitem">
-                <FlipCard svc={svc} onStart={() => setActiveModal(svc)} />
-              </div>
-            ))}
-          </div>
+          {/* 3-column flip card grid — staggered tilt-rise on scroll */}
+          <ServicesGrid onStart={setActiveModal} />
         </div>
       </section>
 

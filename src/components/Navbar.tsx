@@ -18,7 +18,6 @@ const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 
 export default function Navbar() {
   const [scrolled,   setScrolled]   = useState(false);
-  const [navOpacity, setNavOpacity] = useState(1);
   const [menuOpen,   setMenuOpen]   = useState(false);
   const pathname = usePathname();
 
@@ -26,7 +25,6 @@ export default function Navbar() {
     const onScroll = () => {
       const y = window.scrollY;
       setScrolled(y > 50);
-      setNavOpacity(Math.max(0.35, 1 - y / 380));
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -44,7 +42,6 @@ export default function Navbar() {
       {/* ── Floating pill wrapper ───────────────────────────── */}
       <div
         className={`navbar-wrapper${scrolled ? " navbar-wrapper--scrolled" : ""}`}
-        style={{ "--nb-wrapper-opacity": navOpacity } as React.CSSProperties}
       >
         <div className="navbar-container">
           <div className="navbar-glass-layer" />

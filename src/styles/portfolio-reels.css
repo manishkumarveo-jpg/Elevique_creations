@@ -39,6 +39,12 @@
   .portfolio-hero-content {
     padding-bottom: 7.5rem !important;
   }
+
+  /* Compact toggle on mobile for grid/hero mode */
+  .portfolio-view-toggle-wrap .portfolio-view-toggle {
+    transform: scale(0.72);
+    transform-origin: center top;
+  }
 }
 
 .portfolio-view-toggle {
@@ -479,60 +485,10 @@
   gap: 6px;
 }
 
-/* Responsive Overrides */
-@media (max-width: 480px) {
-  .reels-feed-section {
-    padding: 0;
-  }
-  
-  .reels-chassis {
-    border-radius: 0;
-    border: none;
-    height: 100vh;
-    max-width: 100%;
-    box-shadow: none;
-  }
-  
-  .reels-status-bar {
-    padding: 0 16px;
-  }
-  
-  .reels-chassis-glow {
-    display: none;
-  }
-  
-  .reel-meta-overlay {
-    bottom: 40px;
-    left: 16px;
-    right: 74px;
-  }
-  
-  .reel-actions-overlay {
-    bottom: 40px;
-    right: 12px;
-  }
-}
-
-/* Height-based desktop/tablet scaling for short screens */
-@media (max-height: 850px) and (min-width: 481px) {
-  .reels-chassis {
-    height: clamp(500px, 75vh, 700px);
-    width: auto;
-    aspect-ratio: 9 / 19;
-    max-width: 380px;
-    border-radius: 28px;
-  }
-  .reels-feed-section {
-    min-height: auto;
-    padding-top: 1rem;
-    padding-bottom: 2rem;
-  }
-}
-
 /* ─── Reels Back Button inside Chassis ────────────────────────────────────────── */
 .reels-back-btn-chassis {
   position: absolute;
-  top: 40px; /* Directly below the reels status bar (30px high) */
+  top: 40px;
   left: 20px;
   z-index: 10;
   display: flex;
@@ -561,10 +517,94 @@
   transform: scale(0.94);
 }
 
-/* Adjust top position on mobile devices for screen safe areas (notch/status bar) */
-@media (max-width: 480px) {
-  .reels-back-btn-chassis {
-    top: 45px;
+/* Height-based desktop/tablet scaling for short screens */
+@media (max-height: 850px) and (min-width: 769px) {
+  .reels-chassis {
+    height: clamp(500px, 75vh, 700px);
+    width: auto;
+    aspect-ratio: 9 / 19;
+    max-width: 380px;
+    border-radius: 28px;
+  }
+  .reels-feed-section {
+    min-height: auto;
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+  }
+}
+
+/* ─── Mobile: true full-screen Instagram-style reels (≤768px) ─── */
+@media (max-width: 768px) {
+  /* Wrapper: remove top padding so video can go edge-to-edge */
+  .reels-feed-wrapper--reels {
+    padding-top: 0;
+    position: relative;
+    overflow: hidden;
+    min-height: 100svh;
+    display: block;
+  }
+
+  /* Float a compact toggle over the top of the video */
+  .reels-feed-wrapper--reels .portfolio-view-toggle-wrap {
+    position: absolute;
+    top: calc(env(safe-area-inset-top, 0px) + 12px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    margin: 0;
+    width: max-content;
+  }
+
+  /* Scale the whole toggle down — pill JS math still works since it's all proportional */
+  .reels-feed-wrapper--reels .portfolio-view-toggle {
+    transform: scale(0.72);
+    transform-origin: center top;
+  }
+
+  /* Reel section fills the entire viewport */
+  .reels-feed-wrapper--reels .reels-feed-section {
+    padding: 0;
+    min-height: 100svh;
+    height: 100svh;
+    align-items: stretch;
+  }
+
+  /* Chassis becomes borderless full-viewport rectangle */
+  .reels-feed-wrapper--reels .reels-chassis {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    aspect-ratio: unset;
+  }
+
+  /* Fake status bar and glow are not needed on real devices */
+  .reels-feed-wrapper--reels .reels-chassis-glow { display: none; }
+  .reels-feed-wrapper--reels .reels-status-bar   { display: none; }
+
+  /* Back button: below the compact floating toggle (~60px scaled height) */
+  .reels-feed-wrapper--reels .reels-back-btn-chassis {
+    top: calc(env(safe-area-inset-top, 0px) + 72px);
     left: 16px;
+  }
+
+  /* Meta & actions: respect safe area at bottom */
+  .reels-feed-wrapper--reels .reel-meta-overlay {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 36px);
+    left: 16px;
+    right: 78px;
+  }
+
+  .reels-feed-wrapper--reels .reel-actions-overlay {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 36px);
+    right: 12px;
+    gap: 18px;
+  }
+
+  /* Swipe hint: above bottom safe area */
+  .reels-feed-wrapper--reels .reels-swipe-hint {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 6px);
   }
 }

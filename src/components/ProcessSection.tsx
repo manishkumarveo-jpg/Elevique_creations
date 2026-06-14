@@ -75,7 +75,7 @@ function TimelineLine() {
   return (
     <div
       ref={ref}
-      className="absolute left-[21px] lg:left-1/2 top-0 bottom-0 -translate-x-1/2 w-px block"
+      className="absolute hidden lg:block left-1/2 top-0 bottom-0 -translate-x-1/2 w-px"
       aria-hidden="true"
     >
       <div className="absolute inset-0 bg-white/6" />
@@ -95,7 +95,7 @@ function TimelineLine() {
 /* ─── Timeline dot ──────────────────────────────────────────────── */
 function TimelineDot({ inView }: { inView: boolean }) {
   return (
-    <div className="flex absolute left-[21px] lg:left-1/2 top-8 -translate-x-1/2 items-center justify-center z-10">
+    <div className="hidden lg:flex absolute left-1/2 top-8 -translate-x-1/2 items-center justify-center z-10">
       <motion.div
         className="w-3 h-3 rounded-full flex items-center justify-center"
         style={{ background: "var(--black)", border: "1px solid #14B8A6" }}
@@ -139,7 +139,7 @@ function StepCard({ step, index }: { step: (typeof STEPS)[0]; index: number }) {
         initial="hidden"
         animate={inView ? "visible" : "hidden"}
         transition={{ duration: 0.72, ease: EASE_OUT, delay: 0.05 }}
-        className={`relative group pl-12 lg:pl-0 ${isRight ? "lg:pr-16 lg:pl-0" : "lg:pl-16"}`}
+        className={`relative group ${isRight ? "lg:pr-16" : "lg:pl-16"}`}
       >
         <div className="proc-card">
           <div className="proc-card-glow" aria-hidden="true" />

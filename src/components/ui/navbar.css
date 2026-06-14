@@ -10,8 +10,8 @@
   --nb-muted:           rgba(255, 255, 255, 0.65);
   --nb-surface:         rgba(255, 255, 255, 0.04);
   --nb-border:          rgba(255, 255, 255, 0.08);
-  --nb-bg:              rgba(8, 8, 8, 0.52);
-  --nb-bg-scrolled:     rgba(5, 5, 5, 0.76);
+  --nb-bg:              rgba(10, 10, 12, 0.72);
+  --nb-bg-scrolled:     rgba(8, 8, 8, 0.9);
   --nb-ease:            cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -19,11 +19,9 @@
 @keyframes nb-fadein {
   from {
     opacity: 0;
-    transform: translateX(-50%) translateY(-20px);
   }
   to {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
   }
 }
 
@@ -39,8 +37,9 @@
 .navbar-wrapper {
   position: fixed;
   top: 24px;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
+  margin-inline: auto;
   width: min(1100px, 92vw);
   z-index: 1002;
   /* backwards: applies `from` opacity during the 0.1s delay, then CSS cascade
@@ -476,4 +475,14 @@
 @media (max-width: 375px) {
   .navbar-mobile-link { font-size: 1.75rem; }
   .navbar-mobile-links { gap: 1.3rem; }
+}
+
+/* Hide navbar when reels are active on mobile */
+@media (max-width: 768px) {
+  body.reels-active .navbar-wrapper {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-50%) translateY(-100%);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
 }

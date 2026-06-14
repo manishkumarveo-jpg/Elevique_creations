@@ -33,6 +33,7 @@
   transform-style: preserve-3d;
   width: 240px; /* Default collapsed width */
   height: 140px; /* Default collapsed height */
+  max-width: 100%;
 }
 
 /* Subtle gradient overlay */
@@ -87,8 +88,8 @@
 /* Map Pin */
 .loc-map-pin-container {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 28%;
+  left: 78%;
   transform: translate(-50%, -50%);
 }
 

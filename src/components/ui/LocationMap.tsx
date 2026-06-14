@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import "@/styles/location.css";
@@ -21,7 +21,17 @@ export function LocationMap({
 }: LocationMapProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [viewportWidth, setViewportWidth] = useState(1200);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setViewportWidth(window.innerWidth);
+    const handleResize = () => {
+      setViewportWidth(window.innerWidth);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -73,7 +83,9 @@ export function LocationMap({
             transformStyle: "preserve-3d",
           }}
           animate={{
-            width: isExpanded ? 400 : 320,
+            width: isExpanded 
+              ? Math.min(400, viewportWidth - 48) 
+              : Math.min(320, viewportWidth - 48),
             height: isExpanded ? 280 : 140,
           }}
           transition={{

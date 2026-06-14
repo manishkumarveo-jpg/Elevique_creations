@@ -132,6 +132,7 @@
 
 /* ─── Flip wrapper ────────────────────────────────────── */
 .svc-flip-wrapper {
+  -webkit-perspective: 1200px;
   perspective: 1200px;
   height: clamp(300px, 25vw, 380px);
   cursor: pointer;
@@ -141,13 +142,24 @@
   position: relative;
   width: 100%;
   height: 100%;
+  -webkit-transform-style: preserve-3d;
   transform-style: preserve-3d;
-  transition: transform 0.72s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.72s cubic-bezier(0.16, 1, 0.3, 1),
+              -webkit-transform 0.72s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform;
 }
 
 /* CSS-only flip — :hover on the wrapper */
-.svc-flip-wrapper:hover .svc-flip-inner {
+@media (hover: hover) {
+  .svc-flip-wrapper:hover .svc-flip-inner {
+    -webkit-transform: rotateY(180deg);
+    transform: rotateY(180deg);
+  }
+}
+
+/* Tap to flip (global trigger for class) */
+.svc-flip-wrapper--tapped .svc-flip-inner {
+  -webkit-transform: rotateY(180deg);
   transform: rotateY(180deg);
 }
 
@@ -180,7 +192,13 @@
   z-index: 0;
 }
 
-.svc-flip-wrapper:hover .svc-dot-grid {
+@media (hover: hover) {
+  .svc-flip-wrapper:hover .svc-dot-grid {
+    opacity: 1;
+  }
+}
+
+.svc-flip-wrapper--tapped .svc-dot-grid {
   opacity: 1;
 }
 
@@ -192,7 +210,16 @@
 }
 
 /* Front face: glow as user begins hovering */
-.svc-flip-wrapper:hover .svc-card--front {
+@media (hover: hover) {
+  .svc-flip-wrapper:hover .svc-card--front {
+    border-color: rgba(20, 184, 166, 0.22);
+    box-shadow:
+      0 8px 40px rgba(0, 0, 0, 0.55),
+      0 0 40px rgba(20, 184, 166, 0.07);
+  }
+}
+
+.svc-flip-wrapper--tapped .svc-card--front {
   border-color: rgba(20, 184, 166, 0.22);
   box-shadow:
     0 8px 40px rgba(0, 0, 0, 0.55),
@@ -200,7 +227,16 @@
 }
 
 /* Back face: teal glow once it’s rotated into view */
-.svc-flip-wrapper:hover .svc-card--back {
+@media (hover: hover) {
+  .svc-flip-wrapper:hover .svc-card--back {
+    border-color: rgba(20, 184, 166, 0.3);
+    box-shadow:
+      0 12px 48px rgba(0, 0, 0, 0.6),
+      0 0 60px rgba(20, 184, 166, 0.12);
+  }
+}
+
+.svc-flip-wrapper--tapped .svc-card--back {
   border-color: rgba(20, 184, 166, 0.3);
   box-shadow:
     0 12px 48px rgba(0, 0, 0, 0.6),
@@ -212,6 +248,8 @@
   display: flex;
   flex-direction: column;
   padding: clamp(1.5rem, 2.5vw, 2.4rem) clamp(1.2rem, 2vw, 2rem);
+  -webkit-transform: rotateY(0deg);
+  transform: rotateY(0deg);
 }
 
 .svc-card-icon {
@@ -248,12 +286,19 @@
   transition: transform 0.3s ease;
 }
 
-.svc-flip-wrapper:hover .svc-badge-chevron {
+@media (hover: hover) {
+  .svc-flip-wrapper:hover .svc-badge-chevron {
+    transform: translateX(3px);
+  }
+}
+
+.svc-flip-wrapper--tapped .svc-badge-chevron {
   transform: translateX(3px);
 }
 
 /* ─── Back face ──────────────────────────────────────────────── */
 .svc-card--back {
+  -webkit-transform: rotateY(180deg);
   transform: rotateY(180deg);
   display: flex;
   flex-direction: column;
@@ -607,7 +652,13 @@
 }
 
 /* Pause animation state on hover / flip */
-.svc-flip-wrapper:hover .svc-front-animation * {
+@media (hover: hover) {
+  .svc-flip-wrapper:hover .svc-front-animation * {
+    animation-play-state: paused !important;
+  }
+}
+
+.svc-flip-wrapper--tapped .svc-front-animation * {
   animation-play-state: paused !important;
 }
 
@@ -1219,60 +1270,10 @@
   }
 }
 
-/* Touch devices — replace CSS hover-flip with a flat stacked card */
+/* Touch devices — change badge text/interaction hint */
 @media (hover: none) {
-  .svc-flip-wrapper {
-    perspective: none;
-    height: auto;
-  }
-
-  .svc-flip-inner {
-    transform: none !important;
-    transform-style: flat;
-    position: static;
-    display: flex;
-    flex-direction: column;
-    height: auto;
-  }
-
-  .svc-card {
-    position: static;
-    backface-visibility: visible;
-    -webkit-backface-visibility: visible;
-    transform: none !important;
-    inset: auto;
-    height: auto;
-    min-height: 160px;
-  }
-
-  .svc-card--front {
-    border-radius: 16px 16px 0 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    padding-bottom: 1.5rem;
-  }
-
-  .svc-card--back {
-    border-radius: 0 0 16px 16px;
-    padding-top: 1.5rem;
-    justify-content: flex-start;
-  }
-
-  /* Animation widget takes up too much space when stacked */
-  .svc-front-animation {
-    position: static !important;
-    transform: none !important;
-    height: 80px !important;
-    top: auto !important;
-    left: auto !important;
-    margin-top: 0.75rem;
-    opacity: 0.6;
-  }
-
-  /* Hide "hover to learn more" badge on touch */
-  .svc-card-hover-badge { display: none; }
-
-  /* Always show the dot grid */
-  .svc-dot-grid { opacity: 0.6; }
+  /* Change badge text to hint at tap instead of hover */
+  .svc-card-hover-badge { display: inline-flex; }
 }
 
 /* Reduced Motion Override */

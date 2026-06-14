@@ -161,6 +161,16 @@ export default function FeaturedShowcase() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, [viewMode]);
 
+  /* ── Hide navbar on mobile when in reels mode ───────────────── */
+  useEffect(() => {
+    if (viewMode === "reels") {
+      document.body.classList.add("reels-active");
+    } else {
+      document.body.classList.remove("reels-active");
+    }
+    return () => { document.body.classList.remove("reels-active"); };
+  }, [viewMode]);
+
   /* ══ VIDEO OVERLAY ══════════════════════════════════════════════ */
   const openVideoOverlay = useCallback((p: Project) => {
     setVideoOverlay(p);
@@ -437,7 +447,7 @@ export default function FeaturedShowcase() {
         </>
       ) : viewMode === "reels" ? (
         /* Reels mode — standalone toggle header + feed */
-        <div className="reels-feed-wrapper">
+        <div className="reels-feed-wrapper reels-feed-wrapper--reels">
           {/* Persistent toggle so user can always switch back */}
           <ViewToggle />
           <PortfolioReels onViewDetails={openBottomSheet as any} onBack={() => setViewMode("grid")} />

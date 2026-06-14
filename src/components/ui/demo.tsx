@@ -53,39 +53,30 @@ export function Demo() {
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
       className="relative w-full overflow-hidden py-10"
-      style={{ background: "var(--black, #000)" }}
+      style={{ background: "#000000" }}
     >
-      {/* subtle teal center bloom */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(20,184,166,0.06) 0%, transparent 70%)",
-        }}
-      />
-
       {/* glass strip */}
       <div
-        className="relative mx-6 md:mx-12 lg:mx-20 rounded-2xl overflow-hidden"
+        className="relative mx-6 md:mx-12 lg:mx-20 rounded-3xl overflow-hidden"
         style={{
-          background: "rgba(255,255,255,0.03)",
-          border: "1px solid rgba(255,255,255,0.07)",
-          boxShadow:
-            "0 0 0 1px rgba(20,184,166,0.06) inset, 0 8px 40px rgba(0,0,0,0.4)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
+          background: "rgba(255, 255, 255, 0.015)",
+          border: "1px solid rgba(255, 255, 255, 0.05)",
+          boxShadow: "0 4px 30px rgba(0, 0, 0, 0.2)",
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
         }}
       >
-        {/* inner top highlight line */}
-        <div
-          className="absolute inset-x-0 top-0 h-px pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(90deg, transparent, rgba(255,255,255,0.1) 30%, rgba(20,184,166,0.15) 50%, rgba(255,255,255,0.1) 70%, transparent)",
-          }}
-        />
+        {/* SVG Grid Background */}
+        <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.06]" aria-hidden="true">
+          <defs>
+            <pattern id="demo-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+              <path d="M 24 0 L 0 0 0 24" fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth="0.5" />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#demo-grid)" />
+        </svg>
 
-        <div className="relative py-20 px-0">
+        <div className="relative py-8 px-0">
           <InfiniteSlider
             duration={shouldReduceMotion ? 99999 : 30}
             gap={72}
@@ -119,15 +110,6 @@ export function Demo() {
             className="pointer-events-none absolute inset-y-0 right-0 w-28 z-10"
           />
         </div>
-
-        {/* inner bottom edge */}
-        <div
-          className="absolute inset-x-0 bottom-0 h-px pointer-events-none"
-          style={{
-            background:
-              "linear-gradient(90deg, transparent, rgba(255,255,255,0.04) 50%, transparent)",
-          }}
-        />
       </div>
     </motion.div>
   )
