@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, Suspense } from "react";
+import { useRef, Suspense, useState, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Float, Sparkles, MeshDistortMaterial } from "@react-three/drei";
 import * as THREE from "three";
@@ -89,12 +89,29 @@ function Crystal() {
 }
 
 export default function AboutScene3D() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
+    <div ref={containerRef} style={{ width: "100%", height: "100%" }}>
     <Canvas
       camera={{ position: [0, 0, 5.2], fov: 44 }}
       gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
       style={{ background: "transparent" }}
       dpr={[1, 1.5]}
+      frameloop={inView ? "always" : "demand"}
+      performance={{ min: 0.5 }}
     >
       <ambientLight intensity={0.25} />
       <pointLight position={[4,  5,  4]} intensity={1.2} color="#14B8A6" />
@@ -104,5 +121,6 @@ export default function AboutScene3D() {
         <Crystal />
       </Suspense>
     </Canvas>
+    </div>
   );
 }

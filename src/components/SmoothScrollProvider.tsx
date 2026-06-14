@@ -13,7 +13,7 @@ export default function SmoothScrollProvider({
     <ReactLenis
       root
       options={{
-        duration: 1.2,
+        duration: 0.8,
         easing: EASING,
         smoothWheel: true,
         wheelMultiplier: 0.9,

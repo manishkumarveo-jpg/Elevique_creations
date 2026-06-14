@@ -3,12 +3,12 @@ import { Inter, Syne, Space_Grotesk, Geist, Geist_Mono } from "next/font/google"
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
 
 const geistMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
-  weight: ["400", "500", "600"],
+  weight: ["400"],
   display: "swap",
 });
 
@@ -21,14 +21,14 @@ const inter = Inter({
 const syne = Syne({
   subsets: ["latin"],
   variable: "--font-syne",
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["700", "800"],
   display: "swap",
 });
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-space-grotesk",
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500"],
   display: "swap",
 });
 
