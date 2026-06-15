@@ -702,7 +702,6 @@ export type Database = {
         }
         Relationships: []
       }
-    }
       meetings: {
         Row: {
           id: string
@@ -745,6 +744,7 @@ export type Database = {
         }
         Relationships: []
       }
+    }
     Views: {
       projects_team: {
         Row: {
