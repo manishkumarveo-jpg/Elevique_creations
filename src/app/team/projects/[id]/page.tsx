@@ -6,39 +6,24 @@ import { getFoldersForProject, getFilesForProject } from '@/lib/queries/files'
 import { getChecklistForProject } from '@/lib/queries/checklist'
 import { getRevisionsForProject } from '@/lib/queries/revisions'
 import { getDeliverablesForProject } from '@/lib/queries/deliverables'
+import { getAssignmentsForProject } from '@/lib/queries/assignments'
 import { Tabs } from '@/components/ui/Tabs'
 import { ProjectStatusBadge } from '@/components/shared/StatusBadge'
-import { MilestoneTimeline } from '@/components/shared/MilestoneTimeline'
+import { PipelineSteps } from '@/components/shared/PipelineSteps'
 import { TeamMilestoneControls } from './TeamMilestoneControls'
 import { FilesSection } from '@/app/admin/projects/[id]/FilesSection'
-import { AssetChecklist } from '@/components/shared/AssetChecklist'
 import { FinalizeProjectPanel } from './FinalizeProjectPanel'
 import { TeamDeliverablesSection } from './TeamDeliverablesSection'
+import { ClientNoteAlert } from '@/app/admin/projects/[id]/ClientNoteAlert'
 
 interface Props { params: Promise<{ id: string }> }
-
-const panel: React.CSSProperties = {
-  background: '#0f1220',
-  border: '1px solid rgba(255,255,255,0.10)',
-  borderRadius: 16,
-  padding: '1.5rem',
-}
-
-const panelLabel: React.CSSProperties = {
-  fontSize: '0.6rem',
-  fontWeight: 700,
-  letterSpacing: '0.2em',
-  textTransform: 'uppercase',
-  color: 'rgba(255,255,255,0.28)',
-  marginBottom: '1rem',
-}
 
 export default async function TeamProjectPage({ params }: Props) {
   const { id } = await params
   const supabase = await createServerClient()
   await supabase.auth.getUser()
 
-  const [project, milestones, folders, files, checklist, revisions, deliverables] = await Promise.all([
+  const [project, milestones, folders, files, checklist, revisions, deliverables, assignments] = await Promise.all([
     getProjectByIdForTeam(id).catch(() => null),
     getMilestonesForProject(id),
     getFoldersForProject(id),
@@ -46,25 +31,77 @@ export default async function TeamProjectPage({ params }: Props) {
     getChecklistForProject(id),
     getRevisionsForProject(id),
     getDeliverablesForProject(id),
+    getAssignmentsForProject(id).catch(() => []),
   ])
 
   if (!project) notFound()
 
   const client = project.client as { full_name?: string; company_name?: string } | null
+  const teamInitials = assignments.map(
+    a => (a.user as { full_name: string } | null)?.full_name?.[0]?.toUpperCase() ?? '?'
+  )
+  const checklistDone  = checklist.filter(c => c.is_completed).length
+  const checklistTotal = checklist.length
 
   const tabs = [
+    {
+      key: 'overview',
+      label: 'Overview',
+      content: (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div className="p-side-grid">
+            <div className="p-info-panel">
+              <p className="p-info-panel-label">Project Details</p>
+              {[
+                { key: 'Status',   val: <ProjectStatusBadge status={project.status} /> },
+                { key: 'Client',   val: client?.company_name ?? client?.full_name ?? '—' },
+                { key: 'Package',  val: project.package ?? '—' },
+                { key: 'Internal Deadline', val: project.internal_deadline ? new Date(project.internal_deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—' },
+                { key: 'Created',  val: new Date(project.created_at).toLocaleDateString('en-US') },
+              ].map(row => (
+                <div key={row.key} className="p-info-row">
+                  <span className="p-info-key">{row.key}</span>
+                  <span className="p-info-val">{row.val}</span>
+                </div>
+              ))}
+              {assignments.length > 0 && (
+                <div className="p-info-row" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '0.5rem' }}>
+                  <span className="p-info-key">Team</span>
+                  <div className="p-avatar-stack">
+                    {assignments.slice(0, 4).map(a => (
+                      <div key={a.id} className="p-avatar-sm" title={a.user?.full_name ?? ''}>
+                        {(a.user as { full_name: string } | null)?.full_name?.[0]?.toUpperCase() ?? '?'}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="p-info-panel">
+              <p className="p-info-panel-label">Description</p>
+              <p style={{ fontSize: '0.82rem', color: project.description ? 'var(--p-t2)' : 'var(--p-t3)', lineHeight: 1.6, fontStyle: project.description ? 'normal' : 'italic' }}>
+                {project.description ?? 'No description provided.'}
+              </p>
+            </div>
+          </div>
+        </div>
+      ),
+    },
     {
       key: 'milestones',
       label: 'Milestones',
       content: (
-        <div style={panel}>
-          <p style={panelLabel}>Milestones</p>
-          <MilestoneTimeline
-            milestones={milestones}
-            adminApproved={project.admin_approved}
-            projectStatus={project.status}
-          />
-          <TeamMilestoneControls milestones={milestones} projectId={id} />
+        <div className="p-info-panel">
+          <p className="p-info-panel-label">Project Pipeline</p>
+          {milestones.length === 0 ? (
+            <p style={{ fontSize: '0.78rem', color: 'var(--p-t3)', fontStyle: 'italic' }}>No milestones yet.</p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <PipelineSteps milestones={milestones} teamInitials={teamInitials} />
+              <TeamMilestoneControls milestones={milestones} projectId={id} />
+            </div>
+          )}
         </div>
       ),
     },
@@ -74,36 +111,111 @@ export default async function TeamProjectPage({ params }: Props) {
       content: <FilesSection folders={folders} files={files} projectId={id} userRole="team_member" />,
     },
     {
-      key: 'checklist',
-      label: 'Asset Checklist',
+      key: 'team',
+      label: 'Team',
       content: (
-        <div style={panel}>
-          <p style={panelLabel}>Asset Checklist</p>
-          <p style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.25)', marginBottom: '1rem', fontStyle: 'italic' }}>
-            View only — client manages this checklist
-          </p>
-          <AssetChecklist items={checklist} readOnly />
+        <div className="p-info-panel">
+          <p className="p-info-panel-label">Assigned Team Members</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
+            {assignments.length === 0 ? (
+              <p style={{ fontSize: '0.78rem', color: 'var(--p-t3)', fontStyle: 'italic' }}>
+                No team members assigned yet.
+              </p>
+            ) : (
+              assignments.map(a => (
+                <div key={a.id} style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  padding: '0.625rem 0.875rem',
+                  background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid var(--ds-border)',
+                  borderRadius: 10,
+                }}>
+                  {a.user && <div className="p-avatar-sm" style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--ds-bg-elevated)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 600 }}>{a.user.full_name[0]?.toUpperCase()}</div>}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: '0.82rem', fontWeight: 500, color: 'var(--ds-text)', margin: 0 }}>
+                      {a.user?.full_name}
+                    </p>
+                    <p style={{ fontSize: '0.68rem', color: 'var(--ds-text-3)', margin: 0 }}>
+                      {a.user?.email}
+                    </p>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       ),
     },
     {
       key: 'deliverables',
       label: 'Deliverables',
-      content: <TeamDeliverablesSection deliverables={deliverables} projectId={id} />,
+      content: (
+        <div className="p-side-grid">
+          {/* Main deliverables */}
+          <TeamDeliverablesSection deliverables={deliverables} projectId={id} />
+
+          {/* Right sidebar: pipeline + checklist */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {milestones.length > 0 && (
+              <div className="p-info-panel">
+                <p className="p-info-panel-label">Project Pipeline</p>
+                <PipelineSteps milestones={milestones} teamInitials={teamInitials} />
+              </div>
+            )}
+            {checklistTotal > 0 && (
+              <div className="p-info-panel">
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.875rem' }}>
+                  <p className="p-info-panel-label" style={{ margin: 0 }}>Asset Checklist</p>
+                  <span style={{
+                    fontSize: '0.65rem',
+                    fontWeight: 700,
+                    padding: '0.18rem 0.55rem',
+                    borderRadius: 20,
+                    background: checklistDone === checklistTotal ? 'rgba(52,211,153,0.12)' : 'var(--p-s2)',
+                    color: checklistDone === checklistTotal ? '#6ee7b7' : 'var(--p-t3)',
+                    border: checklistDone === checklistTotal ? '1px solid rgba(52,211,153,0.22)' : '1px solid var(--p-b1)',
+                  }}>
+                    {checklistDone}/{checklistTotal} Complete
+                  </span>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  {checklist.map(item => (
+                    <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
+                      <div style={{
+                        width: 16, height: 16, borderRadius: 4, flexShrink: 0,
+                        background: item.is_completed ? 'var(--p-teal)' : 'rgba(255,255,255,0.05)',
+                        border: item.is_completed ? '1px solid var(--p-teal)' : '1px solid var(--p-b1)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      }}>
+                        {item.is_completed && (
+                          <svg viewBox="0 0 12 12" fill="none" stroke="#07080c" style={{ width: 9, height: 9 }}>
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M2 6l3 3 5-5" />
+                          </svg>
+                        )}
+                      </div>
+                      <span style={{ fontSize: '0.73rem', color: item.is_completed ? 'var(--p-t3)' : 'var(--p-t2)', textDecoration: item.is_completed ? 'line-through' : 'none' }}>
+                        {item.item_label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      ),
     },
   ]
 
   return (
-    <div style={{ maxWidth: 860, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem' }}>
+    <div className="p-content-wrap">
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap', marginBottom: '1.75rem' }}>
         <div>
-          <p style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.28em', textTransform: 'uppercase', color: 'var(--ds-white)', margin: '0 0 0.3rem' }}>
-            Team · Projects
-          </p>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 600, color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.01em', margin: 0 }}>
-            {project.name}
-          </h1>
-          <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.32)', marginTop: '0.2rem' }}>
+          <p className="p-eyebrow" style={{ marginBottom: '0.3rem' }}>Team · Projects</p>
+          <h1 className="p-page-title">{project.name}</h1>
+          <p className="p-page-sub">
             {client?.company_name ?? client?.full_name ?? '—'}
             {project.internal_deadline ? ` · Due ${new Date(project.internal_deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}, ${new Date(project.internal_deadline).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}` : ''}
           </p>
@@ -126,45 +238,7 @@ export default async function TeamProjectPage({ params }: Props) {
           } : null,
         }} />
       )}
-      {revisions.length > 0 && (
-        <div style={{
-          background: '#0f1220',
-          border: '1px solid rgba(251,191,36,0.18)',
-          borderRadius: 16,
-          padding: '1.25rem 1.5rem',
-        }}>
-          <p style={{
-            fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.2em',
-            textTransform: 'uppercase', color: 'rgba(251,191,36,0.7)', margin: '0 0 1rem',
-          }}>
-            Client Revision Requests
-          </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-            {revisions.map((r: { id: string; status: string; note: string; created_at: string }) => (
-              <div key={r.id} style={{
-                opacity: r.status === 'resolved' ? 0.45 : 1,
-                padding: '0.5rem 0.75rem',
-                background: r.status === 'open' ? 'rgba(251,191,36,0.04)' : 'rgba(255,255,255,0.02)',
-                border: r.status === 'open' ? '1px solid rgba(251,191,36,0.14)' : '1px solid rgba(255,255,255,0.06)',
-                borderRadius: 8,
-              }}>
-                <span style={{
-                  fontSize: '0.62rem',
-                  color: r.status === 'open' ? 'rgba(251,191,36,0.65)' : 'rgba(255,255,255,0.25)',
-                }}>
-                  {r.status === 'open' ? 'OPEN' : 'RESOLVED'} · {new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                </span>
-                <p style={{
-                  fontSize: '0.82rem', margin: '0.2rem 0 0', lineHeight: 1.5,
-                  color: r.status === 'open' ? 'rgba(255,255,255,0.80)' : 'rgba(255,255,255,0.35)',
-                }}>
-                  {r.note}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      <ClientNoteAlert projectId={id} revisions={revisions} />
       <Tabs tabs={tabs} />
     </div>
   )
