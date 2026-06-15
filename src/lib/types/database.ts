@@ -703,6 +703,48 @@ export type Database = {
         Relationships: []
       }
     }
+      meetings: {
+        Row: {
+          id: string
+          title: string
+          scheduled_at: string
+          client_id: string | null
+          assigned_team_member_id: string | null
+          project_id: string | null
+          notes: string | null
+          attended_by_team: boolean
+          attended_at: string | null
+          created_by: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          title: string
+          scheduled_at: string
+          client_id?: string | null
+          assigned_team_member_id?: string | null
+          project_id?: string | null
+          notes?: string | null
+          attended_by_team?: boolean
+          attended_at?: string | null
+          created_by: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          title?: string
+          scheduled_at?: string
+          client_id?: string | null
+          assigned_team_member_id?: string | null
+          project_id?: string | null
+          notes?: string | null
+          attended_by_team?: boolean
+          attended_at?: string | null
+          created_by?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
     Views: {
       projects_team: {
         Row: {

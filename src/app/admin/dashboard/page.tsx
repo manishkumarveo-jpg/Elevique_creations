@@ -1,6 +1,7 @@
 import { createServerClient } from '@/lib/supabase/server'
 import { getRecentActivity } from '@/lib/queries/activity'
 import { getProjectsWithTeam } from '@/lib/queries/projects'
+import { getUpcomingMeetings, getMissedMeetings } from '@/lib/queries/meetings'
 import DashboardViews from './DashboardViews'
 import Link from 'next/link'
 
@@ -27,10 +28,12 @@ export default async function AdminDashboardPage() {
     ? await supabase.from('profiles').select('full_name').eq('id', user.id).single()
     : { data: null }
 
-  const [stats, projects, activity] = await Promise.all([
+  const [stats, projects, activity, upcomingMeetings, missedMeetings] = await Promise.all([
     getStats(),
     getProjectsWithTeam(),
     getRecentActivity(8),
+    getUpcomingMeetings(),
+    getMissedMeetings(),
   ])
 
   const activeProjects = projects.filter(p => p.status !== 'completed')
@@ -64,8 +67,19 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Alerts */}
-      {(noTeam.length > 0 || overdue.length > 0) && (
+      {(noTeam.length > 0 || overdue.length > 0 || missedMeetings.length > 0) && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.75rem' }}>
+          {missedMeetings.length > 0 && (
+            <div className="p-alert p-alert--warn">
+              <span className="p-alert-dot" />
+              {missedMeetings.length} meeting{missedMeetings.length > 1 ? 's were' : ' was'} not attended by team
+              <div className="p-alert-links">
+                {missedMeetings.slice(0, 3).map(m => (
+                  <span key={m.id} className="p-alert-link" style={{ cursor: 'default' }}>{m.title}</span>
+                ))}
+              </div>
+            </div>
+          )}
           {noTeam.length > 0 && (
             <div className="p-alert p-alert--warn">
               <span className="p-alert-dot" />
@@ -118,6 +132,30 @@ export default async function AdminDashboardPage() {
           action: log.action,
           entityName: log.entity_name ?? null,
           createdAt: log.created_at,
+        }))}
+        upcomingMeetings={upcomingMeetings.map(m => ({
+          id: m.id,
+          title: m.title,
+          scheduled_at: m.scheduled_at,
+          notes: m.notes,
+          attended_by_team: m.attended_by_team,
+          attended_at: m.attended_at,
+          clientName: m.client ? (m.client.company_name ?? m.client.full_name) : null,
+          teamMemberName: m.team_member?.full_name ?? null,
+          teamMemberId: m.team_member?.id ?? null,
+          missed: false,
+        }))}
+        missedMeetings={missedMeetings.map(m => ({
+          id: m.id,
+          title: m.title,
+          scheduled_at: m.scheduled_at,
+          notes: m.notes,
+          attended_by_team: m.attended_by_team,
+          attended_at: m.attended_at,
+          clientName: m.client ? (m.client.company_name ?? m.client.full_name) : null,
+          teamMemberName: m.team_member?.full_name ?? null,
+          teamMemberId: m.team_member?.id ?? null,
+          missed: true,
         }))}
       />
     </div>
