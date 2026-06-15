@@ -639,3 +639,41 @@
 }
 
 
+
+/* ==========================================================
+   SCREEN RESOLUTION FIX ONLY
+   ========================================================== */
+
+/* 14" MacBooks / Windows laptops */
+@media screen and (min-width: 1200px) and (max-width: 1600px) {
+  .hero-video {
+    object-fit: cover;
+    object-position: center center;
+    transform: scale(1.08);
+  }
+}
+
+/* 13" laptops */
+@media screen and (min-width: 1025px) and (max-width: 1199px) {
+  .hero-video {
+    object-fit: cover;
+    object-position: center center;
+    transform: scale(1.12);
+  }
+}
+
+/* Large desktop / 16" MacBook */
+@media screen and (min-width: 1601px) {
+  .hero-video {
+    object-fit: cover;
+    object-position: center center;
+    transform: scale(1);
+  }
+}
+
+/* Short-height displays */
+@media screen and (max-height: 850px) and (min-width: 1025px) {
+  .hero-video {
+    transform: scale(1.1);
+  }
+}
