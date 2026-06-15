@@ -15,6 +15,8 @@ import "@/styles/hero.css";
 /* ─── Data ──────────────────────────────────────────────────── */
 const VIDEO_SRC =
   "https://res.cloudinary.com/dpaoerbde/video/upload/v1780379272/hero-video_pxivlu.mp4";
+const POSTER_SRC =
+  "https://res.cloudinary.com/dpaoerbde/video/upload/v1780379272/hero-video_pxivlu.jpg";
 
 const TITLE_LINES = [
   { text: "AI Visuals",  em: false },
@@ -188,6 +190,7 @@ export default function HeroSection() {
           ref={videoRef}
           className="hero-video"
           src={VIDEO_SRC}
+          poster={POSTER_SRC}
           autoPlay loop muted playsInline preload="metadata"
           aria-hidden="true"
           style={{ scale: videoScale }}

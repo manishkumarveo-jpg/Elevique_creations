@@ -485,15 +485,66 @@
    RESPONSIVE
    ═══════════════════════════════════════════════════════════════ */
 /* 16" MacBook (1728px) — prevent content from getting too wide */
-@media (max-width: 1800px) and (min-width: 1500px) {
+@media (max-width: 1800px) and (min-width: 1501px) {
   .hero-content { max-width: min(640px, 48vw); }
 }
 
-/* 13" MacBook / small laptop (1280px) */
-@media (max-width: 1280px) and (min-width: 1025px) {
-  .hero-content { max-width: min(520px, 50vw); }
-  .hero-title { font-size: clamp(2rem, 3.2vw, 3rem); }
+/* Laptops / medium screens (1025px to 1500px, e.g. 13" and 14" screens) */
+@media (max-width: 1500px) and (min-width: 1025px) {
+  .hero-content { max-width: min(540px, 46vw); }
+  .hero-title { font-size: clamp(2rem, 3.1vw, 2.95rem); }
   .hero-description { font-size: clamp(0.8rem, 0.9vw, 0.92rem); max-width: clamp(240px, 30vw, 360px); }
+}
+
+/* Short viewports (e.g. laptops with reduced height due to scaling or Chrome UI/Taskbar) */
+@media (max-height: 800px) and (min-width: 769px) {
+  .hero-content {
+    padding-bottom: calc(75px + 4vh);
+    padding-top: clamp(0.5rem, 1vh, 1rem);
+  }
+  .hero-title {
+    font-size: clamp(1.95rem, 2.6vw, 2.7rem);
+    margin-bottom: clamp(0.5rem, 1vh, 0.75rem);
+  }
+  .hero-description {
+    margin-bottom: clamp(0.8rem, 1.5vh, 1.1rem);
+  }
+  .hero-overlay {
+    background:
+      linear-gradient(
+        102deg,
+        rgba(2, 2, 3, 0.97) 0%,
+        rgba(2, 2, 3, 0.88) 32%,
+        rgba(2, 2, 3, 0.5) 60%,
+        rgba(2, 2, 3, 0.15) 78%,
+        transparent 100%
+      ),
+      radial-gradient(
+        ellipse 100% 85% at 62% 50%,
+        rgba(0, 60, 52, 0.4)  0%,
+        rgba(0, 30, 26, 0.26) 38%,
+        rgba(2, 6, 5, 0.65)   68%,
+        rgba(2, 2, 3, 0.94)   100%
+      ),
+      linear-gradient(to top,    rgba(2, 2, 3, 1)    0%, transparent 28%),
+      linear-gradient(to bottom, rgba(2, 2, 3, 0.48) 0%, transparent 18%);
+  }
+}
+
+@media (max-height: 680px) and (min-width: 769px) {
+  .hero-content {
+    padding-bottom: calc(65px + 3vh);
+  }
+  .hero-title {
+    font-size: clamp(1.75rem, 2.4vw, 2.25rem);
+  }
+  .hero-description {
+    font-size: 0.84rem;
+    line-height: 1.5;
+  }
+  .hero-trust {
+    padding-bottom: 2vh;
+  }
 }
 
 @media (max-width: 1024px) {
