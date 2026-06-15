@@ -602,6 +602,7 @@ export type Database = {
           task_id?: string | null
           started_at: string
           ended_at?: string | null
+          duration_minutes?: number | null
           entry_type?: 'timer' | 'manual'
           note?: string | null
           created_at?: string
@@ -613,6 +614,7 @@ export type Database = {
           task_id?: string | null
           started_at?: string
           ended_at?: string | null
+          duration_minutes?: number | null
           entry_type?: 'timer' | 'manual'
           note?: string | null
           created_at?: string

@@ -186,6 +186,7 @@ function DeadlineSection({ label, badge, current, deadlineType, projectId, exten
               <input
                 type={deadlineType === 'internal' ? 'datetime-local' : 'date'}
                 required
+                aria-label={deadlineType === 'internal' ? 'New date and time' : 'New date'}
                 value={newDate}
                 onChange={e => setNewDate(e.target.value)}
                 style={inputStyle}
@@ -197,6 +198,7 @@ function DeadlineSection({ label, badge, current, deadlineType, projectId, exten
               </p>
               <input
                 type="text"
+                aria-label="Reason for deadline change"
                 value={reason}
                 onChange={e => setReason(e.target.value)}
                 placeholder="e.g. Client requested more time"

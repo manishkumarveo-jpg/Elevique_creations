@@ -191,7 +191,7 @@ export function ClientDeliverablesSection({ deliverables, projectId }: { deliver
                       border: '1px solid rgba(255,255,255,0.11)',
                       borderRadius: 9, padding: '0.6rem 0.85rem',
                       fontSize: '0.8rem', color: 'rgba(255,255,255,0.88)',
-                      outline: 'none', fontFamily: 'inherit',
+                      outline: '2px solid transparent', outlineOffset: '2px', fontFamily: 'inherit',
                       boxSizing: 'border-box', resize: 'vertical',
                     }}
                   />
