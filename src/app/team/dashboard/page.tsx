@@ -1,9 +1,17 @@
 import { createServerClient } from '@/lib/supabase/server'
 import { getProjectsForTeam } from '@/lib/queries/projects'
+import { getUpcomingMeetingsForTeam, getMissedMeetingsForTeam } from '@/lib/queries/meetings'
 import Link from 'next/link'
 import { FeaturedProjectCard } from '@/components/shared/FeaturedProjectCard'
 import { ProjectStatusBadge } from '@/components/shared/StatusBadge'
-import { Folder } from 'lucide-react'
+import { MeetingAttendButton } from '@/components/team/MeetingAttendButton'
+import { CalendarDays, Folder } from 'lucide-react'
+
+function formatMeetingDate(iso: string) {
+  const d = new Date(iso)
+  return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) +
+    ' · ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+}
 
 export default async function TeamDashboardPage() {
   const supabase = await createServerClient()
@@ -12,7 +20,12 @@ export default async function TeamDashboardPage() {
     ? await supabase.from('profiles').select('full_name').eq('id', user.id).single()
     : { data: null }
 
-  const projects = user ? await getProjectsForTeam(user.id) : []
+  const [projects, upcomingMeetings, missedMeetings] = await Promise.all([
+    user ? getProjectsForTeam(user.id) : Promise.resolve([]),
+    user ? getUpcomingMeetingsForTeam(user.id) : Promise.resolve([]),
+    user ? getMissedMeetingsForTeam(user.id) : Promise.resolve([]),
+  ])
+
   const activeProjects = projects.filter(p => p.status !== 'completed')
   const displayName = profile?.full_name?.split(' ')[0] ?? 'there'
 
@@ -25,6 +38,72 @@ export default async function TeamDashboardPage() {
           {activeProjects.length} active project{activeProjects.length !== 1 ? 's' : ''} assigned to you.
         </p>
       </div>
+
+      {/* Missed meeting alert */}
+      {missedMeetings.length > 0 && (
+        <div style={{ marginBottom: '1.25rem' }}>
+          <div className="p-alert p-alert--warn">
+            <span className="p-alert-dot" />
+            You missed {missedMeetings.length} scheduled meeting{missedMeetings.length > 1 ? 's' : ''}
+            <div className="p-alert-links">
+              {missedMeetings.map(m => (
+                <span key={m.id} className="p-alert-link" style={{ cursor: 'default' }}>{m.title}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Upcoming meetings */}
+      {upcomingMeetings.length > 0 && (
+        <div style={{ marginBottom: '1.75rem' }}>
+          <div className="p-section-header" style={{ marginBottom: '0.625rem' }}>
+            <span className="p-section-label" style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+              <CalendarDays size={13} />
+              Upcoming Meetings
+            </span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
+            {upcomingMeetings.map(m => (
+              <div key={m.id} style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.875rem',
+                padding: '0.625rem 0.875rem',
+                background: 'var(--ds-surface-2)',
+                border: '1px solid var(--ds-border)',
+                borderRadius: '8px',
+              }}>
+                <div style={{
+                  width: 36, height: 36, borderRadius: '8px',
+                  background: 'rgba(14,210,189,0.08)',
+                  border: '1px solid rgba(14,210,189,0.18)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0,
+                }}>
+                  <CalendarDays size={15} style={{ color: '#0ED2BD' }} />
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--ds-white)' }}>{m.title}</div>
+                  <div style={{ fontSize: '11.5px', color: 'var(--ds-text-3)', marginTop: '0.1rem' }}>
+                    {formatMeetingDate(m.scheduled_at)}
+                    {m.client && ` · ${m.client.company_name ?? m.client.full_name}`}
+                  </div>
+                  {m.notes && (
+                    <div style={{ fontSize: '11.5px', color: 'var(--ds-text-3)', marginTop: '0.15rem', fontStyle: 'italic' }}>
+                      {m.notes}
+                    </div>
+                  )}
+                </div>
+                {!m.attended_by_team && <MeetingAttendButton meetingId={m.id} />}
+                {m.attended_by_team && (
+                  <span style={{ fontSize: '11px', color: '#0ED2BD', flexShrink: 0 }}>✓ Attended</span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {projects.length === 0 ? (
         <div className="p-empty">

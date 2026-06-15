@@ -56,6 +56,7 @@ export type ClientWithAssignment = {
   assigned_team_member_id: string | null
 }
 
+
 export const getClientsWithAssignment = cache(async (): Promise<ClientWithAssignment[]> => {
   const supabase = createAdminClient()
   const { data, error } = await supabase

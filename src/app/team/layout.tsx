@@ -2,6 +2,7 @@ import { TeamSidebar } from '@/components/team/TeamSidebar'
 import { NavigationProgress } from '@/components/shared/NavigationProgress'
 import { MobileHeader } from '@/components/shared/MobileHeader'
 import { createServerClient } from '@/lib/supabase/server'
+import { requireTeamMember } from '@/lib/auth/require-role'
 
 function getInitials(name: string) {
   return name
@@ -13,6 +14,7 @@ function getInitials(name: string) {
 }
 
 export default async function TeamLayout({ children }: { children: React.ReactNode }) {
+  await requireTeamMember()
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   let userName = 'Team Member'

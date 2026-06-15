@@ -3,6 +3,9 @@ import { getProfileById } from '@/lib/queries/users'
 import { getProjectsForTeam } from '@/lib/queries/projects'
 import { FeaturedProjectCard } from '@/components/shared/FeaturedProjectCard'
 import { ProjectStatusBadge } from '@/components/shared/StatusBadge'
+import { ScheduleMeetingForm } from './ScheduleMeetingForm'
+import { getClients } from '@/lib/queries/users'
+import { getMeetingsForTeamMember } from '@/lib/queries/meetings'
 import Link from 'next/link'
 import { ArrowLeft, Folder, ShieldAlert } from 'lucide-react'
 import { notFound } from 'next/navigation'
@@ -29,7 +32,11 @@ export default async function AdminTeamMemberDashboardPage({ params }: Props) {
     notFound()
   }
 
-  const projects = await getProjectsForTeam(memberId)
+  const [projects, clients, meetings] = await Promise.all([
+    getProjectsForTeam(memberId),
+    getClients(),
+    getMeetingsForTeamMember(memberId),
+  ])
   const activeProjects = projects.filter(p => p.status !== 'completed')
   const completedProjects = projects.filter(p => p.status === 'completed')
   const firstName = profile.full_name?.split(' ')[0] ?? 'Member'
@@ -107,6 +114,12 @@ export default async function AdminTeamMemberDashboardPage({ params }: Props) {
           </p>
         </div>
       </div>
+
+      <ScheduleMeetingForm
+        memberId={memberId}
+        clients={clients ?? []}
+        meetings={meetings}
+      />
 
       {projects.length === 0 ? (
         <div className="p-empty">

@@ -6,6 +6,7 @@ import { getDeliverablesForProject } from '@/lib/queries/deliverables'
 import { getChecklistForProject } from '@/lib/queries/checklist'
 import { getAssignmentsForProject } from '@/lib/queries/assignments'
 import { getRevisionsForProject } from '@/lib/queries/revisions'
+import { getMeetingsForProject } from '@/lib/queries/meetings'
 import { Tabs } from '@/components/ui/Tabs'
 import { ProjectStatusBadge } from '@/components/shared/StatusBadge'
 import { PipelineSteps } from '@/components/shared/PipelineSteps'
@@ -16,12 +17,13 @@ import { DeliverablesSection } from './DeliverablesSection'
 import { ClientNoteAlert } from './ClientNoteAlert'
 import { AdminApprovalPanel } from './AdminApprovalPanel'
 import { AdminDeadlinePanel } from './AdminDeadlinePanel'
+import { ProjectMeetingsSection } from './ProjectMeetingsSection'
 
 interface Props { params: Promise<{ id: string }> }
 
 export default async function AdminProjectPage({ params }: Props) {
   const { id } = await params
-  const [project, milestones, folders, files, deliverables, checklist, assignments, revisions, deadlineExtensions] = await Promise.all([
+  const [project, milestones, folders, files, deliverables, checklist, assignments, revisions, deadlineExtensions, projectMeetings] = await Promise.all([
     getProjectById(id).catch(() => null),
     getMilestonesForProject(id),
     getFoldersForProject(id),
@@ -31,11 +33,16 @@ export default async function AdminProjectPage({ params }: Props) {
     getAssignmentsForProject(id),
     getRevisionsForProject(id),
     getDeadlineExtensions(id).catch(() => []),
+    getMeetingsForProject(id),
   ])
 
   if (!project) notFound()
 
   const client = project.client as { full_name?: string; company_name?: string; email?: string } | null
+  const teamMembers = assignments.map(a => ({
+    id: (a.user as { id: string; full_name: string } | null)?.id ?? '',
+    full_name: (a.user as { id: string; full_name: string } | null)?.full_name ?? '',
+  })).filter(m => m.id)
   const teamInitials = assignments.map(
     a => (a.user as { full_name: string } | null)?.full_name?.[0]?.toUpperCase() ?? '?'
   )
@@ -187,6 +194,17 @@ export default async function AdminProjectPage({ params }: Props) {
             )}
           </div>
         </div>
+      ),
+    },
+    {
+      key: 'meetings',
+      label: 'Meetings',
+      content: (
+        <ProjectMeetingsSection
+          projectId={id}
+          teamMembers={teamMembers}
+          meetings={projectMeetings}
+        />
       ),
     },
   ]

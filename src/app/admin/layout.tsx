@@ -2,6 +2,7 @@ import { AdminSidebar } from '@/components/admin/AdminSidebar'
 import { NavigationProgress } from '@/components/shared/NavigationProgress'
 import { MobileHeader } from '@/components/shared/MobileHeader'
 import { createServerClient } from '@/lib/supabase/server'
+import { requireAdmin } from '@/lib/auth/require-role'
 
 function getInitials(name: string) {
   return name
@@ -13,6 +14,7 @@ function getInitials(name: string) {
 }
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  await requireAdmin()
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   let userName = 'Admin'

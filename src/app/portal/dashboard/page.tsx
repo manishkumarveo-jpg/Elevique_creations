@@ -1,9 +1,16 @@
 import { createServerClient } from '@/lib/supabase/server'
 import { getProjectsForClient } from '@/lib/queries/projects'
+import { getUpcomingMeetingsForClient, getMissedMeetingsForClient } from '@/lib/queries/meetings'
 import { FeaturedProjectCard } from '@/components/shared/FeaturedProjectCard'
 import { ProjectStatusBadge } from '@/components/shared/StatusBadge'
 import Link from 'next/link'
-import { Folder } from 'lucide-react'
+import { CalendarDays, Folder } from 'lucide-react'
+
+function formatMeetingDate(iso: string) {
+  const d = new Date(iso)
+  return d.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' }) +
+    ' at ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
+}
 
 export default async function ClientDashboardPage() {
   const supabase = await createServerClient()
@@ -12,7 +19,11 @@ export default async function ClientDashboardPage() {
     ? await supabase.from('profiles').select('full_name, company_name').eq('id', user.id).single()
     : { data: null }
 
-  const projects = user ? await getProjectsForClient(user.id) : []
+  const [projects, upcomingMeetings, missedMeetings] = await Promise.all([
+    user ? getProjectsForClient(user.id) : Promise.resolve([]),
+    user ? getUpcomingMeetingsForClient(user.id) : Promise.resolve([]),
+    user ? getMissedMeetingsForClient(user.id) : Promise.resolve([]),
+  ])
 
   const milestoneData = projects.length > 0
     ? await supabase
@@ -40,6 +51,67 @@ export default async function ClientDashboardPage() {
           {activeProjects.length} active project{activeProjects.length !== 1 ? 's' : ''} in progress.
         </p>
       </div>
+
+      {/* Missed meeting alert */}
+      {missedMeetings.length > 0 && (
+        <div style={{ marginBottom: '1.25rem' }}>
+          <div className="p-alert p-alert--warn">
+            <span className="p-alert-dot" />
+            A scheduled meeting was missed — please contact your team
+            <div className="p-alert-links">
+              {missedMeetings.map(m => (
+                <span key={m.id} className="p-alert-link" style={{ cursor: 'default' }}>{m.title}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Upcoming meetings */}
+      {upcomingMeetings.length > 0 && (
+        <div style={{ marginBottom: '1.75rem' }}>
+          <div className="p-section-header" style={{ marginBottom: '0.625rem' }}>
+            <span className="p-section-label" style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+              <CalendarDays size={13} />
+              Upcoming Meetings
+            </span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
+            {upcomingMeetings.map(m => (
+              <div key={m.id} style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.875rem',
+                padding: '0.75rem 1rem',
+                background: 'var(--ds-surface-2)',
+                border: '1px solid rgba(14,210,189,0.18)',
+                borderRadius: '8px',
+              }}>
+                <div style={{
+                  width: 36, height: 36, borderRadius: '8px',
+                  background: 'rgba(14,210,189,0.08)',
+                  border: '1px solid rgba(14,210,189,0.18)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0,
+                }}>
+                  <CalendarDays size={15} style={{ color: '#0ED2BD' }} />
+                </div>
+                <div>
+                  <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--ds-white)' }}>{m.title}</div>
+                  <div style={{ fontSize: '12px', color: 'var(--ds-text-3)', marginTop: '0.15rem' }}>
+                    {formatMeetingDate(m.scheduled_at)}
+                  </div>
+                  {m.notes && (
+                    <div style={{ fontSize: '12px', color: 'var(--ds-text-3)', marginTop: '0.15rem', fontStyle: 'italic' }}>
+                      {m.notes}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {projects.length === 0 ? (
         <div className="p-empty">
