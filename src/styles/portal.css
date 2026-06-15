@@ -149,7 +149,7 @@
   }
 
   .p-shell {
-    grid-template-columns: 0 1fr;
+    grid-template-columns: 1fr;
   }
 }
 
