@@ -15,7 +15,7 @@ export function useCurrentUser() {
     async function load() {
       const { data: { user }, error } = await supabase.auth.getUser()
       if (error?.name === 'AuthApiError') {
-        await supabase.auth.signOut()
+        await supabase.auth.signOut({ scope: 'local' })
         setLoading(false)
         return
       }

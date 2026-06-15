@@ -94,29 +94,15 @@ if (authError?.name === 'AuthApiError') {
   return redirect
 }
 
-  // Route protection
-  if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
-    if (!user) return NextResponse.redirect(new URL('/login', request.url))
-    const { data: profile } = await supabase
-      .from('profiles').select('role, is_active').eq('id', user.id).single()
-    if (!profile || !profile.is_active || profile.role !== 'admin')
-      return NextResponse.redirect(new URL('/unauthorized', request.url))
-  }
+  // Coarse-grained auth gate: just ensure a session exists.
+  // Fine-grained role/active checks are done inside each page via require-role.ts.
+  const isProtected =
+    (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) ||
+    (pathname.startsWith('/team')  && !pathname.startsWith('/team/login'))  ||
+    (pathname.startsWith('/portal') && !pathname.startsWith('/portal/login'))
 
-  if (pathname.startsWith('/team') && !pathname.startsWith('/team/login')) {
-    if (!user) return NextResponse.redirect(new URL('/login', request.url))
-    const { data: profile } = await supabase
-      .from('profiles').select('role, is_active').eq('id', user.id).single()
-    if (!profile || !profile.is_active || profile.role !== 'team_member')
-      return NextResponse.redirect(new URL('/unauthorized', request.url))
-  }
-
-  if (pathname.startsWith('/portal') && !pathname.startsWith('/portal/login')) {
-    if (!user) return NextResponse.redirect(new URL('/login', request.url))
-    const { data: profile } = await supabase
-      .from('profiles').select('role, is_active').eq('id', user.id).single()
-    if (!profile || !profile.is_active || profile.role !== 'client')
-      return NextResponse.redirect(new URL('/unauthorized', request.url))
+  if (isProtected && !user) {
+    return NextResponse.redirect(new URL('/login', request.url))
   }
 
   // Security headers
