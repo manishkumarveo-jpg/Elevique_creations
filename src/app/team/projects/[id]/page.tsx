@@ -105,7 +105,7 @@ export default async function TeamProjectPage({ params }: Props) {
           </h1>
           <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.32)', marginTop: '0.2rem' }}>
             {client?.company_name ?? client?.full_name ?? '—'}
-            {project.internal_deadline ? ` · Due ${new Date(project.internal_deadline + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}` : ''}
+            {project.internal_deadline ? ` · Due ${new Date(project.internal_deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}, ${new Date(project.internal_deadline).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}` : ''}
           </p>
         </div>
         <ProjectStatusBadge status={project.status} />

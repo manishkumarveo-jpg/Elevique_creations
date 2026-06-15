@@ -82,7 +82,7 @@ export default async function TeamDashboardPage() {
                       <div className="p-project-meta">
                         {client?.company_name ?? client?.full_name ?? '—'}
                         {p.internal_deadline
-                          ? ` · Team due ${new Date(p.internal_deadline + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
+                          ? ` · Team due ${new Date(p.internal_deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}, ${new Date(p.internal_deadline).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`
                           : ''}
                       </div>
                     </div>

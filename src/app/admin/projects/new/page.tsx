@@ -48,9 +48,15 @@ export default function NewProjectPage() {
     e.preventDefault()
     setError('')
     setDeadlineError('')
-    if (form.internal_deadline && form.client_deadline && form.internal_deadline > form.client_deadline) {
-      setDeadlineError('Internal deadline must be on or before the client deadline')
-      return
+    if (form.internal_deadline && form.client_deadline) {
+      const internalDate = new Date(form.internal_deadline)
+      // Compare only the date portion so a same-day internal time still passes
+      const internalDay = new Date(internalDate.getFullYear(), internalDate.getMonth(), internalDate.getDate())
+      const clientDay = new Date(form.client_deadline + 'T00:00:00')
+      if (internalDay > clientDay) {
+        setDeadlineError('Internal deadline must be on or before the client deadline')
+        return
+      }
     }
     setLoading(true)
     try {
@@ -128,10 +134,10 @@ export default function NewProjectPage() {
 
           <div className="p-form-row">
             <div className="p-field">
-              <label className="p-field-label">Internal Deadline</label>
+              <label className="p-field-label">Internal Deadline <span style={{ fontSize: '0.7em', color: 'var(--ds-text-3)', fontWeight: 400 }}>(team only · date &amp; time)</span></label>
               <input
                 className="p-field-input"
-                type="date"
+                type="datetime-local"
                 value={form.internal_deadline}
                 onChange={set('internal_deadline')}
               />

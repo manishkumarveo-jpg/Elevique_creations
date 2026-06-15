@@ -66,11 +66,12 @@ const btnGhost: React.CSSProperties = {
   fontFamily: 'inherit',
 }
 
-function fmt(date: string | null) {
+function fmt(date: string | null, withTime = false) {
   if (!date) return '—'
-  return new Date(date + 'T00:00:00').toLocaleDateString('en-US', {
-    month: 'short', day: 'numeric', year: 'numeric',
-  })
+  const d = withTime ? new Date(date) : new Date(date + 'T00:00:00')
+  const base = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  if (!withTime) return base
+  return base + ', ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })
 }
 
 interface DeadlineSectionProps {
@@ -96,31 +97,39 @@ function DeadlineSection({ label, badge, current, deadlineType, projectId, exten
     e.preventDefault()
     setError('')
 
-    const newTime = new Date(newDate + 'T00:00:00').getTime()
+    const isInternal = deadlineType === 'internal'
+    // datetime-local gives "YYYY-MM-DDTHH:mm"; date gives "YYYY-MM-DD"
+    const newTime = isInternal ? new Date(newDate).getTime() : new Date(newDate + 'T00:00:00').getTime()
     if (isNaN(newTime)) {
       setError('Invalid date.')
       return
     }
 
     if (current) {
-      const currentTime = new Date(current + 'T00:00:00').getTime()
+      const currentTime = isInternal ? new Date(current).getTime() : new Date(current + 'T00:00:00').getTime()
       if (newTime <= currentTime) {
         setError('New date must be after the current deadline.')
         return
       }
     }
 
-    if (deadlineType === 'internal' && otherDeadline) {
-      const clientTime = new Date(otherDeadline + 'T00:00:00').getTime()
-      if (!isNaN(clientTime) && newTime > clientTime) {
+    if (isInternal && otherDeadline) {
+      // Compare date portion of new internal timestamp against client date
+      const newD = new Date(newDate)
+      const newDay = new Date(newD.getFullYear(), newD.getMonth(), newD.getDate()).getTime()
+      const clientDay = new Date(otherDeadline + 'T00:00:00').getTime()
+      if (!isNaN(clientDay) && newDay > clientDay) {
         setError('Internal deadline cannot be later than the client deadline.')
         return
       }
     }
 
     if (deadlineType === 'client' && otherDeadline) {
-      const internalTime = new Date(otherDeadline + 'T00:00:00').getTime()
-      if (!isNaN(internalTime) && newTime < internalTime) {
+      // Internal deadline is a full timestamp; compare date portions
+      const internalD = new Date(otherDeadline)
+      const internalDay = new Date(internalD.getFullYear(), internalD.getMonth(), internalD.getDate()).getTime()
+      const newDay = new Date(newDate + 'T00:00:00').getTime()
+      if (!isNaN(internalDay) && newDay < internalDay) {
         setError('Client deadline cannot be earlier than the internal deadline.')
         return
       }
@@ -159,7 +168,7 @@ function DeadlineSection({ label, badge, current, deadlineType, projectId, exten
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <span style={{ fontSize: '0.82rem', color: current ? 'rgba(255,255,255,0.80)' : 'rgba(255,255,255,0.22)', fontStyle: current ? 'normal' : 'italic' }}>
-            {fmt(current)}
+            {fmt(current, deadlineType === 'internal')}
           </span>
           <button type="button" style={btnTeal} onClick={() => setOpen(v => !v)}>
             {open ? 'Cancel' : 'Extend'}
@@ -172,10 +181,10 @@ function DeadlineSection({ label, badge, current, deadlineType, projectId, exten
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '0.625rem' }}>
             <div>
               <p style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.28)', marginBottom: '0.3rem' }}>
-                New Date
+                {deadlineType === 'internal' ? 'New Date & Time' : 'New Date'}
               </p>
               <input
-                type="date"
+                type={deadlineType === 'internal' ? 'datetime-local' : 'date'}
                 required
                 value={newDate}
                 onChange={e => setNewDate(e.target.value)}
@@ -223,7 +232,7 @@ function DeadlineSection({ label, badge, current, deadlineType, projectId, exten
             }}>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.55)' }}>
-                  {fmt(ext.old_date)} → {fmt(ext.new_date)}
+                  {fmt(ext.old_date, deadlineType === 'internal')} → {fmt(ext.new_date, deadlineType === 'internal')}
                 </span>
                 {ext.reason && (
                   <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.30)', marginLeft: '0.5rem' }}>
