@@ -71,21 +71,21 @@ export function AddLinkForm({ onSubmit, placeholder = 'https://drive.google.com/
         style={{
           display: 'inline-flex',
           alignItems: 'center',
-          gap: '0.4rem',
+          gap: '0.25rem',
           background: 'none',
           border: 'none',
           padding: '0.3rem 0',
-          fontSize: '0.75rem',
-          fontWeight: 600,
-          color: '#14B8A6',
+          fontSize: '0.78rem',
+          fontWeight: 500,
+          color: 'rgba(255, 255, 255, 0.45)',
           cursor: 'pointer',
           fontFamily: 'inherit',
+          transition: 'color 0.15s ease',
         }}
+        onMouseEnter={e => (e.currentTarget.style.color = '#ffffff')}
+        onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.45)')}
       >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style={{ width: 14, height: 14 }}>
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
-        </svg>
-        Add link
+        <span style={{ fontSize: '1.05rem', lineHeight: 1, marginTop: '-1px' }}>+</span> Add link
       </button>
     )
   }

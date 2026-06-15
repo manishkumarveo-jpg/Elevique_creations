@@ -1,4 +1,8 @@
+'use client'
+
+import { useState } from 'react'
 import type { Database } from '@/lib/types/database'
+import { ExternalLink, Trash2, Link2 } from 'lucide-react'
 
 type FileRow = Database['public']['Tables']['files']['Row']
 
@@ -18,11 +22,25 @@ function getFileIcon(url: string): React.ReactNode {
       <path d="M8 24c2.2 0 4-1.8 4-4v-4H8c-2.2 0-4 1.8-4 4s1.8 4 4 4zm0-20H4c-2.2 0-4 1.8-4 4s1.8 4 4 4h4V4zm4 0v8h4c2.2 0 4-1.8 4-4s-1.8-4-4-4h-4zm4 10h-4v4c0 2.2 1.8 4 4 4s4-1.8 4-4-1.8-4-4-4z" />
     </svg>
   )
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style={{ width: 14, height: 14, color: 'rgba(255,255,255,0.35)' }}>
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-    </svg>
-  )
+  return <Link2 size={14} style={{ color: 'rgba(255,255,255,0.4)' }} />
+}
+
+const deleteButtonStyle: React.CSSProperties = {
+  background: 'none',
+  border: 'none',
+  padding: '0.25rem',
+  cursor: 'pointer',
+  color: 'rgba(255, 255, 255, 0.20)',
+  display: 'flex',
+  alignItems: 'center',
+  transition: 'color 0.2s ease',
+}
+
+const actionAreaStyle: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '0.5rem',
+  flexShrink: 0,
 }
 
 interface FileLinkRowProps {
@@ -32,29 +50,37 @@ interface FileLinkRowProps {
 }
 
 export function FileLinkRow({ file, onDelete, canDelete }: FileLinkRowProps) {
+  const [hovered, setHovered] = useState(false)
+
   return (
-    <div style={{
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.75rem',
-      padding: '0.6rem 0.75rem',
-      borderRadius: 9,
-      transition: 'background 0.15s ease',
-    }}
-    onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.04)')}
-    onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+    <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '0.75rem',
+        padding: '0.625rem 0.75rem',
+        borderRadius: 8,
+        background: hovered ? 'rgba(255,255,255,0.03)' : 'transparent',
+        border: '1px solid',
+        borderColor: hovered ? 'rgba(255,255,255,0.04)' : 'transparent',
+        transition: 'background 0.2s ease, border-color 0.2s ease',
+      }}
     >
       {/* Icon */}
       <div style={{
         width: 28,
         height: 28,
-        borderRadius: 7,
-        background: 'rgba(255,255,255,0.05)',
-        border: '1px solid rgba(255,255,255,0.08)',
+        borderRadius: 6,
+        background: hovered ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.03)',
+        border: '1px solid',
+        borderColor: hovered ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         flexShrink: 0,
+        transition: 'background 0.2s ease, border-color 0.2s ease',
       }}>
         {getFileIcon(file.file_url)}
       </div>
@@ -67,49 +93,58 @@ export function FileLinkRow({ file, onDelete, canDelete }: FileLinkRowProps) {
           style={{
             fontSize: '0.8rem',
             fontWeight: 500,
-            color: 'rgba(255,255,255,0.80)',
+            color: hovered ? '#ffffff' : 'rgba(255,255,255,0.75)',
             textDecoration: 'none',
             display: 'block',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
-            transition: 'color 0.15s ease',
+            transition: 'color 0.2s ease',
           }}
-          onMouseEnter={e => (e.currentTarget.style.color = '#14B8A6')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.80)')}
         >
           {file.file_name}
         </a>
         {file.uploader && (
-          <p style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.25)', margin: 0 }}>
+          <p style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.25)', margin: '0.1rem 0 0' }}>
             Added by {file.uploader.full_name}
           </p>
         )}
       </div>
 
-      {canDelete && onDelete && (
-        <button
-          type="button"
-          onClick={() => onDelete(file.id)}
-          aria-label="Delete file"
-          style={{
-            background: 'none',
-            border: 'none',
-            padding: '0.25rem',
-            cursor: 'pointer',
-            color: 'rgba(255,255,255,0.20)',
-            display: 'flex',
-            alignItems: 'center',
-            transition: 'color 0.15s ease',
-          }}
-          onMouseEnter={e => (e.currentTarget.style.color = 'rgba(248,113,113,0.70)')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.20)')}
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style={{ width: 15, height: 15 }}>
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      )}
+      {/* Action Area */}
+      <div style={actionAreaStyle}>
+        {/* External Link Indicator on hover */}
+        {hovered && !canDelete && (
+          <a
+            href={file.file_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              color: 'rgba(255,255,255,0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              transition: 'color 0.2s ease',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.85)')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.3)')}
+          >
+            <ExternalLink size={14} />
+          </a>
+        )}
+
+        {canDelete && onDelete && (
+          <button
+            type="button"
+            onClick={() => onDelete(file.id)}
+            aria-label="Delete file"
+            style={deleteButtonStyle}
+            onMouseEnter={e => (e.currentTarget.style.color = 'rgba(248,113,113,0.85)')}
+            onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.20)')}
+          >
+            <Trash2 size={14} />
+          </button>
+        )}
+      </div>
     </div>
   )
 }

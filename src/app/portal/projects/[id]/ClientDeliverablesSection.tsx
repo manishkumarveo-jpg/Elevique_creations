@@ -87,7 +87,7 @@ export function ClientDeliverablesSection({ deliverables, projectId }: { deliver
                   </p>
                   <p style={{ fontSize: '0.68rem', color: 'rgba(255,255,255,0.28)', margin: 0 }}>
                     {[d.format, d.dimensions, d.duration].filter(Boolean).join(' · ')}
-                    {d.delivered_on && ` · Delivered ${new Date(d.delivered_on).toLocaleDateString()}`}
+                    {d.delivered_on && ` · Delivered ${new Date(d.delivered_on).toLocaleDateString('en-US')}`}
                   </p>
                 </div>
 

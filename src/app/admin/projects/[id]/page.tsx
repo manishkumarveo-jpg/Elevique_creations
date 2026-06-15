@@ -72,7 +72,7 @@ export default async function AdminProjectPage({ params }: Props) {
               { key: 'Package',  val: project.package ?? '—' },
               { key: 'Internal Deadline', val: project.internal_deadline ?? '—' },
               { key: 'Client Deadline',   val: project.client_deadline ?? '—' },
-              { key: 'Created',  val: new Date(project.created_at).toLocaleDateString() },
+              { key: 'Created',  val: new Date(project.created_at).toLocaleDateString('en-US') },
             ].map(row => (
               <div key={row.key} className="p-info-row">
                 <span className="p-info-key">{row.key}</span>

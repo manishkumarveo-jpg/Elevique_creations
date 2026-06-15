@@ -70,6 +70,14 @@ export type Database = {
           admin_approved: boolean
           approved_by_admin: string | null
           admin_approved_at: string | null
+          priority: 'low' | 'medium' | 'high' | 'urgent'
+          project_type: string | null
+          estimated_hours: number | null
+          budget: number | null
+          start_date: string | null
+          work_started_date: string | null
+          completion_date: string | null
+          progress_percent: number
           created_at: string
           updated_at: string
         }
@@ -88,6 +96,14 @@ export type Database = {
           admin_approved?: boolean
           approved_by_admin?: string | null
           admin_approved_at?: string | null
+          priority?: 'low' | 'medium' | 'high' | 'urgent'
+          project_type?: string | null
+          estimated_hours?: number | null
+          budget?: number | null
+          start_date?: string | null
+          work_started_date?: string | null
+          completion_date?: string | null
+          progress_percent?: number
           created_at?: string
           updated_at?: string
         }
@@ -106,6 +122,14 @@ export type Database = {
           admin_approved?: boolean
           approved_by_admin?: string | null
           admin_approved_at?: string | null
+          priority?: 'low' | 'medium' | 'high' | 'urgent'
+          project_type?: string | null
+          estimated_hours?: number | null
+          budget?: number | null
+          start_date?: string | null
+          work_started_date?: string | null
+          completion_date?: string | null
+          progress_percent?: number
           created_at?: string
           updated_at?: string
         }
@@ -510,6 +534,127 @@ export type Database = {
         }
         Relationships: []
       }
+      tasks: {
+        Row: {
+          id: string
+          project_id: string
+          title: string
+          description: string | null
+          assigned_to: string | null
+          created_by: string
+          status: 'todo' | 'in_progress' | 'blocked' | 'done'
+          priority: 'low' | 'medium' | 'high' | 'urgent'
+          due_date: string | null
+          completed_at: string | null
+          sort_order: number
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          project_id: string
+          title: string
+          description?: string | null
+          assigned_to?: string | null
+          created_by: string
+          status?: 'todo' | 'in_progress' | 'blocked' | 'done'
+          priority?: 'low' | 'medium' | 'high' | 'urgent'
+          due_date?: string | null
+          completed_at?: string | null
+          sort_order?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          project_id?: string
+          title?: string
+          description?: string | null
+          assigned_to?: string | null
+          created_by?: string
+          status?: 'todo' | 'in_progress' | 'blocked' | 'done'
+          priority?: 'low' | 'medium' | 'high' | 'urgent'
+          due_date?: string | null
+          completed_at?: string | null
+          sort_order?: number
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      time_logs: {
+        Row: {
+          id: string
+          user_id: string
+          project_id: string
+          task_id: string | null
+          started_at: string
+          ended_at: string | null
+          duration_minutes: number | null
+          entry_type: 'timer' | 'manual'
+          note: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          project_id: string
+          task_id?: string | null
+          started_at: string
+          ended_at?: string | null
+          entry_type?: 'timer' | 'manual'
+          note?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          project_id?: string
+          task_id?: string | null
+          started_at?: string
+          ended_at?: string | null
+          entry_type?: 'timer' | 'manual'
+          note?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          id: string
+          user_id: string
+          type: 'project_assigned' | 'deadline_approaching' | 'task_comment' | 'status_changed' | 'review_requested' | 'project_completed' | 'task_assigned'
+          title: string
+          body: string | null
+          entity_type: string | null
+          entity_id: string | null
+          is_read: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          type: 'project_assigned' | 'deadline_approaching' | 'task_comment' | 'status_changed' | 'review_requested' | 'project_completed' | 'task_assigned'
+          title: string
+          body?: string | null
+          entity_type?: string | null
+          entity_id?: string | null
+          is_read?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          type?: 'project_assigned' | 'deadline_approaching' | 'task_comment' | 'status_changed' | 'review_requested' | 'project_completed' | 'task_assigned'
+          title?: string
+          body?: string | null
+          entity_type?: string | null
+          entity_id?: string | null
+          is_read?: boolean
+          created_at?: string
+        }
+        Relationships: []
+      }
       social_leads: {
         Row: {
           id: string
@@ -587,6 +732,32 @@ export type Database = {
           is_archived: boolean
           created_at: string
           updated_at: string
+        }
+        Relationships: []
+      }
+      project_stats: {
+        Row: {
+          project_id: string
+          name: string
+          estimated_hours: number | null
+          actual_hours: number
+          remaining_hours: number
+          progress_percent: number
+          client_deadline: string | null
+          internal_deadline: string | null
+          risk_status: 'completed' | 'no_deadline' | 'overdue' | 'at_risk' | 'on_track'
+        }
+        Relationships: []
+      }
+      team_member_stats: {
+        Row: {
+          user_id: string
+          full_name: string
+          active_projects: number
+          completed_projects: number
+          total_hours: number
+          tasks_completed: number
+          tasks_open: number
         }
         Relationships: []
       }

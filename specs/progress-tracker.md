@@ -27,6 +27,12 @@ This document tracks the active progress of features across the website and clie
 - [x] Embed Lenis Smooth Scroll container
 - [x] Code process timeline component
 - [x] Set up contact submission actions and RLS anonymous write capabilities
+- [x] Add Portfolio Reels feed with mobile-first vertical video layout
+- [x] Add Packages section with three-tier tab navigation inside FeaturedShowcase
+- [x] Implement view-mode switcher (Grid / Reels / Packages) as shared extracted component
+- [x] Hide Navbar on mobile when reels mode is active
+- [x] Animate ServicesSection with new grid card layout and flip interactions
+- [x] Improve ProcessSection responsiveness and card hover effects
 
 ### Phase 4: Collaboration Portals (Admin, Team, Client)
 - [x] Build Admin Dashboard widgets (circular progress, alert bars, activity feed)
@@ -36,6 +42,28 @@ This document tracks the active progress of features across the website and clie
 - [x] Code thread-based project messaging with Supabase Realtime channel updates
 - [x] Integrate Resend transactional onboarding and update notifications
 - [x] Add append-only global project revisions log
+
+### Phase 5: Performance & Code Quality
+- [x] Reduce font weight variants (Syne 5→2, Space Grotesk 5→2, Geist Mono 3→1) to cut HTTP requests
+- [x] Pause Three.js `AboutScene3D` canvas when off-screen via `IntersectionObserver` + `frameloop="demand"`
+- [x] Add `performance={{ min: 0.5 }}` to R3F Canvas for auto DPR scaling under load
+- [x] Speed up Lenis smooth scroll duration (1.2s → 0.8s)
+- [x] Enable AVIF + WebP image formats in `next.config.ts` for 30–50% smaller images
+- [x] Remove unused tsparticles packages (`@tsparticles/engine`, `@tsparticles/react`, `@tsparticles/slim`) — ~37 packages removed
+- [x] Delete unused `src/components/ui/sparkles.tsx`
+- [x] Remove Sentry client instrumentation (`sentry.edge.config.ts`, `sentry.server.config.ts`, example pages)
+- [x] Resolve all 25 ESLint errors (0 errors, 0 warnings after cleanup)
+  - Replaced all `catch (err: any)` with `catch (err: unknown)` + narrowing
+  - Defined typed interfaces for Supabase rows in admin pages (`ContactSubmission`, `SocialLead`)
+  - Extracted `ViewToggle` out of render function into top-level component
+  - Fixed `useRef` element types (`HTMLDivElement` → `HTMLButtonElement` where appropriate)
+  - Wrapped `setState` calls in `startTransition` in Navbar, AdminSidebar, ClientSidebar, TeamSidebar, PortfolioReels, LocationMap
+  - Removed `passive` option from `removeEventListener` (not valid per spec)
+  - Typed framer-motion `handleDragEnd` with `PanInfo` instead of `any`
+  - Wrapped `handleChange`/`handleNext`/`handlePrev` in `useCallback`; added to effect dep arrays
+  - Stabilised Supabase client via `useRef` in `use-current-user` hook
+  - Captured timer refs to locals before cleanup in `NavigationProgress`
+
 
 ---
 
