@@ -37,11 +37,13 @@ export default async function PortalLayout({ children }: { children: React.React
   }
 
   return (
-    <div className="p-shell">
+    <>
       <NavigationProgress />
       <MobileHeader roleLabel="Client Portal" />
-      <ClientSidebar userName={userName} userInitials={userInitials} companyName={companyName} />
-      <main className="p-main">{children}</main>
-    </div>
+      <div className="p-shell">
+        <ClientSidebar userName={userName} userInitials={userInitials} companyName={companyName} />
+        <main className="p-main">{children}</main>
+      </div>
+    </>
   )
 }

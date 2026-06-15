@@ -33,11 +33,13 @@ export default async function TeamLayout({ children }: { children: React.ReactNo
   }
 
   return (
-    <div className="p-shell">
+    <>
       <NavigationProgress />
       <MobileHeader roleLabel="Team Workspace" />
-      <TeamSidebar userName={userName} userInitials={userInitials} />
-      <main className="p-main">{children}</main>
-    </div>
+      <div className="p-shell">
+        <TeamSidebar userName={userName} userInitials={userInitials} />
+        <main className="p-main">{children}</main>
+      </div>
+    </>
   )
 }

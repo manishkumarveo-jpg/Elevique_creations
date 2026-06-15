@@ -33,11 +33,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
 
   return (
-    <div className="p-shell">
+    <>
       <NavigationProgress />
       <MobileHeader roleLabel="Admin Suite" />
-      <AdminSidebar userName={userName} userInitials={userInitials} />
-      <main className="p-main">{children}</main>
-    </div>
+      <div className="p-shell">
+        <AdminSidebar userName={userName} userInitials={userInitials} />
+        <main className="p-main">{children}</main>
+      </div>
+    </>
   )
 }
