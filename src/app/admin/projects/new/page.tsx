@@ -93,8 +93,9 @@ export default function NewProjectPage() {
 
         <div className="p-form-body">
           <div className="p-field">
-            <label className="p-field-label">Project Name *</label>
+            <label htmlFor="field-name" className="p-field-label">Project Name *</label>
             <input
+              id="field-name"
               className="p-field-input"
               value={form.name}
               onChange={set('name')}
@@ -105,8 +106,9 @@ export default function NewProjectPage() {
           </div>
 
           <div className="p-field">
-            <label className="p-field-label">Client *</label>
+            <label htmlFor="field-client" className="p-field-label">Client *</label>
             <select
+              id="field-client"
               className="p-field-select"
               value={form.client_id}
               onChange={set('client_id')}
@@ -122,8 +124,9 @@ export default function NewProjectPage() {
           </div>
 
           <div className="p-field">
-            <label className="p-field-label">Package</label>
+            <label htmlFor="field-package" className="p-field-label">Package</label>
             <input
+              id="field-package"
               className="p-field-input"
               value={form.package}
               onChange={set('package')}
@@ -134,8 +137,9 @@ export default function NewProjectPage() {
 
           <div className="p-form-row">
             <div className="p-field">
-              <label className="p-field-label">Internal Deadline <span style={{ fontSize: '0.7em', color: 'var(--ds-text-3)', fontWeight: 400 }}>(team only · date &amp; time)</span></label>
+              <label htmlFor="field-internal-deadline" className="p-field-label">Internal Deadline <span style={{ fontSize: '0.7em', color: 'var(--ds-text-3)', fontWeight: 400 }}>(team only · date &amp; time)</span></label>
               <input
+                id="field-internal-deadline"
                 className="p-field-input"
                 type="datetime-local"
                 value={form.internal_deadline}
@@ -143,8 +147,9 @@ export default function NewProjectPage() {
               />
             </div>
             <div className="p-field">
-              <label className="p-field-label">Client Deadline</label>
+              <label htmlFor="field-client-deadline" className="p-field-label">Client Deadline</label>
               <input
+                id="field-client-deadline"
                 className="p-field-input"
                 type="date"
                 value={form.client_deadline}
@@ -156,8 +161,9 @@ export default function NewProjectPage() {
           {deadlineError && <p className="auth-error">{deadlineError}</p>}
 
           <div className="p-field">
-            <label className="p-field-label">Description</label>
+            <label htmlFor="field-description" className="p-field-label">Description</label>
             <textarea
+              id="field-description"
               className="p-field-input"
               style={{ resize: 'vertical', minHeight: 90 }}
               value={form.description}
@@ -200,7 +206,7 @@ export default function NewProjectPage() {
                         cursor: 'pointer',
                         fontFamily: 'inherit',
                         textAlign: 'left',
-                        transition: 'all 0.12s var(--ds-ease)',
+                        transition: 'border-color 0.12s var(--ds-ease), background 0.12s var(--ds-ease)',
                       }}
                     >
                       <Avatar name={m.full_name} size="sm" />

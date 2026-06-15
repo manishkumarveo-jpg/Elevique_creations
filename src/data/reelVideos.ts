@@ -97,18 +97,6 @@ export const REEL_VIDEOS: ReelVideo[] = [
     videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001794/Aar_Kay_Vox_UK_-_Luxury_joqd3i.mov",
   },
   {
-    id: 8,
-    title: "Luxury Perfume",
-    category: "Brand Film",
-    year: "2024",
-    role: "Packaging & Brand System",
-    description: "Sensory storytelling distilled into 60 seconds of atmospheric brand cinema.",
-    techStack: ["Product Viz", "AI Styling", "Motion Graphics"],
-    colorFrom: "#f59e0b",
-    colorTo: "#ec4899",
-    videoSrc: undefined,
-  },
-  {
     id: 9,
     title: "Luxury Perfume",
     category: "Brand Film",
