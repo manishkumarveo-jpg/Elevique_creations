@@ -14,6 +14,7 @@ import PortfolioReels from "./PortfolioReels";
 import "@/styles/portfolio-reels.css";
 import "@/styles/portfolio-showcase.css";
 import { GRID_PROJECTS, AI_VISUALS, EDITORIAL, PRODUCT_FILM, BRAND_FILM, TECH_UI, EXPERIMENTAL, type GridProject } from "@/data/gridVideos";
+import { PKG_AI_VISUALS, PKG_EDITORIAL, PKG_PRODUCT_FILM, PKG_BRAND_FILM, PKG_TECH_UI, PKG_EXPERIMENTAL } from "@/data/packagesVideo";
 
 /* ─── Data ───────────────────────────────────────────────────── */
 interface Project {
@@ -97,12 +98,12 @@ function groupByCategory(projects: GridProject[]) {
 }
 const CATEGORY_GROUPS = groupByCategory(GRID_PROJECTS);
 
-type PackageTab = "1" | "2" | "3";
+type PackageTab = "signature" | "impact" | "custom";
 
 const PACKAGE_SECTIONS: Record<PackageTab, { rows: { category: string; items: GridProject[] }[] }> = {
-  "1": { rows: [{ category: "AI Visuals", items: AI_VISUALS }, { category: "Editorial", items: EDITORIAL }] },
-  "2": { rows: [{ category: "Product Film", items: PRODUCT_FILM }, { category: "Brand Film", items: BRAND_FILM }] },
-  "3": { rows: [{ category: "Tech / UI", items: TECH_UI }, { category: "Experimental", items: EXPERIMENTAL }] },
+  "signature": { rows: [{ category: "AI Visuals", items: PKG_AI_VISUALS as GridProject[] }, { category: "Editorial", items: PKG_EDITORIAL as GridProject[] }] },
+  "impact": { rows: [{ category: "Product Film", items: PKG_PRODUCT_FILM as GridProject[] }, { category: "Brand Film", items: PKG_BRAND_FILM as GridProject[] }] },
+  "custom": { rows: [{ category: "Tech / UI", items: PKG_TECH_UI as GridProject[] }, { category: "Experimental", items: PKG_EXPERIMENTAL as GridProject[] }] },
 };
 
 const VO_BACKDROP_CLICK_STYLE = {
@@ -374,12 +375,9 @@ export default function FeaturedShowcase() {
             <div className="portfolio-hero-actions">
               <button type="button" className="portfolio-btn-primary" onClick={() => openVideoOverlay(active)}>
                 <Play size={15} fill="currentColor" />
-                Watch Film
+                Watch Full Video
               </button>
-              <button type="button" className="portfolio-btn-ghost" onClick={() => openBottomSheet(active)}>
-                <ExternalLink size={15} />
-                View Case Study
-              </button>
+             
             </div>
           </div>
 
@@ -791,13 +789,13 @@ function PackagesSection({
   onCardLeave: () => void;
   onCardClick: (p: GridProject) => void;
 }) {
-  const [activeTab, setActiveTab] = useState<PackageTab>("1");
+  const [activeTab, setActiveTab] = useState<PackageTab>("impact");
   const section = PACKAGE_SECTIONS[activeTab];
 
   return (
     <div className="packages-section-wrap">
       <div className="packages-tabs-wrap">
-        {(["1", "2", "3"] as PackageTab[]).map((tab) => (
+        {(["impact", "signature", "custom"] as PackageTab[]).map((tab) => (
           <button
             key={tab}
             type="button"

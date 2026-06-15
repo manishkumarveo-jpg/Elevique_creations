@@ -359,7 +359,7 @@ export default function DashboardViews({
                         {log.entityName && <span className="p-feed-entity"> · {log.entityName}</span>}
                       </div>
                       <div className="p-feed-row">
-                        <span className="p-feed-time mono">{new Date(log.createdAt).toLocaleString()}</span>
+                        <span className="p-feed-time mono">{new Date(log.createdAt).toLocaleString('en-US')}</span>
                         <RoleBadge role={log.actorRole} />
                       </div>
                     </div>
@@ -392,7 +392,7 @@ function ActivityRail({ activity }: { activity: ActivityRow[] }) {
                   {log.entityName && <span className="p-feed-entity"> · {log.entityName}</span>}
                 </div>
                 <div className="p-feed-row">
-                  <span className="p-feed-time mono">{new Date(log.createdAt).toLocaleString()}</span>
+                  <span className="p-feed-time mono">{new Date(log.createdAt).toLocaleString('en-US')}</span>
                   <RoleBadge role={log.actorRole} />
                 </div>
               </div>

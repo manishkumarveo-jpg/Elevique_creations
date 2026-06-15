@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState, useCallback } from "react";
+import Link from "next/link";
 import {
   motion,
   useScroll,
@@ -23,8 +24,8 @@ const TITLE_LINES = [
 const LOOP_PHRASES = ["Look Like AI", "Cost a Fortune", "Take Weeks"];
 
 const STAT_DATA = [
-  { count: 500, suffix: "+",  label: "Videos Created"  },
-  { count: 50,  suffix: "+",  label: "Brands Served"   },
+  { count: 2000, suffix: "+",  label: "Videos Created"  },
+  { count: 500,  suffix: "+",  label: "Brands Served"   },
   { count: 100, suffix: "M+", label: "Views Generated" },
 ];
 
@@ -265,15 +266,14 @@ export default function HeroSection() {
               <span className="arrow" aria-hidden="true">→</span>
             </a>
 
-            <button
-              type="button"
+            <Link
+              href="/portfolio"
               className="btn-secondary"
-              onClick={scrollDown}
               id="hero-cta-secondary"
             >
               View Work
               <span aria-hidden="true">↗</span>
-            </button>
+            </Link>
           </motion.div>
         </motion.div>
 
