@@ -134,7 +134,7 @@ export default async function AdminProjectPage({ params }: Props) {
       key: 'deliverables',
       label: 'Deliverables',
       content: (
-        <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: '1.5rem', alignItems: 'start' }}>
+        <div className="p-side-grid">
           {/* Main deliverables */}
           <DeliverablesSection deliverables={deliverables} checklist={checklist} projectId={id} isAdmin />
 

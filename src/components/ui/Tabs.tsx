@@ -24,7 +24,10 @@ export function Tabs({ tabs, defaultTab }: TabsProps) {
         marginBottom: '1.75rem',
         display: 'flex',
         gap: '0.125rem',
-      }}>
+        overflowX: 'auto',
+        scrollbarWidth: 'none',
+        WebkitOverflowScrolling: 'touch' as React.CSSProperties['WebkitOverflowScrolling'],
+      } as React.CSSProperties}>
         {tabs.map(tab => {
           const isActive = active === tab.key
           return (
@@ -33,6 +36,7 @@ export function Tabs({ tabs, defaultTab }: TabsProps) {
               key={tab.key}
               onClick={() => setActive(tab.key)}
               style={{
+                flexShrink: 0,
                 padding: '0.6rem 1.1rem',
                 fontSize: '0.78rem',
                 fontWeight: isActive ? 600 : 400,

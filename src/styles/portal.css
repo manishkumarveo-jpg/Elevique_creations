@@ -55,6 +55,7 @@
 
 .p-main {
   overflow-y: auto;
+  overflow-x: hidden;
   background: var(--ds-bg);
   display: flex;
   flex-direction: column;
@@ -774,7 +775,15 @@
   padding: 40px 32px 80px;
 }
 
+.p-side-grid {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
 @media (max-width: 768px) {
+  .p-side-grid { grid-template-columns: 1fr; }
   .p-content-wrap { padding: 1.5rem 1rem 3rem; }
 }
 

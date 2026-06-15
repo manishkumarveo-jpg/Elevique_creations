@@ -43,7 +43,7 @@ export default async function ClientProjectPage({ params }: Props) {
   const openRevision = revisions.find(r => r.status === 'open')
 
   const progressTab = (
-    <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: '1.5rem', alignItems: 'start' }}>
+    <div className="p-side-grid">
       {/* Left: milestone pipeline */}
       <div className="p-info-panel">
         <p className="p-info-panel-label">Project Progress</p>
