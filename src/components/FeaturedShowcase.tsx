@@ -11,8 +11,6 @@ import {
   ExternalLink,
 } from "lucide-react";
 import PortfolioReels from "./PortfolioReels";
-import "@/styles/portfolio-reels.css";
-import "@/styles/portfolio-showcase.css";
 import { GRID_PROJECTS, AI_VISUALS, EDITORIAL, PRODUCT_FILM, BRAND_FILM, TECH_UI, EXPERIMENTAL, type GridProject } from "@/data/gridVideos";
 import { PKG_AI_VISUALS, PKG_EDITORIAL, PKG_PRODUCT_FILM, PKG_BRAND_FILM, PKG_TECH_UI, PKG_EXPERIMENTAL } from "@/data/packagesVideo";
 
@@ -80,7 +78,7 @@ const PROJECTS: Project[] = [
     colorTo: "#ec4899",
     videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781090224/Its_me_music_video_compressed_ug7wwp.mp4",
   },
-  
+
 ];
 
 interface PopupState {
@@ -128,7 +126,7 @@ function ViewToggle({ viewMode, setViewMode }: { viewMode: ViewMode; setViewMode
           type="button"
           className={`portfolio-toggle-btn${viewMode === "grid" ? " active" : ""}`}
           onClick={() => setViewMode("grid")}
-          style={{ width: "130px", justifyContent: "center" }}
+          style={{ width: "110px", justifyContent: "center" }}
         >
           Grid Showcase
         </button>
@@ -136,7 +134,7 @@ function ViewToggle({ viewMode, setViewMode }: { viewMode: ViewMode; setViewMode
           type="button"
           className={`portfolio-toggle-btn${viewMode === "reels" ? " active" : ""}`}
           onClick={() => setViewMode("reels")}
-          style={{ width: "130px", justifyContent: "center" }}
+          style={{ width: "110px", justifyContent: "center" }}
         >
           Reels Feed
         </button>
@@ -144,15 +142,15 @@ function ViewToggle({ viewMode, setViewMode }: { viewMode: ViewMode; setViewMode
           type="button"
           className={`portfolio-toggle-btn${viewMode === "packages" ? " active" : ""}`}
           onClick={() => setViewMode("packages")}
-          style={{ width: "130px", justifyContent: "center" }}
+          style={{ width: "110px", justifyContent: "center" }}
         >
           Packages
         </button>
         <div
           className="portfolio-toggle-pill"
           style={{
-            width: "130px",
-            transform: viewMode === "grid" ? "translateX(0)" : viewMode === "reels" ? "translateX(130px)" : "translateX(260px)",
+            width: "110px",
+            transform: viewMode === "grid" ? "translateX(0)" : viewMode === "reels" ? "translateX(110px)" : "translateX(220px)",
           }}
         />
       </div>
@@ -162,26 +160,26 @@ function ViewToggle({ viewMode, setViewMode }: { viewMode: ViewMode; setViewMode
 
 /* ════════════════════════════════════════════════════════════════ */
 export default function FeaturedShowcase() {
-  const [viewMode, setViewMode]         = useState<ViewMode>("grid");
-  const [active, setActive]           = useState<Project>(PROJECTS[0]);
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [active, setActive] = useState<Project>(PROJECTS[0]);
   const [videoOverlay, setVideoOverlay] = useState<Project | null>(null);
-  const [bottomSheet, setBottomSheet]   = useState<Project | null>(null);
-  const [popup, setPopup]             = useState<PopupState | null>(null);
+  const [bottomSheet, setBottomSheet] = useState<Project | null>(null);
+  const [popup, setPopup] = useState<PopupState | null>(null);
 
-  const heroVideoRef  = useRef<HTMLVideoElement>(null);
-  const popupRef      = useRef<HTMLDivElement>(null);
+  const heroVideoRef = useRef<HTMLVideoElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
 
   /* overlay refs */
-  const overlayBgRef  = useRef<HTMLDialogElement>(null);
+  const overlayBgRef = useRef<HTMLDialogElement>(null);
   const overlayBoxRef = useRef<HTMLDivElement>(null);
 
   /* bottom sheet refs */
-  const sheetBgRef    = useRef<HTMLButtonElement>(null);
+  const sheetBgRef = useRef<HTMLButtonElement>(null);
   const sheetPanelRef = useRef<HTMLDialogElement>(null);
 
-  const hoverTimer            = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const leaveTimer            = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const activePopupProject    = useRef<number | null>(null);
+  const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const activePopupProject = useRef<number | null>(null);
 
   /* ── Hero video transition ──────────────────────────────────── */
   const switchProject = useCallback((p: Project) => {
@@ -315,7 +313,7 @@ export default function FeaturedShowcase() {
     const popW = rect.width + expand * 2;
     const popH = rect.height + expand * 2;
     const left = Math.max(margin, Math.min(rect.left - expand, window.innerWidth - popW - margin));
-    const top  = Math.max(margin, Math.min(rect.top  - expand, window.innerHeight - popH - margin));
+    const top = Math.max(margin, Math.min(rect.top - expand, window.innerHeight - popH - margin));
     gsap.set(el, { position: "fixed", left, top, width: popW, height: popH, x: 0, y: 0, xPercent: 0, yPercent: 0, scale: 0.88, opacity: 0 });
     gsap.to(el, { scale: 1, opacity: 1, duration: 0.38, ease: "back.out(1.4)" });
   }, [popup]);
@@ -335,6 +333,15 @@ export default function FeaturedShowcase() {
   const cancelHide = useCallback(() => {
     if (leaveTimer.current) { clearTimeout(leaveTimer.current); leaveTimer.current = null; }
   }, []);
+
+  /* Close the hover popup as soon as the page scrolls, since its position
+     is calculated once and won't follow the card while scrolling. */
+  useEffect(() => {
+    if (!popup) return;
+    const onScroll = () => hidePopup();
+    window.addEventListener("scroll", onScroll, { passive: true, capture: true });
+    return () => window.removeEventListener("scroll", onScroll, true);
+  }, [popup, hidePopup]);
 
   const onCardEnter = useCallback((p: GridProject, e: React.MouseEvent<HTMLElement>) => {
     if (hoverTimer.current) clearTimeout(hoverTimer.current);
@@ -377,18 +384,17 @@ export default function FeaturedShowcase() {
                 <Play size={15} fill="currentColor" />
                 Watch Full Video
               </button>
-             
+
             </div>
           </div>
 
-          {/* Toggle floats over the hero bottom */}
           <div className="portfolio-view-toggle-wrap hero-toggle-overlay">
             <div className="portfolio-view-toggle">
               <button
                 type="button"
                 className="portfolio-toggle-btn active"
                 onClick={() => setViewMode("grid")}
-                style={{ width: "130px", justifyContent: "center" }}
+                style={{ width: "110px", justifyContent: "center" }}
               >
                 Grid Showcase
               </button>
@@ -396,7 +402,7 @@ export default function FeaturedShowcase() {
                 type="button"
                 className="portfolio-toggle-btn"
                 onClick={() => setViewMode("reels")}
-                style={{ width: "130px", justifyContent: "center" }}
+                style={{ width: "110px", justifyContent: "center" }}
               >
                 Reels Feed
               </button>
@@ -404,14 +410,14 @@ export default function FeaturedShowcase() {
                 type="button"
                 className="portfolio-toggle-btn"
                 onClick={() => setViewMode("packages")}
-                style={{ width: "130px", justifyContent: "center" }}
+                style={{ width: "110px", justifyContent: "center" }}
               >
                 Packages
               </button>
               <div
                 className="portfolio-toggle-pill"
                 style={{
-                  width: "130px",
+                  width: "110px",
                   transform: "translateX(0)",
                 }}
               />
@@ -652,7 +658,7 @@ function FeaturedCard({ project, isActive, onClick }: { project: Project; isActi
   const videoRef = useRef<HTMLVideoElement>(null);
   const onEnter = () => {
     if (!isActive) gsap.to(cardRef.current, { scale: 1.04, duration: 0.22, ease: "power4.out" });
-    if (project.videoSrc) videoRef.current?.play().catch(() => {});
+    if (project.videoSrc) videoRef.current?.play().catch(() => { });
   };
   const onLeave = () => {
     gsap.to(cardRef.current, { scale: 1, duration: 0.22, ease: "power4.out" });
@@ -737,7 +743,7 @@ function CategoryRow({
 function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject; onEnter: (p: GridProject, e: React.MouseEvent<HTMLElement>) => void; onLeave: () => void; onClick: () => void }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const handleEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (project.videoSrc) videoRef.current?.play().catch(() => {});
+    if (project.videoSrc) videoRef.current?.play().catch(() => { });
     onEnter(project, e);
   };
   const handleLeave = () => {

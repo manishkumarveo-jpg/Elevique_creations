@@ -10,7 +10,6 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import Navbar from "./Navbar";
-import "@/styles/hero.css";
 
 /* ─── Data ──────────────────────────────────────────────────── */
 const VIDEO_SRC =
@@ -19,20 +18,20 @@ const POSTER_SRC =
   "https://res.cloudinary.com/dpaoerbde/video/upload/v1780379272/hero-video_pxivlu.jpg";
 
 const TITLE_LINES = [
-  { text: "AI Visuals",  em: false },
+  { text: "AI Visuals", em: false },
   { text: "That Don't", em: false },
 ];
 
 const LOOP_PHRASES = ["Look Like AI", "Cost a Fortune", "Take Weeks"];
 
 const STAT_DATA = [
-  { count: 2000, suffix: "+",  label: "Videos Created"  },
-  { count: 500,  suffix: "+",  label: "Brands Served"   },
+  { count: 2000, suffix: "+", label: "Videos Created" },
+  { count: 500, suffix: "+", label: "Brands Served" },
   { count: 100, suffix: "M+", label: "Views Generated" },
 ];
 
 const EASE_CINEMA = [0.77, 0, 0.175, 1] as const;
-const EASE_OUT    = [0.16, 1, 0.3,   1] as const;
+const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 
 /* ─── Count-up hook ─────────────────────────────────────────── */
 function useCountUp(target: number, duration = 1.8, delay = 0) {
@@ -71,7 +70,7 @@ function CountStat({ count, suffix, label }: { count: number; suffix: string; la
 
 /* ─── LoopingPhrase ─────────────────────────────────────────── */
 function LoopingPhrase() {
-  const [index,   setIndex]   = useState(0);
+  const [index, setIndex] = useState(0);
   const [cycling, setCycling] = useState(false);
 
   /* Wait for entrance animation to finish + brief hold, then start cycling */
@@ -118,9 +117,20 @@ function LoopingPhrase() {
 /* ════════════════════════════════════════════════════════════ */
 export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const videoRef   = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const [showReel, setShowReel] = useState(false);
+
+  /* ── Pause/resume hero video when reel opens/closes ──────── */
+  const openReel = useCallback(() => {
+    videoRef.current?.pause();
+    setShowReel(true);
+  }, []);
+
+  const closeReel = useCallback(() => {
+    setShowReel(false);
+    videoRef.current?.play().catch(() => { });
+  }, []);
 
   /* ── Cursor glow parallax (desktop only via CSS) ────────── */
   const glowX = useSpring(0, { damping: 60, stiffness: 120 });
@@ -137,9 +147,9 @@ export default function HeroSection() {
     const v = videoRef.current;
     if (!v) return;
     v.muted = true;
-    v.play().catch(() => {});
+    v.play().catch(() => { });
 
-    const onPause = () => v.play().catch(() => {});
+    const onPause = () => v.play().catch(() => { });
     v.addEventListener("pause", onPause);
     return () => v.removeEventListener("pause", onPause);
   }, []);
@@ -151,14 +161,17 @@ export default function HeroSection() {
   });
 
   const videoScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
-  const contentY   = useTransform(scrollYProgress, [0, 1], [0, 70]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, 70]);
+  const trustY = useTransform(scrollYProgress, [0, 1], [0, 80]);
+  const trustOpacity = useTransform(scrollYProgress, [0, 0.35], [1, 0]);
+  const scrollOpacity = useTransform(scrollYProgress, [0, 0.25], [1, 0]);
 
   /* ── Escape closes reel ─────────────────────────────────── */
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setShowReel(false); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") closeReel(); };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [closeReel]);
 
   const scrollDown = useCallback(() => {
     window.scrollBy({ top: window.innerHeight, behavior: "smooth" });
@@ -281,7 +294,11 @@ export default function HeroSection() {
         </motion.div>
 
         {/* ── Trust Bar ────────────────────────────────────── */}
-        <div className="hero-trust" aria-label="Studio credentials">
+        <motion.div
+          className="hero-trust"
+          aria-label="Studio credentials"
+          style={{ y: trustY, opacity: trustOpacity }}
+        >
           <motion.div
             className="trust-stats"
             initial={{ opacity: 0, y: 18 }}
@@ -296,7 +313,7 @@ export default function HeroSection() {
           {/* Showreel */}
           <motion.button
             className="showreel-btn"
-            onClick={() => setShowReel(true)}
+            onClick={openReel}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.6, duration: 0.8 }}
@@ -311,13 +328,14 @@ export default function HeroSection() {
               </span>
             </span>
           </motion.button>
-        </div>
+        </motion.div>
 
         {/* Scroll indicator */}
         <motion.button
           className="scroll-indicator"
           onClick={scrollDown}
           aria-label="Scroll to next section"
+          style={{ opacity: scrollOpacity }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.8, duration: 0.8 }}
@@ -339,7 +357,7 @@ export default function HeroSection() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.35 }}
-            onClick={() => setShowReel(false)}
+            onClick={closeReel}
             role="dialog"
             aria-modal="true"
             aria-label="Showreel"
@@ -347,8 +365,8 @@ export default function HeroSection() {
             <motion.div
               className="showreel-video"
               initial={{ scale: 0.88, opacity: 0 }}
-              animate={{ scale: 1,    opacity: 1 }}
-              exit={{ scale: 0.92,    opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.92, opacity: 0 }}
               transition={{ duration: 0.45, ease: EASE_OUT }}
               onClick={(e) => e.stopPropagation()}
             >
@@ -362,7 +380,7 @@ export default function HeroSection() {
             <button
               type="button"
               className="showreel-close"
-              onClick={() => setShowReel(false)}
+              onClick={closeReel}
               aria-label="Close showreel"
             >
               ✕

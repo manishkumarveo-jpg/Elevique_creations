@@ -6,7 +6,6 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 
 const AboutScene3D = dynamic(() => import("./AboutScene3D"), { ssr: false });
-import "@/styles/about.css";
 
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 
@@ -29,9 +28,9 @@ const pillars = [
 ];
 
 export default function AboutSection() {
-  const heroRef  = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
   const pillarsRef = useRef<HTMLDivElement>(null);
-  const heroInView    = useInView(heroRef,    { once: true, margin: "-8%" });
+  const heroInView = useInView(heroRef, { once: true, margin: "-8%" });
   const pillarsInView = useInView(pillarsRef, { once: true, margin: "-8%" });
 
   return (
@@ -42,7 +41,7 @@ export default function AboutSection() {
       style={{ background: "var(--black)", overflow: "visible" }}
     >
       <div className="svc-bloom svc-bloom--title" aria-hidden="true" />
-      <div className="svc-grid-overlay"            aria-hidden="true" />
+      <div className="svc-grid-overlay" aria-hidden="true" />
 
       <div className="svc-container">
 

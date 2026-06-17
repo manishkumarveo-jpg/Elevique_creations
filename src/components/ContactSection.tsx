@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { MessageSquareMore, Phone, Mail, CheckCircle } from "lucide-react";
 import { LocationMap } from "@/components/ui/LocationMap";
+import { BorderBeam } from "@/components/ui/border-beam";
 
 export default function ContactSection() {
   const [formState, setFormState] = useState({
@@ -110,6 +111,13 @@ export default function ContactSection() {
 
           {/* Right Column: Contact Form */}
           <div className="ct-form-wrap">
+            <BorderBeam
+              size={120}
+              duration={20}
+              colorFrom="#14b8a6"
+              colorTo="#5eead4"
+              style={{ filter: "drop-shadow(0 0 16px #14b8a6) drop-shadow(0 0 32px #14b8a6)" }}
+            />
             {isSent ? (
               <div className="ct-success">
                 <div className="ct-success-icon">

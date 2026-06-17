@@ -4,7 +4,6 @@ import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, Check, CheckCircle2, ArrowRight } from "lucide-react";
-import "@/styles/leads.css";
 
 const SERVICES = [
   "AI Video Ads",
@@ -204,9 +203,8 @@ export default function LeadsLandingPage() {
                     <button
                       id="service-type"
                       type="button"
-                      className={`leads-select-trigger ${
-                        activeDropdown === "service" ? "leads-select-trigger--open" : ""
-                      }`}
+                      className={`leads-select-trigger ${activeDropdown === "service" ? "leads-select-trigger--open" : ""
+                        }`}
                       onClick={() => toggleDropdown("service")}
                     >
                       <span
@@ -233,9 +231,8 @@ export default function LeadsLandingPage() {
                           {SERVICES.map((s) => (
                             <div
                               key={s}
-                              className={`leads-select-option ${
-                                form.service_type === s ? "leads-select-option--selected" : ""
-                              }`}
+                              className={`leads-select-option ${form.service_type === s ? "leads-select-option--selected" : ""
+                                }`}
                               onClick={() => handleSelectOption("service_type", s)}
                             >
                               <span style={{ flex: 1 }}>{s}</span>
@@ -254,9 +251,8 @@ export default function LeadsLandingPage() {
                     <button
                       id="videos-count"
                       type="button"
-                      className={`leads-select-trigger ${
-                        activeDropdown === "videos" ? "leads-select-trigger--open" : ""
-                      }`}
+                      className={`leads-select-trigger ${activeDropdown === "videos" ? "leads-select-trigger--open" : ""
+                        }`}
                       onClick={() => toggleDropdown("videos")}
                     >
                       <span
@@ -283,9 +279,8 @@ export default function LeadsLandingPage() {
                           {VIDEO_COUNTS.map((v) => (
                             <div
                               key={v}
-                              className={`leads-select-option ${
-                                form.videos_count === v ? "leads-select-option--selected" : ""
-                              }`}
+                              className={`leads-select-option ${form.videos_count === v ? "leads-select-option--selected" : ""
+                                }`}
                               onClick={() => handleSelectOption("videos_count", v)}
                             >
                               <span style={{ flex: 1 }}>{v}</span>
@@ -366,9 +361,8 @@ export default function LeadsLandingPage() {
                     <div className="leads-select-wrapper leads-country-code">
                       <button
                         type="button"
-                        className={`leads-select-trigger ${
-                          activeDropdown === "phone" ? "leads-select-trigger--open" : ""
-                        }`}
+                        className={`leads-select-trigger ${activeDropdown === "phone" ? "leads-select-trigger--open" : ""
+                          }`}
                         onClick={() => toggleDropdown("phone")}
                         style={{ paddingLeft: "12px", paddingRight: "12px" }}
                       >
@@ -390,9 +384,8 @@ export default function LeadsLandingPage() {
                             {COUNTRY_CODES.map((c) => (
                               <div
                                 key={c.code}
-                                className={`leads-select-option ${
-                                  form.phone_code === c.code ? "leads-select-option--selected" : ""
-                                }`}
+                                className={`leads-select-option ${form.phone_code === c.code ? "leads-select-option--selected" : ""
+                                  }`}
                                 onClick={() => handleSelectOption("phone_code", c.code)}
                               >
                                 <span style={{ fontSize: "0.8rem" }}>{c.label}</span>

@@ -86,9 +86,9 @@ export function TeamDeliverablesSection({ deliverables, projectId }: { deliverab
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       {/* Add form */}
-      <div className="p-info-panel">
+      <div style={panel}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: showForm ? '1.125rem' : 0 }}>
-          <p className="p-info-panel-label" style={{ margin: 0 }}>Add Deliverable</p>
+          <p style={{ ...panelLabel, margin: 0 }}>Add Deliverable</p>
           <button
             type="button"
             onClick={() => setShowForm(v => !v)}
@@ -147,8 +147,20 @@ export function TeamDeliverablesSection({ deliverables, projectId }: { deliverab
             <button
               type="submit"
               disabled={isPending}
-              className="p-btn-primary"
-              style={{ alignSelf: 'flex-end' }}
+              style={{
+                alignSelf: 'flex-end',
+                padding: '0.5rem 1.25rem',
+                background: isPending ? 'rgba(20,184,166,0.3)' : 'var(--ds-white)',
+                color: '#07080c',
+                fontSize: '0.72rem',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                border: 'none',
+                borderRadius: 8,
+                cursor: isPending ? 'not-allowed' : 'pointer',
+                fontFamily: 'inherit',
+              }}
             >
               {isPending ? 'Adding…' : 'Create Item'}
             </button>
@@ -157,35 +169,42 @@ export function TeamDeliverablesSection({ deliverables, projectId }: { deliverab
       </div>
 
       {/* Deliverables list */}
-      <div className="p-info-panel" style={{ padding: 0 }}>
-        <div style={{ padding: '1.125rem 1.25rem', borderBottom: '1px solid var(--p-b2)' }}>
-          <p className="p-info-panel-label" style={{ margin: 0 }}>Deliverables ({deliverables.length})</p>
+      <div style={{ ...panel, padding: 0 }}>
+        <div style={{ padding: '1.125rem 1.25rem', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+          <p style={{ ...panelLabel, margin: 0 }}>Deliverables ({deliverables.length})</p>
           {markError && (
             <p style={{ fontSize: '0.72rem', color: 'rgba(248,113,113,0.85)', margin: '0.5rem 0 0' }}>{markError}</p>
           )}
         </div>
 
         {deliverables.length === 0 ? (
-          <p style={{ padding: '1.5rem', fontSize: '0.78rem', color: 'var(--p-t3)', fontStyle: 'italic' }}>
+          <p style={{ padding: '1.5rem', fontSize: '0.78rem', color: 'rgba(255,255,255,0.25)', fontStyle: 'italic' }}>
             No deliverables yet. Add the first one above.
           </p>
         ) : (
-          <div className="p-table-wrap" style={{ borderRadius: 0, border: 'none' }}>
-            <table className="p-table">
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem' }}>
               <thead>
-                <tr>
-                  <th>Deliverable</th>
-                  <th>Format</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+                  {['Deliverable', 'Format', 'Status', 'Actions'].map(h => (
+                    <th key={h} style={{
+                      padding: '0.6rem 1.25rem',
+                      textAlign: 'left',
+                      fontSize: '0.6rem',
+                      fontWeight: 700,
+                      letterSpacing: '0.12em',
+                      textTransform: 'uppercase',
+                      color: 'rgba(255,255,255,0.28)',
+                    }}>{h}</th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
                 {deliverables.map(d => (
-                  <tr key={d.id}>
-                    <td>
-                      <p className="p-table-name">{d.file_name}</p>
-                      <p className="p-table-sub">
+                  <tr key={d.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <td style={{ padding: '0.75rem 1.25rem' }}>
+                      <p style={{ margin: 0, fontWeight: 500, color: 'rgba(255,255,255,0.85)' }}>{d.file_name}</p>
+                      <p style={{ margin: '0.15rem 0 0', fontSize: '0.68rem', color: 'rgba(255,255,255,0.3)' }}>
                         {d.deliverable_type === 'video' ? '🎬' : '🖼'}{' '}
                         {[d.format, d.dimensions, d.duration].filter(Boolean).join(' · ') || d.deliverable_type}
                       </p>
@@ -193,41 +212,42 @@ export function TeamDeliverablesSection({ deliverables, projectId }: { deliverab
                         <p style={{
                           marginTop: '0.25rem',
                           padding: '0.2rem 0.5rem',
-                          background: 'var(--p-amber-dim)',
-                          border: '1px solid var(--p-amber-b)',
+                          background: 'rgba(251,191,36,0.06)',
+                          border: '1px solid rgba(251,191,36,0.2)',
                           borderRadius: 6,
                           fontSize: '0.65rem',
-                          color: 'var(--p-amber)',
+                          color: 'rgba(251,191,36,0.85)',
                           display: 'inline-block',
                         }}>
                           Revision: {d.revision_note}
                         </p>
                       )}
                     </td>
-                    <td style={{ whiteSpace: 'nowrap' }}>
-                      <span style={{ fontSize: '0.72rem', color: 'var(--p-t2)' }}>
+                    <td style={{ padding: '0.75rem 1.25rem', whiteSpace: 'nowrap' }}>
+                      <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.4)' }}>
                         {d.format ?? d.deliverable_type}
                       </span>
                     </td>
-                    <td>
+                    <td style={{ padding: '0.75rem 1.25rem' }}>
                       <DeliverableStatusBadge status={d.status} />
                     </td>
-                    <td>
+                    <td style={{ padding: '0.75rem 1.25rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                         {d.drive_link && (
                           <a
-                              href={d.drive_link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="p-btn-secondary"
-                              style={{
-                                display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
-                                padding: '0.22rem 0.55rem',
-                                border: '1px solid var(--ds-border)',
-                                borderRadius: 6, fontSize: '0.62rem', fontWeight: 600,
-                                textDecoration: 'none',
-                                whiteSpace: 'nowrap',
-                              }}
+                            href={d.drive_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="p-btn-secondary"
+                            style={{
+                              display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
+                              padding: '0.22rem 0.55rem',
+                              background: 'rgba(66,133,244,0.08)',
+                              border: '1px solid rgba(66,133,244,0.22)',
+                              borderRadius: 6, fontSize: '0.62rem', fontWeight: 600,
+                              color: 'rgba(99,163,250,0.90)', textDecoration: 'none',
+                              whiteSpace: 'nowrap',
+                            }}
                           >
                             Drive ↗
                           </a>

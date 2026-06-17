@@ -7,7 +7,6 @@ import {
   VolumeX,
   Share2,
   ExternalLink,
-  ChevronUp,
   Wifi,
   Battery,
   Play,
@@ -117,7 +116,6 @@ export default function PortfolioReels({ onViewDetails, onBack }: PortfolioReels
               isMuted={isMuted}
               toggleMute={toggleMute}
               onViewDetails={onViewDetails}
-              isLast={idx === REEL_VIDEOS.length - 1}
             />
           ))}
         </div>
@@ -134,7 +132,6 @@ interface ReelCardProps {
   isMuted: boolean;
   toggleMute: (e: React.MouseEvent) => void;
   onViewDetails: (project: Project) => void;
-  isLast: boolean;
 }
 
 interface FloatingHeartItem {
@@ -150,19 +147,18 @@ function ReelCard({
   isMuted,
   toggleMute,
   onViewDetails,
-  isLast,
 }: ReelCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [liked, setLiked] = useState<boolean>(false);
   const [likeCount, setLikeCount] = useState<number>(120);
   const [copied, setCopied] = useState<boolean | 'error'>(false);
-  
+
   // Double-tap and play/pause action feedback
   const [showHeartPop, setShowHeartPop] = useState<boolean>(false);
   const [playStateFeedback, setPlayStateFeedback] = useState<"play" | "pause" | null>(null);
   const [particles, setParticles] = useState<FloatingHeartItem[]>([]);
-  
+
   const lastTapRef = useRef<number>(0);
   const nextParticleId = useRef<number>(0);
 
@@ -208,7 +204,7 @@ function ReelCard({
       setIsPlaying(false);
       setPlayStateFeedback("pause");
     } else {
-      video.play().catch(() => {});
+      video.play().catch(() => { });
       setIsPlaying(true);
       setPlayStateFeedback("play");
     }
@@ -225,7 +221,7 @@ function ReelCard({
       setLiked(true);
       setLikeCount((prev) => prev + 1);
     }
-    
+
     // Create new float-up particles
     const newParticles = Array.from({ length: 5 }).map(() => ({
       id: nextParticleId.current++,
@@ -360,7 +356,7 @@ function ReelCard({
             }}
             aria-label={`Like ${reel.title}`}
           >
-            <Heart size={20} fill={liked ? "currentColor" : "none"} />
+            <Heart size={14} fill={liked ? "currentColor" : "none"} />
           </button>
           <span className="reel-action-label">{likeCount}</span>
         </div>
@@ -373,7 +369,7 @@ function ReelCard({
             onClick={handleShare}
             aria-label="Share project"
           >
-            <Share2 size={20} />
+            <Share2 size={14} />
           </button>
           <span className="reel-action-label">{copied === true ? "Copied" : copied === 'error' ? "Failed" : "Share"}</span>
         </div>
@@ -386,7 +382,7 @@ function ReelCard({
             onClick={toggleMute}
             aria-label={isMuted ? "Unmute sound" : "Mute sound"}
           >
-            {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+            {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
           </button>
           <span className="reel-action-label">{isMuted ? "Muted" : "Sound"}</span>
         </div>
@@ -399,19 +395,11 @@ function ReelCard({
             onClick={handleOpenDetails}
             aria-label="View case study details"
           >
-            <ExternalLink size={20} />
+            <ExternalLink size={14} />
           </button>
           <span className="reel-action-label">Details</span>
         </div>
       </div>
-
-      {/* Swipe up guide (hidden on the last reel item) */}
-      {!isLast && (
-        <div className="reels-swipe-hint">
-          <ChevronUp size={16} />
-          <span>Swipe up</span>
-        </div>
-      )}
     </div>
   );
 }

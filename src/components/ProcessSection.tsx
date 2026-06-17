@@ -10,7 +10,7 @@ import {
   Rocket,
 } from "lucide-react";
 
-import "@/styles/process.css";
+/* The Elevique Method */
 
 /* ─── Data ─────────────────────────────────────────────────────── */
 const STEPS = [
