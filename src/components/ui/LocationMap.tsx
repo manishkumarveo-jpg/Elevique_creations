@@ -4,7 +4,6 @@ import type React from "react";
 import { useState, useRef, useEffect, startTransition } from "react";
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { ExternalLink } from "lucide-react";
-import "@/styles/location.css";
 
 interface LocationMapProps {
   location?: string;
@@ -83,8 +82,8 @@ export function LocationMap({
             transformStyle: "preserve-3d",
           }}
           animate={{
-            width: isExpanded 
-              ? Math.min(400, viewportWidth - 48) 
+            width: isExpanded
+              ? Math.min(400, viewportWidth - 48)
               : Math.min(320, viewportWidth - 48),
             height: isExpanded ? 280 : 140,
           }}

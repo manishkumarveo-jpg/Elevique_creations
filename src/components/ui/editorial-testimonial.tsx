@@ -3,14 +3,13 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring, type PanInfo } from "framer-motion";
-import "@/styles/testimonial.css";
 
 // ── Client SVG Logos ───────────────────────────────────────────
 
 const DumaneraLogo = () => (
   <svg className="h-7 opacity-75 hover:opacity-100 transition-opacity" viewBox="0 0 160 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M5 25V10C5 7.24 7.24 5 10 5H18C20.76 5 23 7.24 23 10V25M23 25C23 27.76 20.76 30 18 30H10C7.24 30 5 27.76 5 25Z" stroke="var(--gold)" strokeWidth="1.8"/>
-    <path d="M12 12H16M12 18H16M12 24H16" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M5 25V10C5 7.24 7.24 5 10 5H18C20.76 5 23 7.24 23 10V25M23 25C23 27.76 20.76 30 18 30H10C7.24 30 5 27.76 5 25Z" stroke="var(--gold)" strokeWidth="1.8" />
+    <path d="M12 12H16M12 18H16M12 24H16" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" />
     <text x="32" y="21" fill="var(--white)" fontSize="11" fontWeight="700" letterSpacing="0.15em">DUMANERA</text>
     <text x="32" y="28" fill="var(--gold)" fontSize="6" fontWeight="600" letterSpacing="0.3em">SHOES</text>
   </svg>
@@ -18,8 +17,8 @@ const DumaneraLogo = () => (
 
 const FitvittleLogo = () => (
   <svg className="h-7 opacity-75 hover:opacity-100 transition-opacity" viewBox="0 0 160 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="14" cy="17" r="9" stroke="var(--gold)" strokeWidth="1.8" strokeDasharray="3 3"/>
-    <path d="M11 17L13 19L17 15" stroke="var(--gold)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+    <circle cx="14" cy="17" r="9" stroke="var(--gold)" strokeWidth="1.8" strokeDasharray="3 3" />
+    <path d="M11 17L13 19L17 15" stroke="var(--gold)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
     <text x="32" y="21" fill="var(--white)" fontSize="11" fontWeight="700" letterSpacing="0.12em">FITVITTLE</text>
     <text x="32" y="28" fill="var(--gold)" fontSize="6" fontWeight="500" letterSpacing="0.2em">HEALTH & LABS</text>
   </svg>
@@ -27,7 +26,7 @@ const FitvittleLogo = () => (
 
 const TitanBrosLogo = () => (
   <svg className="h-7 opacity-75 hover:opacity-100 transition-opacity" viewBox="0 0 160 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M8 8H20M14 8V26M10 26H18" stroke="var(--gold)" strokeWidth="2.2" strokeLinecap="round"/>
+    <path d="M8 8H20M14 8V26M10 26H18" stroke="var(--gold)" strokeWidth="2.2" strokeLinecap="round" />
     <text x="32" y="21" fill="var(--white)" fontSize="11" fontWeight="700" letterSpacing="0.15em">TITAN BROS</text>
     <text x="32" y="28" fill="var(--gold)" fontSize="6" fontWeight="600" letterSpacing="0.4em">USA</text>
   </svg>
@@ -35,7 +34,7 @@ const TitanBrosLogo = () => (
 
 const GauddlyLogo = () => (
   <svg className="h-7 opacity-75 hover:opacity-100 transition-opacity" viewBox="0 0 160 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M22 13C22 8.58 18.42 5 14 5C9.58 5 6 8.58 6 13C6 17.42 9.58 21 14 21C18.42 21 22 17.42 22 13ZM22 13H14M14 21V28" stroke="var(--gold)" strokeWidth="1.8" strokeLinecap="round"/>
+    <path d="M22 13C22 8.58 18.42 5 14 5C9.58 5 6 8.58 6 13C6 17.42 9.58 21 14 21C18.42 21 22 17.42 22 13ZM22 13H14M14 21V28" stroke="var(--gold)" strokeWidth="1.8" strokeLinecap="round" />
     <text x="32" y="21" fill="var(--white)" fontSize="11" fontWeight="700" letterSpacing="0.18em">GAUDDLY</text>
     <text x="32" y="28" fill="var(--gold)" fontSize="6" fontWeight="500" letterSpacing="0.3em">FASHION</text>
   </svg>
@@ -43,8 +42,8 @@ const GauddlyLogo = () => (
 
 const ElCasaLogo = () => (
   <svg className="h-7 opacity-75 hover:opacity-100 transition-opacity" viewBox="0 0 160 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M5 25L14 8L23 25H5Z" stroke="var(--gold)" strokeWidth="1.8" strokeLinejoin="round"/>
-    <line x1="9" y1="17" x2="19" y2="17" stroke="var(--gold)" strokeWidth="1.5"/>
+    <path d="M5 25L14 8L23 25H5Z" stroke="var(--gold)" strokeWidth="1.8" strokeLinejoin="round" />
+    <line x1="9" y1="17" x2="19" y2="17" stroke="var(--gold)" strokeWidth="1.5" />
     <text x="32" y="21" fill="var(--white)" fontSize="11" fontWeight="700" letterSpacing="0.12em">EL&apos;CASA</text>
     <text x="32" y="28" fill="var(--gold)" fontSize="6" fontWeight="500" letterSpacing="0.25em">LIVING SPACES</text>
   </svg>
@@ -52,7 +51,7 @@ const ElCasaLogo = () => (
 
 const ShreeBuildconLogo = () => (
   <svg className="h-7 opacity-75 hover:opacity-100 transition-opacity" viewBox="0 0 160 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M6 27H22M9 27V12L14 8L19 12V27M14 12V27" stroke="var(--gold)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M6 27H22M9 27V12L14 8L19 12V27M14 12V27" stroke="var(--gold)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
     <text x="32" y="21" fill="var(--white)" fontSize="9" fontWeight="700" letterSpacing="0.08em">SHREE BUILDCON</text>
     <text x="32" y="28" fill="var(--gold)" fontSize="6" fontWeight="500" letterSpacing="0.3em">REALTY</text>
   </svg>
@@ -60,8 +59,8 @@ const ShreeBuildconLogo = () => (
 
 const SkinRitualLogo = () => (
   <svg className="h-7 opacity-75 hover:opacity-100 transition-opacity" viewBox="0 0 160 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="14" cy="17" r="9" stroke="var(--gold)" strokeWidth="1.8"/>
-    <path d="M14 11C14 11 16.5 14 16.5 17C16.5 20 14 23 14 23" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round"/>
+    <circle cx="14" cy="17" r="9" stroke="var(--gold)" strokeWidth="1.8" />
+    <path d="M14 11C14 11 16.5 14 16.5 17C16.5 20 14 23 14 23" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" />
     <text x="32" y="20" fill="var(--white)" fontSize="9.5" fontWeight="700" letterSpacing="0.1em">THE SKIN RITUAL</text>
     <text x="32" y="27" fill="var(--gold)" fontSize="6" fontWeight="500" letterSpacing="0.4em">CO.</text>
   </svg>
@@ -69,8 +68,8 @@ const SkinRitualLogo = () => (
 
 const ItsmeLogo = () => (
   <svg className="h-7 opacity-75 hover:opacity-100 transition-opacity" viewBox="0 0 160 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M6 10C6 10 10 6 14 10C18 14 18 20 14 24C10 28 6 24 6 24" stroke="var(--gold)" strokeWidth="1.8" strokeLinecap="round"/>
-    <line x1="12" y1="17" x2="22" y2="17" stroke="var(--gold)" strokeWidth="1.8" strokeLinecap="round"/>
+    <path d="M6 10C6 10 10 6 14 10C18 14 18 20 14 24C10 28 6 24 6 24" stroke="var(--gold)" strokeWidth="1.8" strokeLinecap="round" />
+    <line x1="12" y1="17" x2="22" y2="17" stroke="var(--gold)" strokeWidth="1.8" strokeLinecap="round" />
     <text x="32" y="21" fill="var(--white)" fontSize="11" fontWeight="700" letterSpacing="0.15em">ITSME</text>
     <text x="32" y="28" fill="var(--gold)" fontSize="6" fontWeight="500" letterSpacing="0.3em">COSMETICS</text>
   </svg>
@@ -78,7 +77,7 @@ const ItsmeLogo = () => (
 
 const SweetThrillsLogo = () => (
   <svg className="h-7 opacity-75 hover:opacity-100 transition-opacity" viewBox="0 0 160 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M6 14C10 10 12 22 16 18C20 14 22 26 26 22" stroke="var(--gold)" strokeWidth="2" strokeLinecap="round"/>
+    <path d="M6 14C10 10 12 22 16 18C20 14 22 26 26 22" stroke="var(--gold)" strokeWidth="2" strokeLinecap="round" />
     <text x="32" y="21" fill="var(--white)" fontSize="11" fontWeight="700" letterSpacing="0.12em">SWEET THRILLS</text>
     <text x="32" y="28" fill="var(--gold)" fontSize="6" fontWeight="500" letterSpacing="0.25em">SWEETS & DECOR</text>
   </svg>
@@ -315,11 +314,11 @@ export default function TestimonialsEditorial() {
 
   const handlePrev = useCallback(() =>
     handleChange(active === 0 ? testimonials.length - 1 : active - 1),
-  [active, handleChange]);
+    [active, handleChange]);
 
   const handleNext = useCallback(() =>
     handleChange(active === testimonials.length - 1 ? 0 : active + 1),
-  [active, handleChange]);
+    [active, handleChange]);
 
   // Swipe gesture support
   const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
@@ -451,14 +450,14 @@ export default function TestimonialsEditorial() {
                 className="te-author-row"
               >
                 {/* Author Information */}
-                <motion.div 
+                <motion.div
                   className="te-author"
                   whileHover="hover"
                   initial="initial"
                 >
                   {/* Spinning Ring + Avatar Wrapper */}
                   <div className="te-avatar-container">
-                    <motion.div 
+                    <motion.div
                       className="te-avatar-ring"
                       variants={avatarRingVariants}
                     />
@@ -490,9 +489,9 @@ export default function TestimonialsEditorial() {
 
           {/* Autoplay loading indicator bar */}
           <div className="te-progress-container" aria-hidden="true">
-            <div 
-              className="te-progress-bar" 
-              style={{ width: `${progress}%` }} 
+            <div
+              className="te-progress-bar"
+              style={{ width: `${progress}%` }}
             />
           </div>
         </div>

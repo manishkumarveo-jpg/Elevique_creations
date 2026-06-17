@@ -4,28 +4,62 @@ import React, { useState, useEffect, startTransition } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
-import "./ui/navbar.css";
+import { BorderBeam } from "@/components/ui/border-beam";
 
 const navLinks = [
   { label: "Portfolio", href: "/portfolio" },
-  { label: "Services",  href: "/services"  },
-  { label: "Process",   href: "/process"   },
-  { label: "About",     href: "/about"     },
-  { label: "Contact",   href: "/contact"   },
+  { label: "Services", href: "/services" },
+  { label: "Process", href: "/process" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 
 export default function Navbar() {
-  const [scrolled,   setScrolled]   = useState(false);
-  const [menuOpen,   setMenuOpen]   = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [showBeam, setShowBeam] = useState(true);
   const pathname = usePathname();
 
+  /* BorderBeam is a decorative, infinitely-looping animation rendered under
+     a blurred fixed pill. On mobile GPUs that combination commonly shows up
+     as a constant jitter/vibration of the whole navbar, so skip it below
+     desktop widths instead of trying to tune the animation itself. */
   useEffect(() => {
-    const onScroll = () => {
+    const mq = window.matchMedia("(min-width: 769px)");
+    setShowBeam(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setShowBeam(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+
+  useEffect(() => {
+    let ticking = false;
+    let isScrolled = false;
+
+    const update = () => {
+      ticking = false;
       const y = window.scrollY;
-      setScrolled(y > 50);
+      // Hysteresis: different enter/exit thresholds so momentum/rubber-band
+      // scroll hovering near one value can't flip the class back and forth
+      // every frame (that flicker is what reads as the navbar "shaking").
+      if (!isScrolled && y > 60) {
+        isScrolled = true;
+        setScrolled(true);
+      } else if (isScrolled && y < 30) {
+        isScrolled = false;
+        setScrolled(false);
+      }
     };
+
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -46,6 +80,9 @@ export default function Navbar() {
         <div className="navbar-container">
           <div className="navbar-glass-layer" />
           <div className="navbar-glow" />
+          {showBeam && (
+            <BorderBeam size={80} thickness={3} radius={20} duration={48} colorFrom="#14b8a6b3" colorTo="#14b8a6b3" />
+          )}
 
           <Link href="/" className="navbar-logo">Elevique</Link>
 

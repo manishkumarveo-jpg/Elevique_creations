@@ -1,21 +1,19 @@
 "use client"
 
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { InfiniteSlider } from '@/components/ui/infinite-slider'
 import { ProgressiveBlur } from '@/components/ui/progressive-blur'
 import { ELVIQUE_LOGOS } from '@/data/elviqueLogos'
 
 export function Demo() {
-  const shouldReduceMotion = useReducedMotion()
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-      className="relative w-full overflow-hidden py-10"
+      className="relative w-full overflow-hidden py-20 md:py-28"
       style={{ background: "#000000" }}
     >
       {/* SVG filter to key out white background while preserving original logo colors */}
@@ -34,6 +32,44 @@ export function Demo() {
           </filter>
         </defs>
       </svg>
+
+      {/* Brands Heading */}
+      <div className="flex flex-col items-center justify-center text-center mt-12 mb-16 px-4">
+        {/* Glowing eyebrow */}
+        <span 
+          className="text-[9px] font-bold tracking-[0.42em] uppercase mb-2 text-[#14B8A6]"
+          style={{ textShadow: "0 0 12px rgba(20, 184, 166, 0.4)" }}
+        >
+          Trusted Partnerships
+        </span>
+        
+        {/* Main premium heading */}
+        <h2 
+          className="text-lg sm:text-xl md:text-2xl font-extrabold tracking-[0.25em] uppercase"
+          style={{
+            background: "linear-gradient(to bottom, #ffffff 30%, #a3a3a3 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}
+        >
+          Brands We Worked With
+        </h2>
+        
+        {/* Accent indicator line */}
+        <div className="flex items-center gap-2 mt-4">
+          <span className="h-[1px] w-6 bg-gradient-to-r from-transparent to-[#14B8A6]/40" />
+          <span className="h-1.5 w-1.5 rounded-full bg-[#14B8A6] animate-pulse" />
+          <span className="h-[1px] w-6 bg-gradient-to-l from-transparent to-[#14B8A6]/40" />
+        </div>
+      </div>
+
+      {/* Ambient decorative glow behind the glass strip */}
+      <div 
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[75%] h-[220px] pointer-events-none opacity-25 filter blur-[100px] rounded-full"
+        style={{
+          background: "radial-gradient(circle, rgba(20, 184, 166, 0.25) 0%, transparent 70%)"
+        }}
+      />
 
       {/* glass strip */}
       <div
@@ -56,17 +92,17 @@ export function Demo() {
           <rect width="100%" height="100%" fill="url(#demo-grid)" />
         </svg>
 
-        <div className="relative py-8 px-0">
+        <div className="relative py-12 md:py-16 px-0">
           <InfiniteSlider
-            duration={shouldReduceMotion ? 99999 : 200}
-            gap={64}
+            duration={150}
+            gap={72}
             className="flex items-center"
           >
             {ELVIQUE_LOGOS.map((logoPath, idx) => {
               return (
                 <div
                   key={logoPath}
-                  className="h-16 w-40 md:h-20 md:w-52 shrink-0 transition-all duration-500 flex items-center justify-center select-none relative"
+                  className="h-18 w-44 md:h-22 md:w-56 shrink-0 transition-all duration-500 flex items-center justify-center select-none relative"
                   style={{ opacity: 0.75 }}
                   onMouseEnter={e => {
                     e.currentTarget.style.opacity = "1";
@@ -83,7 +119,7 @@ export function Demo() {
                     fill
                     draggable={false}
                     className="object-contain pointer-events-none transition-all duration-300"
-                    sizes="(max-width: 768px) 160px, 208px"
+                    sizes="(max-width: 768px) 176px, 224px"
                     style={{
                       filter: 'url(#remove-white-bg)'
                     }}

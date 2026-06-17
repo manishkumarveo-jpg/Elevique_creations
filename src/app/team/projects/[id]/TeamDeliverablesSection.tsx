@@ -238,6 +238,7 @@ export function TeamDeliverablesSection({ deliverables, projectId }: { deliverab
                             href={d.drive_link}
                             target="_blank"
                             rel="noopener noreferrer"
+                            className="p-btn-secondary"
                             style={{
                               display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
                               padding: '0.22rem 0.55rem',
