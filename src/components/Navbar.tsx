@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, startTransition } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { BorderBeam } from "@/components/ui/border-beam";
@@ -84,7 +85,37 @@ export default function Navbar() {
             <BorderBeam size={80} thickness={3} radius={20} duration={48} colorFrom="#14b8a6b3" colorTo="#14b8a6b3" />
           )}
 
-          <Link href="/" className="navbar-logo">Elevique</Link>
+          <Link href="/" className="navbar-logo" style={{ overflow: "visible", display: "flex", alignItems: "center", position: "relative" }}>
+            {/* SVG filter to key out the light grey background of the logo */}
+            <svg style={{ position: "absolute", width: 0, height: 0, overflow: "hidden" }} aria-hidden="true">
+              <defs>
+                <filter id="remove-white-bg" colorInterpolationFilters="sRGB">
+                  <feColorMatrix
+                    type="matrix"
+                    values="
+                      1 0 0 0 0
+                      0 1 0 0 0
+                      0 0 1 0 0
+                      -6 0 0 5 0
+                    "
+                  />
+                </filter>
+              </defs>
+            </svg>
+            <Image
+              src="/logo.png"
+              alt="Elevique Logo"
+              width={80}
+              height={80}
+              style={{
+                objectFit: "contain",
+                filter: "url(#remove-white-bg) brightness(2.2) contrast(1.1)",
+                marginTop: "-20px",
+                marginBottom: "-20px",
+              }}
+              priority
+            />
+          </Link>
 
           <nav className="navbar-links" aria-label="Main navigation">
             {navLinks.map((link) => (
