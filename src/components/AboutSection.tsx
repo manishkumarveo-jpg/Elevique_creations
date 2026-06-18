@@ -75,18 +75,12 @@ export default function AboutSection() {
               className="svc-heading"
               style={{ textAlign: "left", marginBottom: "1.8rem" }}
             >
-              Built for the Era<br />of AI Visuals
+              Crafting Seamless User<br />Experiences With Intelligent.
             </h1>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "1.2rem", marginBottom: "2.4rem" }}>
               <p className="svc-subheading" style={{ maxWidth: "100%", textAlign: "left" }}>
-                {"We founded Elevique on a single belief: the visual language of premium brands deserves the full power of artificial intelligence — not as a gimmick, but as a genuine creative force that expands what's possible."}
-              </p>
-              <p className="svc-subheading" style={{ maxWidth: "100%", textAlign: "left" }}>
-                {"Every frame starts with a deep understanding of your brand's identity, audience, and ambition. Our directors, prompt engineers, and motion artists translate your vision into visuals that stop the scroll, hold attention, and convert."}
-              </p>
-              <p className="svc-subheading" style={{ maxWidth: "100%", textAlign: "left" }}>
-                {"The result is a studio that moves at the speed of a tech company while producing at the quality of a film house — a combination that simply didn't exist before now."}
+                At <strong>Elevique</strong>, we blend <strong>AI innovation and cinematic storytelling</strong> to create ads that are <strong>smarter, faster, and more impactful</strong>. Our mission is simple—deliver <strong>cost-efficient, creative, and ROI-driven campaigns</strong> that help brands stand out and grow.
               </p>
             </div>
 

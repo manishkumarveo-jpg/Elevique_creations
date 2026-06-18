@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function ContactPage() {
   return (
-    <main style={{ paddingTop: "calc(24px + 60px + 16px)" }}>
+    <main className="subpage-layout">
       <Navbar />
       <ContactSection />
       <Footer />

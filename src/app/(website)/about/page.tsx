@@ -1,5 +1,7 @@
 import Navbar from "@/components/Navbar";
 import AboutSection from "@/components/AboutSection";
+import { Demo as BrandsSection } from "@/components/ui/demo";
+import TestimonialsEditorial from "@/components/ui/editorial-testimonial";
 import ContactSection from "@/components/ContactSection";
 import { Footer } from "@/components/ui/footer-section";
 
@@ -10,9 +12,11 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <main style={{ paddingTop: "calc(24px + 60px + 16px)" }}>
+    <main className="subpage-layout">
       <Navbar />
       <AboutSection />
+      <BrandsSection />
+      <TestimonialsEditorial />
       <ContactSection />
       <Footer />
     </main>

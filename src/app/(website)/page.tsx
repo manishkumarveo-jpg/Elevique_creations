@@ -1,5 +1,7 @@
 import dynamic from "next/dynamic";
+import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
+import FeaturedShowcase from "@/components/FeaturedShowcase";
 import ServicesSection from "@/components/ServicesSection";
 
 // Below-fold sections loaded only when needed — keeps the initial JS bundle small
@@ -14,10 +16,9 @@ const Demo = dynamic(() => import("@/components/ui/demo").then(m => ({ default: 
 export default function Home() {
   return (
     <main>
+      <Navbar />
       <HeroSection />
-       <section id="demo" className="relative w-full">
-        <Demo />
-      </section>
+      <Demo />
       <ServicesSection />
       <ProcessSection />
       <section
@@ -30,8 +31,8 @@ export default function Home() {
       >
         <TestimonialsEditorial />
       </section>
-      
-     
+
+
 
       <ContactSection />
       <Footer />

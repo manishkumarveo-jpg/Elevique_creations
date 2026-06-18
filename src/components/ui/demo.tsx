@@ -1,10 +1,63 @@
 "use client"
 
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { InfiniteSlider } from '@/components/ui/infinite-slider'
 import { ProgressiveBlur } from '@/components/ui/progressive-blur'
 import { ELVIQUE_LOGOS } from '@/data/elviqueLogos'
+
+function LogoImage({ src, alt, fill, unoptimized, className, sizes }: any) {
+  const [hasWhiteBg, setHasWhiteBg] = useState(true);
+
+  useEffect(() => {
+    const img = new window.Image();
+    img.crossOrigin = "anonymous";
+    img.src = src;
+    img.onload = () => {
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = 10;
+        canvas.height = 10;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+        ctx.drawImage(img, 0, 0, 10, 10);
+        const pixel = ctx.getImageData(0, 0, 1, 1).data;
+        const alpha = pixel[3];
+        if (alpha < 50) {
+          setHasWhiteBg(false);
+        } else {
+          const r = pixel[0], g = pixel[1], b = pixel[2];
+          if (r > 240 && g > 240 && b > 240) {
+            setHasWhiteBg(true);
+          } else {
+            setHasWhiteBg(false);
+          }
+        }
+      } catch (e) {
+        setHasWhiteBg(true);
+      }
+    };
+  }, [src]);
+
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      fill={fill}
+      unoptimized={unoptimized}
+      draggable={false}
+      className={className}
+      sizes={sizes}
+      style={{
+        filter: hasWhiteBg 
+          ? 'url(#remove-white-bg) brightness(0) invert(1)' 
+          : 'brightness(0) invert(1)',
+        imageRendering: '-webkit-optimize-contrast',
+      }}
+    />
+  );
+}
 
 export function Demo() {
   return (
@@ -13,7 +66,7 @@ export function Demo() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-      className="relative w-full overflow-hidden py-20 md:py-28"
+      className="relative w-full overflow-hidden pt-28 pb-32 md:pt-36 md:pb-44"
       style={{ background: "#000000" }}
     >
       {/* SVG filter to key out white background while preserving original logo colors */}
@@ -26,7 +79,7 @@ export function Demo() {
                 1 0 0 0 0
                 0 1 0 0 0
                 0 0 1 0 0
-                -1.3 -1.3 -1.3 4 0
+                -1.5 -1.5 -1.5 4.5 0
               "
             />
           </filter>
@@ -34,52 +87,33 @@ export function Demo() {
       </svg>
 
       {/* Brands Heading */}
-      <div className="flex flex-col items-center justify-center text-center mt-12 mb-16 px-4">
-        {/* Glowing eyebrow */}
-        <span 
-          className="text-[9px] font-bold tracking-[0.42em] uppercase mb-2 text-[#14B8A6]"
-          style={{ textShadow: "0 0 12px rgba(20, 184, 166, 0.4)" }}
-        >
+      <div className="svc-header mb-16 md:mb-20">
+        <span className="svc-eyebrow">
+          <span className="svc-eyebrow-line" />
           Trusted Partnerships
         </span>
-        
-        {/* Main premium heading */}
-        <h2 
-          className="text-lg sm:text-xl md:text-2xl font-extrabold tracking-[0.25em] uppercase"
-          style={{
-            background: "linear-gradient(to bottom, #ffffff 30%, #a3a3a3 100%)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-          }}
-        >
+        <h2 className="svc-heading">
           Brands We Worked With
         </h2>
-        
-        {/* Accent indicator line */}
-        <div className="flex items-center gap-2 mt-4">
-          <span className="h-[1px] w-6 bg-gradient-to-r from-transparent to-[#14B8A6]/40" />
-          <span className="h-1.5 w-1.5 rounded-full bg-[#14B8A6] animate-pulse" />
-          <span className="h-[1px] w-6 bg-gradient-to-l from-transparent to-[#14B8A6]/40" />
-        </div>
       </div>
 
       {/* Ambient decorative glow behind the glass strip */}
       <div 
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[75%] h-[220px] pointer-events-none opacity-25 filter blur-[100px] rounded-full"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[300px] pointer-events-none opacity-20 filter blur-[120px] rounded-full"
         style={{
-          background: "radial-gradient(circle, rgba(20, 184, 166, 0.25) 0%, transparent 70%)"
+          background: "radial-gradient(circle, rgba(20, 184, 166, 0.2) 0%, transparent 75%)"
         }}
       />
 
-      {/* glass strip */}
+      {/* glass strip (now full-width edge-to-edge banner) */}
       <div
-        className="relative mx-6 md:mx-12 lg:mx-20 rounded-3xl overflow-hidden"
+        className="relative w-full border-t border-b overflow-hidden"
         style={{
-          background: "rgba(255, 255, 255, 0.015)",
-          border: "1px solid rgba(255, 255, 255, 0.05)",
-          boxShadow: "0 4px 30px rgba(0, 0, 0, 0.2)",
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
+          background: "rgba(255, 255, 255, 0.012)",
+          borderColor: "rgba(255, 255, 255, 0.05)",
+          boxShadow: "0 4px 30px rgba(0, 0, 0, 0.15)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
         }}
       >
         {/* SVG Grid Background */}
@@ -92,37 +126,34 @@ export function Demo() {
           <rect width="100%" height="100%" fill="url(#demo-grid)" />
         </svg>
 
-        <div className="relative py-12 md:py-16 px-0">
+        <div className="relative py-14 md:py-20 px-0">
           <InfiniteSlider
             duration={150}
-            gap={72}
+            gap={110}
             className="flex items-center"
           >
             {ELVIQUE_LOGOS.map((logoPath, idx) => {
               return (
                 <div
                   key={logoPath}
-                  className="h-18 w-44 md:h-22 md:w-56 shrink-0 transition-all duration-500 flex items-center justify-center select-none relative"
-                  style={{ opacity: 0.75 }}
+                  className="h-22 w-52 md:h-26 md:w-64 shrink-0 transition-all duration-500 flex items-center justify-center select-none relative"
+                  style={{ opacity: 0.85 }}
                   onMouseEnter={e => {
                     e.currentTarget.style.opacity = "1";
                     e.currentTarget.style.transform = "scale(1.05)";
                   }}
                   onMouseLeave={e => {
-                    e.currentTarget.style.opacity = "0.75";
+                    e.currentTarget.style.opacity = "0.85";
                     e.currentTarget.style.transform = "scale(1)";
                   }}
                 >
-                  <Image
+                  <LogoImage
                     src={logoPath}
                     alt={`Partner Logo ${idx + 1}`}
                     fill
-                    draggable={false}
+                    unoptimized
                     className="object-contain pointer-events-none transition-all duration-300"
-                    sizes="(max-width: 768px) 176px, 224px"
-                    style={{
-                      filter: 'url(#remove-white-bg)'
-                    }}
+                    sizes="(max-width: 768px) 208px, 256px"
                   />
                 </div>
               );

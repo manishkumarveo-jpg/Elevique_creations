@@ -105,22 +105,22 @@ export default function AboutScene3D() {
 
   return (
     <div ref={containerRef} style={{ width: "100%", height: "100%" }}>
-    <Canvas
-      camera={{ position: [0, 0, 5.2], fov: 44 }}
-      gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
-      style={{ background: "transparent" }}
-      dpr={[1, 1.5]}
-      frameloop={inView ? "always" : "demand"}
-      performance={{ min: 0.5 }}
-    >
-      <ambientLight intensity={0.25} />
-      <pointLight position={[4,  5,  4]} intensity={1.2} color="#14B8A6" />
-      <pointLight position={[-4, -3, -3]} intensity={0.6} color="#14B8A6" />
-      <pointLight position={[0,  0,  6]} intensity={0.3} color="#ffffff" />
-      <Suspense fallback={null}>
-        <Crystal />
-      </Suspense>
-    </Canvas>
+      <Canvas
+        camera={{ position: [0, 0, 5.2], fov: 44 }}
+        gl={{ alpha: true, antialias: true, powerPreference: "high-performance" }}
+        style={{ background: "transparent" }}
+        dpr={[1, 1.5]}
+        frameloop={inView ? "always" : "demand"}
+        performance={{ min: 0.5 }}
+      >
+        <ambientLight intensity={0.25} />
+        <pointLight position={[4, 5, 4]} intensity={1.2} color="#14B8A6" />
+        <pointLight position={[-4, -3, -3]} intensity={0.6} color="#14B8A6" />
+        <pointLight position={[0, 0, 6]} intensity={0.3} color="#ffffff" />
+        <Suspense fallback={null}>
+          <Crystal />
+        </Suspense>
+      </Canvas>
     </div>
   );
 }
