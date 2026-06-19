@@ -1,8 +1,7 @@
 import { ClientSidebar } from '@/components/portal/ClientSidebar'
 import { NavigationProgress } from '@/components/shared/NavigationProgress'
 import { MobileHeader } from '@/components/shared/MobileHeader'
-import { createServerClient } from '@/lib/supabase/server'
-import { requireClient } from '@/lib/auth/require-role'
+import { requireClient, getCurrentUserAndProfile } from '@/lib/auth/require-role'
 
 function getInitials(name: string) {
   return name
@@ -15,17 +14,11 @@ function getInitials(name: string) {
 
 export default async function PortalLayout({ children }: { children: React.ReactNode }) {
   await requireClient()
-  const supabase = await createServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const { user, profile } = await getCurrentUserAndProfile()
   let userName = 'Client'
   let userInitials = 'C'
   let companyName = 'Client Portal'
   if (user) {
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('full_name, company_name')
-      .eq('id', user.id)
-      .single()
     if (profile?.full_name) {
       userName = profile.full_name
       userInitials = getInitials(profile.full_name)

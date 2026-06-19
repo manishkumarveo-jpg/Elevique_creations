@@ -12,6 +12,7 @@ import {
   Check,
   X,
   LogOut,
+  Video,
 } from 'lucide-react'
 
 const NAV_GROUPS = [
@@ -21,6 +22,7 @@ const NAV_GROUPS = [
       { href: '/team/dashboard', label: 'My Work', icon: LayoutDashboard, matchPrefix: '/team/dashboard' },
       { href: '/team/projects', label: 'My Projects', icon: Folder, matchPrefix: '/team/projects' },
       { href: '/team/milestones', label: 'Milestones', icon: Milestone, matchPrefix: '/team/milestones' },
+      { href: '/team/video-tracker', label: 'Video Gen Tracker', icon: Video, matchPrefix: '/team/video-tracker' },
     ],
   },
 ]

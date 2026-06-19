@@ -36,6 +36,9 @@ export function TeamMilestoneControls({ milestones, projectId }: { milestones: M
   const [success, setSuccess] = useState(false)
 
   const currentMilestone = milestones.find(m => m.id === selected)
+  const priorPhasesIncomplete = currentMilestone
+    ? milestones.some(m => m.phase_number < currentMilestone.phase_number && m.status !== 'done')
+    : false
 
   function handleSave() {
     if (!selected || !status) return
@@ -71,9 +74,12 @@ export function TeamMilestoneControls({ milestones, projectId }: { milestones: M
           </label>
           <select style={{ ...selStyle, minWidth: 150 }} value={status} onChange={e => setStatus(e.target.value)}>
             <option value="">Select status…</option>
-            {statusOptions.filter(o => o.value !== currentMilestone?.status).map(o => (
-              <option key={o.value} value={o.value}>{o.label}</option>
-            ))}
+            {statusOptions
+              .filter(o => o.value !== currentMilestone?.status)
+              .filter(o => o.value !== 'done' || !priorPhasesIncomplete)
+              .map(o => (
+                <option key={o.value} value={o.value}>{o.label}</option>
+              ))}
           </select>
         </div>
 
@@ -99,6 +105,12 @@ export function TeamMilestoneControls({ milestones, projectId }: { milestones: M
           {isPending ? 'Saving…' : 'Save'}
         </button>
       </div>
+
+      {priorPhasesIncomplete && (
+        <p style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginTop: '0.625rem' }}>
+          Earlier phases must be marked Done before this one can be completed.
+        </p>
+      )}
 
       {success && (
         <p style={{ fontSize: '0.73rem', color: '#34d399', marginTop: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>

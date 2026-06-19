@@ -2,6 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
+import { StaggerContainer, StaggerItem } from "@/components/shared/StaggerGroup";
 import {
   Video,
   PenTool,
@@ -581,21 +582,24 @@ export default function ServicesSection() {
           </div>
 
           {/* Asymmetrical staggered grid — 3 top / 2 bottom */}
-          <div className="svc-diff-grid" role="list">
-            {DIFFERENTIATORS.map((d, i) => (
-              <div
-                key={d.id}
-                className={`svc-diff-card svc-diff-card--${i}`}
-                role="listitem"
-                aria-label={d.label}
-              >
-                <DotGrid />
-                <div className="svc-diff-icon">{d.icon}</div>
-                <div className="svc-diff-label">{d.label}</div>
-                <div className="svc-diff-desc">{d.desc}</div>
-              </div>
-            ))}
-          </div>
+          <StaggerContainer>
+            <div className="svc-diff-grid" role="list">
+              {DIFFERENTIATORS.map((d, i) => (
+                <StaggerItem
+                  key={d.id}
+                  direction={i < 3 ? "up" : "scale"}
+                  className={`svc-diff-card svc-diff-card--${i}`}
+                >
+                  <div role="listitem" aria-label={d.label}>
+                    <DotGrid />
+                    <div className="svc-diff-icon">{d.icon}</div>
+                    <div className="svc-diff-label">{d.label}</div>
+                    <div className="svc-diff-desc">{d.desc}</div>
+                  </div>
+                </StaggerItem>
+              ))}
+            </div>
+          </StaggerContainer>
         </div>
       </section>
 

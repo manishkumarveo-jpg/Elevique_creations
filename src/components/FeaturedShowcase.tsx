@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import gsap from "gsap";
+import { motion } from "framer-motion";
+import { ScrollReveal } from "@/components/shared/ScrollReveal";
 import {
   Play,
   X,
@@ -13,6 +15,12 @@ import {
 import PortfolioReels from "./PortfolioReels";
 import { GRID_PROJECTS, AI_VISUALS, EDITORIAL, PRODUCT_FILM, BRAND_FILM, TECH_UI, EXPERIMENTAL, type GridProject } from "@/data/gridVideos";
 import { PKG_AI_VISUALS, PKG_EDITORIAL, PKG_PRODUCT_FILM, PKG_BRAND_FILM, PKG_TECH_UI, PKG_EXPERIMENTAL } from "@/data/packagesVideo";
+
+const EASE_OUT = [0.16, 1, 0.3, 1] as const;
+const imageRevealVariants = {
+  hidden: { clipPath: "inset(8% 0 0 0)" },
+  visible: { clipPath: "inset(0% 0 0 0)" },
+};
 
 /* ─── Data ───────────────────────────────────────────────────── */
 interface Project {
@@ -40,7 +48,7 @@ const PROJECTS: Project[] = [
     techStack: ["AI Generation", "Motion Design", "Color Grading", "VFX"],
     colorFrom: "#ff6b35",
     colorTo: "#ff1a1a",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1780998674/Forbes_properties_-_Real_estate_odzs1p.mov",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Ladakh%20Bike%20tours%20-%20Avatar.mp4",
   },
   {
     id: 2,
@@ -52,7 +60,7 @@ const PROJECTS: Project[] = [
     techStack: ["AI Cinematics", "Editorial", "Sound Design", "Compositing"],
     colorFrom: "#e879f9",
     colorTo: "#7c3aed",
-    videoSrc: "https://res.cloudinary.com/dpaoerbde/video/upload/v1780379272/hero-video_pxivlu.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Cosmetics%20-%20Premium%20(5).mp4",
   },
   {
     id: 3,
@@ -64,7 +72,7 @@ const PROJECTS: Project[] = [
     techStack: ["3D Render", "AI Upscale", "Particle FX", "WebGL"],
     colorFrom: "#3b82f6",
     colorTo: "#06b6d4",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781089842/Animated_movie_-_Malibhai_compressed_avswba.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Fashion%20&%20Lifestyle%20-%20Escale%20Dubai.mp4",
   },
   {
     id: 4,
@@ -76,7 +84,7 @@ const PROJECTS: Project[] = [
     techStack: ["Product Viz", "AI Styling", "Motion Graphics", "Grade"],
     colorFrom: "#f59e0b",
     colorTo: "#ec4899",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781090224/Its_me_music_video_compressed_ug7wwp.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/KM%20Hospital%20-%20Scenario%20stories%20(2).mp4",
   },
 
 ];
@@ -665,37 +673,52 @@ function FeaturedCard({ project, isActive, onClick }: { project: Project; isActi
     videoRef.current?.pause();
   };
   return (
-    <button
-      ref={cardRef}
-      type="button"
-      className={`portfolio-feat-card${isActive ? " portfolio-feat-card--active" : ""}`}
-      style={{
-        background: "transparent",
-        padding: 0,
-        cursor: "pointer",
-        ...(isActive ? { boxShadow: `0 0 18px 2px ${project.colorFrom}8C`, borderColor: project.colorFrom } : {})
-      }}
-      onClick={onClick}
-      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { if (e.key === " ") e.preventDefault(); onClick(); } }}
-      onMouseEnter={onEnter}
-      onMouseLeave={onLeave}
-      aria-label={`Switch to ${project.title}`}
-    >
-      {project.videoSrc ? (
-        <video ref={videoRef} src={project.videoSrc} loop muted playsInline className="portfolio-feat-video" aria-hidden="true" tabIndex={-1} />
-      ) : (
-        <div
-          className="portfolio-feat-video"
-          style={{ background: `linear-gradient(135deg, ${project.colorFrom}33 0%, ${project.colorTo}22 100%)` }}
-          aria-hidden="true"
-        />
-      )}
-      <div className="portfolio-feat-overlay" />
-      <div className="portfolio-feat-info">
-        <span className="portfolio-feat-title">{project.title}</span>
-        <span className="portfolio-feat-category">{project.category.toUpperCase()}</span>
-      </div>
-    </button>
+    <ScrollReveal direction="scale" scaleFrom={0.95} amount={0.2} margin="0px -5%" className="shrink-0">
+      <button
+        ref={cardRef}
+        type="button"
+        className={`portfolio-feat-card${isActive ? " portfolio-feat-card--active" : ""}`}
+        style={{
+          background: "transparent",
+          padding: 0,
+          cursor: "pointer",
+          ...(isActive ? { boxShadow: `0 0 18px 2px ${project.colorFrom}8C`, borderColor: project.colorFrom } : {})
+        }}
+        onClick={onClick}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { if (e.key === " ") e.preventDefault(); onClick(); } }}
+        onMouseEnter={onEnter}
+        onMouseLeave={onLeave}
+        aria-label={`Switch to ${project.title}`}
+      >
+        {project.videoSrc ? (
+          <motion.video
+            ref={videoRef}
+            src={project.videoSrc}
+            loop
+            muted
+            playsInline
+            className="portfolio-feat-video"
+            aria-hidden="true"
+            tabIndex={-1}
+            variants={imageRevealVariants}
+            transition={{ duration: 0.6, delay: 0.1, ease: EASE_OUT }}
+          />
+        ) : (
+          <motion.div
+            className="portfolio-feat-video"
+            style={{ background: `linear-gradient(135deg, ${project.colorFrom}33 0%, ${project.colorTo}22 100%)` }}
+            aria-hidden="true"
+            variants={imageRevealVariants}
+            transition={{ duration: 0.6, delay: 0.1, ease: EASE_OUT }}
+          />
+        )}
+        <div className="portfolio-feat-overlay" />
+        <div className="portfolio-feat-info">
+          <span className="portfolio-feat-title">{project.title}</span>
+          <span className="portfolio-feat-category">{project.category.toUpperCase()}</span>
+        </div>
+      </button>
+    </ScrollReveal>
   );
 }
 
@@ -751,37 +774,52 @@ function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject
     onLeave();
   };
   return (
-    <button
-      type="button"
-      className="portfolio-grid-card"
-      style={{ border: "none", background: "transparent", padding: 0, cursor: "pointer" }}
-      onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
-      onClick={onClick}
-      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { if (e.key === " ") e.preventDefault(); onClick(); } }}
-      aria-label={`Play ${project.title}`}
-    >
-      <div className="portfolio-grid-card-inner">
-        {project.videoSrc ? (
-          <video ref={videoRef} src={project.videoSrc} loop muted playsInline className="portfolio-grid-video" aria-hidden="true" tabIndex={-1} />
-        ) : (
-          <div
-            className="portfolio-grid-video"
-            style={{
-              background: `linear-gradient(135deg, ${project.colorFrom}44 0%, ${project.colorTo}33 100%)`,
-              opacity: 0.7,
-            }}
-            aria-hidden="true"
-          />
-        )}
-        <div className="portfolio-grid-overlay" />
-      </div>
-      <span className="portfolio-grid-year">{project.year}</span>
-      <div className="portfolio-grid-info">
-        <span className="portfolio-grid-title">{project.title}</span>
-        <span className="portfolio-grid-category">{project.category.toUpperCase()}</span>
-      </div>
-    </button>
+    <ScrollReveal direction="scale" scaleFrom={0.95} amount={0.2} margin="0px -5%" className="shrink-0">
+      <button
+        type="button"
+        className="portfolio-grid-card"
+        style={{ border: "none", background: "transparent", padding: 0, cursor: "pointer" }}
+        onMouseEnter={handleEnter}
+        onMouseLeave={handleLeave}
+        onClick={onClick}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { if (e.key === " ") e.preventDefault(); onClick(); } }}
+        aria-label={`Play ${project.title}`}
+      >
+        <div className="portfolio-grid-card-inner">
+          {project.videoSrc ? (
+            <motion.video
+              ref={videoRef}
+              src={project.videoSrc}
+              loop
+              muted
+              playsInline
+              className="portfolio-grid-video"
+              aria-hidden="true"
+              tabIndex={-1}
+              variants={imageRevealVariants}
+              transition={{ duration: 0.6, delay: 0.1, ease: EASE_OUT }}
+            />
+          ) : (
+            <motion.div
+              className="portfolio-grid-video"
+              style={{
+                background: `linear-gradient(135deg, ${project.colorFrom}44 0%, ${project.colorTo}33 100%)`,
+                opacity: 0.7,
+              }}
+              aria-hidden="true"
+              variants={imageRevealVariants}
+              transition={{ duration: 0.6, delay: 0.1, ease: EASE_OUT }}
+            />
+          )}
+          <div className="portfolio-grid-overlay" />
+        </div>
+        <span className="portfolio-grid-year">{project.year}</span>
+        <div className="portfolio-grid-info">
+          <span className="portfolio-grid-title">{project.title}</span>
+          <span className="portfolio-grid-category">{project.category.toUpperCase()}</span>
+        </div>
+      </button>
+    </ScrollReveal>
   );
 }
 

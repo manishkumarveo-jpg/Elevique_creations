@@ -621,6 +621,102 @@ export type Database = {
         }
         Relationships: []
       }
+      production_deliverables: {
+        Row: {
+          id: string
+          project_id: string
+          brand_name: string
+          deliverable_type: string
+          details: string | null
+          assets_location: string | null
+          status: 'pending' | 'in_progress' | 'revision_pending' | 'completed' | 'paused'
+          comments: string | null
+          pending_with_id: string | null
+          delivery_date: string | null
+          priority: 'P1' | 'P2' | 'P3'
+          completed_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          project_id: string
+          brand_name: string
+          deliverable_type: string
+          details?: string | null
+          assets_location?: string | null
+          status?: 'pending' | 'in_progress' | 'revision_pending' | 'completed' | 'paused'
+          comments?: string | null
+          pending_with_id?: string | null
+          delivery_date?: string | null
+          priority?: 'P1' | 'P2' | 'P3'
+          completed_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          project_id?: string
+          brand_name?: string
+          deliverable_type?: string
+          details?: string | null
+          assets_location?: string | null
+          status?: 'pending' | 'in_progress' | 'revision_pending' | 'completed' | 'paused'
+          comments?: string | null
+          pending_with_id?: string | null
+          delivery_date?: string | null
+          priority?: 'P1' | 'P2' | 'P3'
+          completed_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      video_generation_tasks: {
+        Row: {
+          id: string
+          project_id: string
+          brand_name: string
+          content_type: string
+          script_number: number
+          assigned_to_id: string | null
+          assigned_at: string
+          completed_at: string | null
+          status: 'pending' | 'in_progress' | 'revision_pending' | 'completed' | 'paused'
+          checks_performed: string[]
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          project_id: string
+          brand_name: string
+          content_type: string
+          script_number?: number
+          assigned_to_id?: string | null
+          assigned_at?: string
+          completed_at?: string | null
+          status?: 'pending' | 'in_progress' | 'revision_pending' | 'completed' | 'paused'
+          checks_performed?: string[]
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          project_id?: string
+          brand_name?: string
+          content_type?: string
+          script_number?: number
+          assigned_to_id?: string | null
+          assigned_at?: string
+          completed_at?: string | null
+          status?: 'pending' | 'in_progress' | 'revision_pending' | 'completed' | 'paused'
+          checks_performed?: string[]
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       projects_team: {
@@ -681,6 +777,8 @@ export type Database = {
       milestone_status: 'pending' | 'in_progress' | 'done'
       deliverable_type: 'video' | 'image'
       deliverable_status: 'pending' | 'shared' | 'delivered' | 'approved'
+      tracker_status: 'pending' | 'in_progress' | 'revision_pending' | 'completed' | 'paused'
+      tracker_priority: 'P1' | 'P2' | 'P3'
     }
     CompositeTypes: {
       [_ in never]: never

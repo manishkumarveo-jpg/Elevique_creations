@@ -46,9 +46,9 @@ function Typewriter({ phrases, speed = 80, delay = 1800, deleteSpeed = 40 }: { p
 }
 
 const VIDEO_SRC =
-  "https://res.cloudinary.com/dpaoerbde/video/upload/v1780379272/hero-video_pxivlu.mp4";
+  "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Music%20video%20-%20Gauddly.mp4";
 const POSTER_SRC =
-  "https://res.cloudinary.com/dpaoerbde/video/upload/v1780379272/hero-video_pxivlu.jpg";
+  "";
 
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 
@@ -56,7 +56,11 @@ export default function HeroSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   /* Autoplay, but skip it when the user has asked for reduced motion —
-     the poster frame still renders so the section isn't empty. */
+     the poster frame still renders so the section isn't empty.
+     Mobile browsers (notably Chrome/Android with Data Saver, and some
+     in-app webviews) can silently block the initial autoplay() call even
+     when muted+playsInline are set, so we retry on the events that fire
+     once the video is actually ready, plus on the user's first touch. */
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
@@ -66,10 +70,28 @@ export default function HeroSection() {
     if (prefersReducedMotion) return;
 
     v.muted = true;
-    v.play().catch(() => {});
-    const onPause = () => v.play().catch(() => {});
-    v.addEventListener("pause", onPause);
-    return () => v.removeEventListener("pause", onPause);
+    const tryPlay = () => v.play().catch(() => { });
+
+    tryPlay();
+    v.addEventListener("pause", tryPlay);
+    v.addEventListener("loadeddata", tryPlay);
+    v.addEventListener("canplay", tryPlay);
+
+    const onFirstInteraction = () => {
+      tryPlay();
+      window.removeEventListener("touchstart", onFirstInteraction);
+      window.removeEventListener("click", onFirstInteraction);
+    };
+    window.addEventListener("touchstart", onFirstInteraction, { once: true, passive: true });
+    window.addEventListener("click", onFirstInteraction, { once: true });
+
+    return () => {
+      v.removeEventListener("pause", tryPlay);
+      v.removeEventListener("loadeddata", tryPlay);
+      v.removeEventListener("canplay", tryPlay);
+      window.removeEventListener("touchstart", onFirstInteraction);
+      window.removeEventListener("click", onFirstInteraction);
+    };
   }, []);
 
   return (

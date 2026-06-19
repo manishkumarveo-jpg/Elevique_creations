@@ -22,7 +22,7 @@ export const REEL_VIDEOS: ReelVideo[] = [
     techStack: ["AI Generation", "Motion Design", "Color Grading"],
     colorFrom: "#ff6b35",
     colorTo: "#ff1a1a",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001396/Health_-_Multivitamin_caps_tvauww.mov",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Animated%20movie%20-%20Malibhai.mp4",
   },
   {
     id: 2,
@@ -34,7 +34,7 @@ export const REEL_VIDEOS: ReelVideo[] = [
     techStack: ["AI Cinematics", "Editorial", "Sound Design"],
     colorFrom: "#e879f9",
     colorTo: "#7c3aed",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781093631/Shringar_Jewellery_h4ygie.mov",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Fashion%20&%20Lifestyle%20-%20Escale%20Dubai.mp4",
   },
   {
     id: 3,
@@ -46,7 +46,7 @@ export const REEL_VIDEOS: ReelVideo[] = [
     techStack: ["3D Render", "AI Upscale", "Particle FX"],
     colorFrom: "#3b82f6",
     colorTo: "#06b6d4",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781002091/Forbes_properties_-_Real_estate_qd8fpx.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Car%20mantra%20-%20mechanical.mov",
   },
   {
     id: 4,
@@ -58,7 +58,7 @@ export const REEL_VIDEOS: ReelVideo[] = [
     techStack: ["Product Viz", "AI Styling", "Motion Graphics"],
     colorFrom: "#f59e0b",
     colorTo: "#ec4899",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001716/Aar_Kay_Vox_UK_-_Legacy_story_lvcljy.mov",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Bulgari%20premium%20concept.mov",
   },
   {
     id: 5,
@@ -70,7 +70,7 @@ export const REEL_VIDEOS: ReelVideo[] = [
     techStack: ["Product Viz", "AI Styling", "Motion Graphics"],
     colorFrom: "#f59e0b",
     colorTo: "#ec4899",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781002041/Forbes_properties_-_Real_estate_2_syk2io.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Cosmetics%20-%20Aura%20concept.mp4",
   },
   {
     id: 6,
@@ -82,7 +82,7 @@ export const REEL_VIDEOS: ReelVideo[] = [
     techStack: ["Product Viz", "AI Styling", "Motion Graphics"],
     colorFrom: "#f59e0b",
     colorTo: "#ec4899",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781093726/Purelab_Shampoo_o8vhpz.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Cosmetics%20-%20Lipstick%20showreel.mp4",
   },
   {
     id: 7,
@@ -94,7 +94,7 @@ export const REEL_VIDEOS: ReelVideo[] = [
     techStack: ["Product Viz", "AI Styling", "Motion Graphics"],
     colorFrom: "#f59e0b",
     colorTo: "#ec4899",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001794/Aar_Kay_Vox_UK_-_Luxury_joqd3i.mov",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Premium%20bag%20showreel.mp4",
   },
   {
     id: 9,
@@ -106,7 +106,7 @@ export const REEL_VIDEOS: ReelVideo[] = [
     techStack: ["Product Viz", "AI Styling", "Motion Graphics"],
     colorFrom: "#f59e0b",
     colorTo: "#ec4899",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001994/Forbes_properties_-_Real_estate_1_yliuyb.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Modern%20Jewellery.mp4",
   },
   {
     id: 10,
@@ -118,7 +118,7 @@ export const REEL_VIDEOS: ReelVideo[] = [
     techStack: ["Product Viz", "AI Styling", "Motion Graphics"],
     colorFrom: "#f59e0b",
     colorTo: "#ec4899",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001911/Electronics_-_Cooler_Ad_kf7caf.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Shringar%20Jewellery.mov",
   },
   {
     id: 11,
@@ -130,7 +130,7 @@ export const REEL_VIDEOS: ReelVideo[] = [
     techStack: ["Product Viz", "AI Styling", "Motion Graphics"],
     colorFrom: "#f59e0b",
     colorTo: "#ec4899",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781093823/Purelab_Serum_mbtous.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Mezvo%20Tote%20bags.mp4",
   },
   {
     id: 12,
@@ -142,7 +142,7 @@ export const REEL_VIDEOS: ReelVideo[] = [
     techStack: ["Product Viz", "AI Styling", "Motion Graphics"],
     colorFrom: "#f59e0b",
     colorTo: "#ec4899",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001863/Bulgari_premium_concept_azbzdo.mov",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Lifestyle%20-%20Eyewear%20premium.mp4",
   },
   {
     id: 13,
@@ -154,7 +154,7 @@ export const REEL_VIDEOS: ReelVideo[] = [
     techStack: ["Product Viz", "AI Styling", "Motion Graphics"],
     colorFrom: "#f59e0b",
     colorTo: "#ec4899",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781093935/Purelab_Facewash_bfffuf.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Luxury%20reel%20version.mp4",
   },
   {
     id: 14,
@@ -166,7 +166,7 @@ export const REEL_VIDEOS: ReelVideo[] = [
     techStack: ["Product Viz", "AI Styling", "Motion Graphics"],
     colorFrom: "#f59e0b",
     colorTo: "#ec4899",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001957/Electronics_-_Fan_Ad_cto8wj.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Shobha%20Sarees.mp4",
   },
   {
     id: 15,
@@ -178,7 +178,7 @@ export const REEL_VIDEOS: ReelVideo[] = [
     techStack: ["Product Viz", "AI Styling", "Motion Graphics"],
     colorFrom: "#f59e0b",
     colorTo: "#ec4899",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781250745/KM_Hospital_-_scenario_stories_5_odnsrj.mov",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Sleepera%202(1).mp4",
   },
   {
     id: 16,
@@ -190,7 +190,7 @@ export const REEL_VIDEOS: ReelVideo[] = [
     techStack: ["Product Viz", "AI Styling", "Motion Graphics"],
     colorFrom: "#f59e0b",
     colorTo: "#ec4899",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781093426/Cosmetics_-_Premium_1_jzchj9.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Lifestyle%20-%20Retro%20concept%20Blush.mp4",
   },
   {
     id: 17,
@@ -202,6 +202,6 @@ export const REEL_VIDEOS: ReelVideo[] = [
     techStack: ["Product Viz", "AI Styling", "Motion Graphics"],
     colorFrom: "#f59e0b",
     colorTo: "#ec4899",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781250872/Forbes_properties_-_Real_estate_latcub.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Hyginest%20-%20Brand%20video.mp4",
   },
 ];

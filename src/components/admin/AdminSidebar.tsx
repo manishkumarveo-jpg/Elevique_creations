@@ -16,6 +16,9 @@ import {
   Check,
   X,
   LogOut,
+  CalendarCheck,
+  Video,
+  Table2,
 } from 'lucide-react'
 
 const NAV_GROUPS = [
@@ -32,6 +35,14 @@ const NAV_GROUPS = [
       { href: '/admin/projects', label: 'Projects', icon: Folder },
       { href: '/admin/clients', label: 'Clients', icon: Users },
       { href: '/admin/documents', label: 'Documents', icon: FileText },
+    ],
+  },
+  {
+    label: 'Team Tracker',
+    items: [
+      { href: '/admin/team-tracker', label: 'All Records', icon: Table2 },
+      { href: '/admin/production-tracker', label: 'Production Tracker', icon: CalendarCheck },
+      { href: '/admin/video-tracker', label: 'Video Gen Tracker', icon: Video },
     ],
   },
   {

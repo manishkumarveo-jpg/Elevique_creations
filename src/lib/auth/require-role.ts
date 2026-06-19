@@ -1,8 +1,11 @@
+import { cache } from 'react'
 import { createServerClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import type { User } from '@supabase/supabase-js'
 
-async function getUserAndProfile() {
+// cache() dedupes this across every call within the same request (requireX()
+// plus each layout's own lookup), so we only hit Supabase Auth + profiles once.
+const getUserAndProfile = cache(async () => {
   const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
 
@@ -10,12 +13,14 @@ async function getUserAndProfile() {
 
   const { data: profile } = await supabase
     .from('profiles')
-    .select('role, is_active, full_name, email')
+    .select('role, is_active, full_name, email, company_name')
     .eq('id', user.id)
     .single()
 
   return { user, profile }
-}
+})
+
+export const getCurrentUserAndProfile = getUserAndProfile
 
 export async function requireAdmin(): Promise<User> {
   const { user, profile } = await getUserAndProfile()

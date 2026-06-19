@@ -4,6 +4,8 @@ import { useState } from "react";
 import { MessageSquareMore, Phone, Mail, CheckCircle } from "lucide-react";
 import { LocationMap } from "@/components/ui/LocationMap";
 import { BorderBeam } from "@/components/ui/border-beam";
+import { ScrollReveal } from "@/components/shared/ScrollReveal";
+import { StaggerContainer, StaggerItem } from "@/components/shared/StaggerGroup";
 
 export default function ContactSection() {
   const [formState, setFormState] = useState({
@@ -46,59 +48,66 @@ export default function ContactSection() {
       <div className="ct-container">
         <div className="ct-grid">
           {/* Left Column: Content Details */}
-          <div className="ct-left">
+          <ScrollReveal direction="left" className="ct-left">
             <span className="ct-eyebrow">Get in touch with us</span>
             <h2 className="ct-heading" id="contact-heading">
               Let’s create your ideas into reality
             </h2>
 
-            <ul className="ct-details" role="list">
-              {/* Ready for coffee */}
-              <li className="ct-detail" role="listitem">
-                <div className="ct-detail-icon">
-                  <MessageSquareMore size={20} strokeWidth={1.5} />
-                </div>
-                <div className="ct-detail-content">
-                  <h3 className="ct-detail-title">Ready for some coffee?</h3>
-                  <span className="ct-detail-text">Elevique Creation</span>
-                  <span className="ct-detail-text">Vishwakarma colony, Pul Pehladpur ,New delhi 110044</span>
-                </div>
-              </li>
+            <StaggerContainer margin="-5% 0px">
+              <ul className="ct-details" role="list">
+                {/* Ready for coffee */}
+                <StaggerItem direction="up">
+                  <li className="ct-detail" role="listitem">
+                    <div className="ct-detail-icon">
+                      <MessageSquareMore size={20} strokeWidth={1.5} />
+                    </div>
+                    <div className="ct-detail-content">
+                      <h3 className="ct-detail-title">Ready for some coffee?</h3>
+                      <span className="ct-detail-text">Elevique Creation</span>
+                      <span className="ct-detail-text">Vishwakarma colony, Pul Pehladpur ,New delhi 110044</span>
+                    </div>
+                  </li>
+                </StaggerItem>
 
-              {/* Don't hesitate to reach out */}
-              <li className="ct-detail" role="listitem">
-                <div className="ct-detail-icon">
-                  <Phone size={20} strokeWidth={1.5} />
-                </div>
-                <div className="ct-detail-content">
-                  <h3 className="ct-detail-title">Don&apos;t hesitate to reach out!</h3>
-                  <span className="ct-detail-text">Phone : +91 7217832613</span>
-                  <span className="ct-detail-text">
-                    WhatsApp:{" "}
-                    <a
-                      href="https://wa.me/917217832613"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="ct-inline-link"
-                    >
-                      +91 7217832613
-                    </a>
-                  </span>
-                </div>
-              </li>
+                {/* Don't hesitate to reach out */}
+                <StaggerItem direction="up">
+                  <li className="ct-detail" role="listitem">
+                    <div className="ct-detail-icon">
+                      <Phone size={20} strokeWidth={1.5} />
+                    </div>
+                    <div className="ct-detail-content">
+                      <h3 className="ct-detail-title">Don&apos;t hesitate to reach out!</h3>
+                      <span className="ct-detail-text">Phone : +91 7217832613</span>
+                      <span className="ct-detail-text">
+                        WhatsApp:{" "}
+                        <a
+                          href="https://wa.me/917217832613"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="ct-inline-link"
+                        >
+                          +91 7217832613
+                        </a>
+                      </span>
+                    </div>
+                  </li>
+                </StaggerItem>
 
-              {/* How can we assist */}
-              <li className="ct-detail" role="listitem">
-                <div className="ct-detail-icon">
-                  <Mail size={20} strokeWidth={1.5} />
-                </div>
-                <div className="ct-detail-content">
-                  <h3 className="ct-detail-title">How can we assist you?</h3>
-                  <span className="ct-detail-text">eleviquecreations.ai@gmail.com</span>
-                 
-                </div>
-              </li>
-            </ul>
+                {/* How can we assist */}
+                <StaggerItem direction="up">
+                  <li className="ct-detail" role="listitem">
+                    <div className="ct-detail-icon">
+                      <Mail size={20} strokeWidth={1.5} />
+                    </div>
+                    <div className="ct-detail-content">
+                      <h3 className="ct-detail-title">How can we assist you?</h3>
+                      <span className="ct-detail-text">eleviquecreations.ai@gmail.com</span>
+                    </div>
+                  </li>
+                </StaggerItem>
+              </ul>
+            </StaggerContainer>
 
             <div className="ct-map-wrapper">
               <LocationMap
@@ -107,10 +116,10 @@ export default function ContactSection() {
                 mapUrl="https://www.google.com/maps/search/?api=1&query=Vishwakarma+Colony+Pul+Pehladpur+New+Delhi+110044"
               />
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Right Column: Contact Form */}
-          <div className="ct-form-wrap">
+          <ScrollReveal direction="right" delay={0.15} className="ct-form-wrap">
             <BorderBeam
               size={120}
               duration={20}
@@ -137,69 +146,85 @@ export default function ContactSection() {
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="ct-form">
-                <h3 className="ct-success-title" style={{ textAlign: "left", marginBottom: "0.5rem" }}>
-                  Say hello!
-                </h3>
+              <StaggerContainer>
+                <form onSubmit={handleSubmit} className="ct-form">
+                  <StaggerItem direction="up">
+                    <h3 className="ct-success-title" style={{ textAlign: "left", marginBottom: "0.5rem" }}>
+                      Say hello!
+                    </h3>
+                  </StaggerItem>
 
-                <div className="ct-field">
-                  <label htmlFor="fullName">Full Name</label>
-                  <input
-                    id="fullName"
-                    type="text"
-                    required
-                    placeholder="Enter your name here.."
-                    value={formState.name}
-                    onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-                  />
-                </div>
+                  <StaggerItem direction="up">
+                    <div className="ct-field">
+                      <label htmlFor="fullName">Full Name</label>
+                      <input
+                        id="fullName"
+                        type="text"
+                        required
+                        placeholder="Enter your name here.."
+                        value={formState.name}
+                        onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                      />
+                    </div>
+                  </StaggerItem>
 
-                <div className="ct-field">
-                  <label htmlFor="emailAddress">Your Email</label>
-                  <input
-                    id="emailAddress"
-                    type="email"
-                    required
-                    placeholder="Enter your email here..."
-                    value={formState.email}
-                    onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-                  />
-                </div>
+                  <StaggerItem direction="up">
+                    <div className="ct-field">
+                      <label htmlFor="emailAddress">Your Email</label>
+                      <input
+                        id="emailAddress"
+                        type="email"
+                        required
+                        placeholder="Enter your email here..."
+                        value={formState.email}
+                        onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                      />
+                    </div>
+                  </StaggerItem>
 
-                <div className="ct-field">
-                  <label htmlFor="phoneNumber">Phone Number</label>
-                  <input
-                    id="phoneNumber"
-                    type="tel"
-                    placeholder="Enter your phone number here..."
-                    value={formState.phone}
-                    onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
-                  />
-                </div>
+                  <StaggerItem direction="up">
+                    <div className="ct-field">
+                      <label htmlFor="phoneNumber">Phone Number</label>
+                      <input
+                        id="phoneNumber"
+                        type="tel"
+                        placeholder="Enter your phone number here..."
+                        value={formState.phone}
+                        onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
+                      />
+                    </div>
+                  </StaggerItem>
 
-                <div className="ct-field">
-                  <label htmlFor="message">Message</label>
-                  <textarea
-                    id="message"
-                    required
-                    rows={4}
-                    placeholder="Enter your message"
-                    value={formState.message}
-                    onChange={(e) => setFormState({ ...formState, message: e.target.value })}
-                  />
-                </div>
+                  <StaggerItem direction="up">
+                    <div className="ct-field">
+                      <label htmlFor="message">Message</label>
+                      <textarea
+                        id="message"
+                        required
+                        rows={4}
+                        placeholder="Enter your message"
+                        value={formState.message}
+                        onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                      />
+                    </div>
+                  </StaggerItem>
 
-                <button type="submit" disabled={isSubmitting} className="ct-submit">
-                  {isSubmitting ? "Sending..." : "Send Inquiry"}
-                </button>
+                  <StaggerItem direction="up">
+                    <button type="submit" disabled={isSubmitting} className="ct-submit">
+                      {isSubmitting ? "Sending..." : "Send Inquiry"}
+                    </button>
+                  </StaggerItem>
 
-                <p className="ct-disclaimer">
-                  I understand that my data will be hold securely in accordance with the{" "}
-                  <a href="#privacy">privacy policy</a>
-                </p>
-              </form>
+                  <StaggerItem direction="up">
+                    <p className="ct-disclaimer">
+                      I understand that my data will be hold securely in accordance with the{" "}
+                      <a href="#privacy">privacy policy</a>
+                    </p>
+                  </StaggerItem>
+                </form>
+              </StaggerContainer>
             )}
-          </div>
+          </ScrollReveal>
         </div>
 
         <div className="ct-socials">

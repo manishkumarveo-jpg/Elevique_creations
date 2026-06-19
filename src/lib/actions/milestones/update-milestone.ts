@@ -19,6 +19,26 @@ async function applyMilestoneUpdate(milestoneId: string, projectId: string, inpu
   const parsed = UpdateMilestoneSchema.parse(input)
   const supabase = await createServerClient()
 
+  if (parsed.status === 'done') {
+    const { data: current, error: currentError } = await supabase
+      .from('milestones')
+      .select('phase_number')
+      .eq('id', milestoneId)
+      .single()
+    if (currentError) throw new Error(currentError.message)
+
+    const { data: priorPhases, error: priorError } = await supabase
+      .from('milestones')
+      .select('status')
+      .eq('project_id', projectId)
+      .lt('phase_number', current.phase_number)
+    if (priorError) throw new Error(priorError.message)
+
+    if ((priorPhases ?? []).some(m => m.status !== 'done')) {
+      throw new Error('Complete earlier phases before marking this one as done.')
+    }
+  }
+
   const update: MilestoneUpdate = {
     ...parsed,
     updated_by: actorId,

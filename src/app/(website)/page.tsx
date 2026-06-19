@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import FeaturedShowcase from "@/components/FeaturedShowcase";
 import ServicesSection from "@/components/ServicesSection";
+import { ScrollReveal } from "@/components/shared/ScrollReveal";
 
 // Below-fold sections loaded only when needed — keeps the initial JS bundle small
 const ProcessSection = dynamic(() => import("@/components/ProcessSection"));
@@ -29,7 +30,9 @@ export default function Home() {
           borderColor: "var(--glass-border)",
         }}
       >
-        <TestimonialsEditorial />
+        <ScrollReveal direction="up" amount={0.15}>
+          <TestimonialsEditorial />
+        </ScrollReveal>
       </section>
 
 

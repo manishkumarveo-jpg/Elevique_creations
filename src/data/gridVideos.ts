@@ -23,7 +23,7 @@ export const AI_VISUALS: GridProject[] = [
     techStack: ["AI Generation", "Motion Design", "Color Grading", "VFX"],
     colorFrom: "#ff6b35",
     colorTo: "#ff1a1a",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001396/Health_-_Multivitamin_caps_tvauww.mov",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Malibhai%20concept.mp4",
   },
   {
     id: 2,
@@ -35,7 +35,7 @@ export const AI_VISUALS: GridProject[] = [
     techStack: ["AI Generation", "Motion Design", "Color Grading", "VFX"],
     colorFrom: "#ff6b35",
     colorTo: "#ff1a1a",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781093631/Shringar_Jewellery_h4ygie.mov",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/AI%20avatar%20-%20UGC%20testimonial.mp4",
   },
   {
     id: 3,
@@ -47,7 +47,7 @@ export const AI_VISUALS: GridProject[] = [
     techStack: ["AI Fashion", "Virtual Runway", "Motion Capture", "VFX"],
     colorFrom: "#ec4899",
     colorTo: "#f59e0b",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781002091/Forbes_properties_-_Real_estate_qd8fpx.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Influencer%20avatar.mp4",
   },
 ];
 
@@ -63,7 +63,7 @@ export const EDITORIAL: GridProject[] = [
     techStack: ["AI Cinematics", "Editorial", "Sound Design", "Compositing"],
     colorFrom: "#e879f9",
     colorTo: "#7c3aed",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001716/Aar_Kay_Vox_UK_-_Legacy_story_lvcljy.mov",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Fashion%20&%20Lifestyle%20-%20Dual%20models.mp4",
   },
   {
     id: 2,
@@ -75,7 +75,7 @@ export const EDITORIAL: GridProject[] = [
     techStack: ["Drone AI", "Photogrammetry", "WebGL", "GLSL"],
     colorFrom: "#06b6d4",
     colorTo: "#10b981",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781002041/Forbes_properties_-_Real_estate_2_syk2io.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Travel%20&%20Holidays%20Co.mov",
   },
   {
     id: 3,
@@ -87,7 +87,7 @@ export const EDITORIAL: GridProject[] = [
     techStack: ["AI Cinematics", "Editorial", "Colour Science", "Compositing"],
     colorFrom: "#e879f9",
     colorTo: "#7c3aed",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781093726/Purelab_Shampoo_o8vhpz.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Aar%20Kay%20Vox%20UK%20-%20Legacy%20story.mov",
   },
 ];
 
@@ -103,7 +103,7 @@ export const PRODUCT_FILM: GridProject[] = [
     techStack: ["3D Render", "AI Upscale", "Particle FX", "WebGL"],
     colorFrom: "#3b82f6",
     colorTo: "#06b6d4",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001794/Aar_Kay_Vox_UK_-_Luxury_joqd3i.mov",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Car%20mantra%20-%20mechanical.mov",
   },
   {
     id: 2,
@@ -115,7 +115,7 @@ export const PRODUCT_FILM: GridProject[] = [
     techStack: ["Blender", "AI Texture", "Redshift", "Nuke"],
     colorFrom: "#f97316",
     colorTo: "#eab308",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001994/Forbes_properties_-_Real_estate_1_yliuyb.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Petromaxx%20LPG.mp4",
   },
   {
     id: 3,
@@ -127,7 +127,7 @@ export const PRODUCT_FILM: GridProject[] = [
     techStack: ["Product Viz", "AI Styling", "Motion Graphics", "Grade"],
     colorFrom: "#3b82f6",
     colorTo: "#06b6d4",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001911/Electronics_-_Cooler_Ad_kf7caf.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Electronics%20-%20Cooler%20Ad.mp4",
   },
   {
     id: 4,
@@ -139,7 +139,7 @@ export const PRODUCT_FILM: GridProject[] = [
     techStack: ["Product Viz", "AI Styling", "Motion Graphics", "Grade"],
     colorFrom: "#3b82f6",
     colorTo: "#06b6d4",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781093823/Purelab_Serum_mbtous.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Kitchenware%20-%20Seiken%20knife.mov",
   },
 ];
 
@@ -155,7 +155,7 @@ export const BRAND_FILM: GridProject[] = [
     techStack: ["Product Viz", "AI Styling", "Motion Graphics", "Grade"],
     colorFrom: "#f59e0b",
     colorTo: "#ec4899",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001863/Bulgari_premium_concept_azbzdo.mov",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Bulgari%20premium%20concept.mov",
   },
   {
     id: 2,
@@ -167,7 +167,7 @@ export const BRAND_FILM: GridProject[] = [
     techStack: ["Product Viz", "Motion Graphics", "Colour Science", "Grade"],
     colorFrom: "#f59e0b",
     colorTo: "#ec4899",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781093935/Purelab_Facewash_bfffuf.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Cosmetics%20-%20Premium%20(1).mp4",
   },
 ];
 
@@ -183,7 +183,7 @@ export const TECH_UI: GridProject[] = [
     techStack: ["UI Animation", "After Effects", "Lottie", "WebGL"],
     colorFrom: "#10b981",
     colorTo: "#3b82f6",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781001957/Electronics_-_Fan_Ad_cto8wj.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Electronics%20-%20Fan%20Ad.mp4",
   },
   {
     id: 2,
@@ -195,7 +195,7 @@ export const TECH_UI: GridProject[] = [
     techStack: ["WebGL", "Three.js", "GLSL", "React"],
     colorFrom: "#10b981",
     colorTo: "#3b82f6",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781250745/KM_Hospital_-_scenario_stories_5_odnsrj.mov",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Forbes%20properties%20-%20Real%20estate.mp4",
   },
 ];
 
@@ -211,7 +211,7 @@ export const EXPERIMENTAL: GridProject[] = [
     techStack: ["Macro Photography", "AI Enhancement", "Color Grading", "VFX"],
     colorFrom: "#8b5cf6",
     colorTo: "#ec4899",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781093426/Cosmetics_-_Premium_1_jzchj9.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Health%20-%20Multivitamin%20caps.mov",
   },
   {
     id: 2,
@@ -223,7 +223,7 @@ export const EXPERIMENTAL: GridProject[] = [
     techStack: ["Macro Photography", "AI Enhancement", "Color Grading", "VFX"],
     colorFrom: "#8b5cf6",
     colorTo: "#ec4899",
-    videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781250872/Forbes_properties_-_Real_estate_latcub.mp4",
+    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Almonds.AI%20concept.mp4",
   },
 ];
 

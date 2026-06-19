@@ -4,6 +4,7 @@ import { Demo as BrandsSection } from "@/components/ui/demo";
 import TestimonialsEditorial from "@/components/ui/editorial-testimonial";
 import ContactSection from "@/components/ContactSection";
 import { Footer } from "@/components/ui/footer-section";
+import { ScrollReveal } from "@/components/shared/ScrollReveal";
 
 export const metadata = {
   title: "About | Elevique",
@@ -16,7 +17,9 @@ export default function AboutPage() {
       <Navbar />
       <AboutSection />
       <BrandsSection />
-      <TestimonialsEditorial />
+      <ScrollReveal direction="up" amount={0.15}>
+        <TestimonialsEditorial />
+      </ScrollReveal>
       <ContactSection />
       <Footer />
     </main>
