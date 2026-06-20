@@ -12,6 +12,7 @@ export default function NewUserPage() {
     full_name: '',
     email: '',
     temporary_password: '',
+    confirm_password: '',
     role: 'client' as 'team_member' | 'client',
     company_name: '',
     phone: '',
@@ -25,6 +26,10 @@ export default function NewUserPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
+    if (form.temporary_password !== form.confirm_password) {
+      setError('Passwords do not match.')
+      return
+    }
     setLoading(true)
     try {
       await createUserAccount(form)
@@ -95,6 +100,21 @@ export default function NewUserPage() {
               onChange={set('temporary_password')}
               placeholder="Min. 8 characters"
               required
+              minLength={8}
+              autoComplete="new-password"
+            />
+          </div>
+
+          <div className="p-field">
+            <label className="p-field-label">Confirm Password *</label>
+            <input
+              className="p-field-input"
+              type="password"
+              value={form.confirm_password}
+              onChange={set('confirm_password')}
+              placeholder="Re-enter password"
+              required
+              minLength={8}
               autoComplete="new-password"
             />
           </div>

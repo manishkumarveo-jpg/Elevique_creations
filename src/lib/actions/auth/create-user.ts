@@ -14,6 +14,10 @@ const CreateUserSchema = z.object({
   company_name: z.string().max(200).optional(),
   phone: z.string().max(20).optional(),
   temporary_password: z.string().min(8),
+  confirm_password: z.string().min(8),
+}).refine((data) => data.temporary_password === data.confirm_password, {
+  message: 'Passwords do not match.',
+  path: ['confirm_password'],
 })
 
 export async function createUserAccount(input: unknown) {
