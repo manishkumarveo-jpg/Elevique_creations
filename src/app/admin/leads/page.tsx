@@ -1,6 +1,6 @@
 import { createServerClient } from "@/lib/supabase/server";
-import { Avatar } from "@/components/ui/Avatar";
-import { Mail, Phone, Calendar, MapPin, Video, DollarSign, Globe, Building, Briefcase } from "lucide-react";
+import { Briefcase } from "lucide-react";
+import { LeadsTable } from "./LeadsTable";
 
 export const dynamic = "force-dynamic";
 
@@ -75,112 +75,7 @@ export default async function AdminLeadsPage() {
           <p className="p-empty-sub">Submissions from the lead landing page will appear here.</p>
         </div>
       ) : (
-        <div className="p-table-wrap">
-          <table className="p-table">
-            <thead>
-              <tr>
-                <th>Lead / Contact</th>
-                <th>Service</th>
-                <th>Budget</th>
-                <th>Brief</th>
-                <th>Location</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {leads.map((lead) => (
-                <tr key={lead.id}>
-                  <td style={{ verticalAlign: "top" }}>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "0.375rem" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-                        <Avatar name={lead.full_name} size="sm" />
-                        <span className="p-table-name">{lead.full_name}</span>
-                      </div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem", paddingLeft: "2rem" }}>
-                        <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "12px" }} className="mono">
-                          <Mail size={11} style={{ color: "var(--ds-text-3)", flexShrink: 0 }} />
-                          <a href={`mailto:${lead.email}`} style={{ color: "var(--ds-text-3)", textDecoration: "none" }}>
-                            {lead.email}
-                          </a>
-                        </span>
-                        {lead.phone && (
-                          <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "12px" }} className="mono">
-                            <Phone size={11} style={{ color: "var(--ds-text-3)", flexShrink: 0 }} />
-                            <a href={`tel:${lead.phone}`} style={{ color: "var(--ds-text-3)", textDecoration: "none" }}>
-                              {lead.phone}
-                            </a>
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </td>
-
-                  <td style={{ verticalAlign: "top" }}>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
-                      <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "13px", color: "var(--ds-text)", fontWeight: 500 }}>
-                        <Briefcase size={12} style={{ color: "var(--ds-text-3)", flexShrink: 0 }} />
-                        {lead.service_type || "—"}
-                      </span>
-                      <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "12px" }} className="mono">
-                        <Video size={11} style={{ color: "var(--ds-text-3)", flexShrink: 0 }} />
-                        <span style={{ color: "var(--ds-text-3)" }}>{lead.videos_count || "—"}</span>
-                      </span>
-                    </div>
-                  </td>
-
-                  <td style={{ verticalAlign: "top" }}>
-                    <span style={{ display: "flex", alignItems: "center", gap: "0.3rem", fontWeight: 600 }} className="mono">
-                      <DollarSign size={13} style={{ color: "var(--ds-text-3)", flexShrink: 0 }} />
-                      {lead.budget_per_video || "—"}
-                    </span>
-                  </td>
-
-                  <td style={{ verticalAlign: "top", maxWidth: 280 }}>
-                    <p style={{ fontSize: "13px", lineHeight: "1.5", color: "var(--ds-text-2)", margin: 0, whiteSpace: "pre-wrap" }}>
-                      {lead.requirement_brief || <span style={{ color: "var(--ds-text-3)", fontStyle: "italic" }}>No brief provided</span>}
-                    </p>
-                  </td>
-
-                  <td style={{ verticalAlign: "top" }}>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
-                      {lead.city && (
-                        <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "13px", color: "var(--ds-text-2)" }}>
-                          <MapPin size={12} style={{ color: "var(--ds-text-3)", flexShrink: 0 }} />
-                          {lead.city}
-                        </span>
-                      )}
-                      {lead.company_name && (
-                        <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "13px", color: "var(--ds-text-2)" }}>
-                          <Building size={12} style={{ color: "var(--ds-text-3)", flexShrink: 0 }} />
-                          {lead.company_name}
-                        </span>
-                      )}
-                      {lead.website && (
-                        <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "13px", color: "var(--ds-text-2)" }}>
-                          <Globe size={12} style={{ color: "var(--ds-text-3)", flexShrink: 0 }} />
-                          <a href={lead.website} target="_blank" rel="noopener noreferrer" style={{ color: "var(--ds-text-2)", textDecoration: "underline", textUnderlineOffset: "2px" }}>
-                            Website
-                          </a>
-                        </span>
-                      )}
-                    </div>
-                  </td>
-
-                  <td style={{ verticalAlign: "top", whiteSpace: "nowrap" }}>
-                    <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "12px", color: "var(--ds-text-3)" }} className="mono">
-                      <Calendar size={11} style={{ flexShrink: 0 }} />
-                      {new Date(lead.created_at).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <LeadsTable leads={leads} />
       )}
     </div>
   );

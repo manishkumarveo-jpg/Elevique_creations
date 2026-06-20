@@ -56,6 +56,11 @@ export default async function TeamProjectPage({ params }: Props) {
                 { key: 'Status',   val: <ProjectStatusBadge status={project.status} /> },
                 { key: 'Client',   val: client?.company_name ?? client?.full_name ?? '—' },
                 { key: 'Package',  val: project.package ?? '—' },
+                { key: 'Started',  val: project.work_started_date
+                    ? new Date(project.work_started_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                    : project.start_date
+                      ? new Date(project.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                      : 'Not started yet' },
                 { key: 'Internal Deadline', val: project.internal_deadline ? new Date(project.internal_deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—' },
                 { key: 'Created',  val: new Date(project.created_at).toLocaleDateString('en-US') },
               ].map(row => (

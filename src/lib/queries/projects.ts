@@ -95,7 +95,7 @@ export const getProjectsForTeam = cache(async (userId: string) => {
 
   const { data, error } = await supabase
     .from('projects')
-    .select('id, name, client_id, package, status, internal_deadline, description, client_note, created_by, is_archived, admin_approved, created_at, updated_at, client:profiles!projects_client_id_fkey(id, full_name, email, company_name)')
+    .select('id, name, client_id, package, status, priority, internal_deadline, start_date, work_started_date, completion_date, progress_percent, description, client_note, created_by, is_archived, admin_approved, created_at, updated_at, client:profiles!projects_client_id_fkey(id, full_name, email, company_name)')
     .eq('is_archived', false)
     .in('id', assignedIds)
     .order('created_at', { ascending: false })
@@ -133,7 +133,7 @@ export const getProjectByIdForTeam = cache(async (id: string) => {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('projects')
-    .select('id, name, client_id, package, status, description, internal_deadline, client_note, created_by, is_archived, admin_approved, created_at, updated_at, client:profiles!projects_client_id_fkey(id, full_name, email, company_name), approver:profiles!projects_approved_by_admin_fkey(id, full_name)')
+    .select('id, name, client_id, package, status, description, internal_deadline, start_date, work_started_date, completion_date, client_note, created_by, is_archived, admin_approved, created_at, updated_at, client:profiles!projects_client_id_fkey(id, full_name, email, company_name), approver:profiles!projects_approved_by_admin_fkey(id, full_name)')
     .eq('id', id)
     .single()
   if (error) throw error

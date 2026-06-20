@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { getProjectsWithTeam } from '@/lib/queries/projects'
-import { ProjectStatusBadge } from '@/components/shared/StatusBadge'
-import { Avatar } from '@/components/ui/Avatar'
+import { ProjectsListView } from './ProjectsListView'
 
 export default async function AdminProjectsPage() {
   const projects = await getProjectsWithTeam()
@@ -30,56 +29,7 @@ export default async function AdminProjectsPage() {
           <p className="p-empty-sub">Create your first project to get started.</p>
         </div>
       ) : (
-        <div className="p-project-rows">
-          {projects.map(project => {
-            const progress = project.milestone_total > 0
-              ? Math.round((project.milestone_done / project.milestone_total) * 100)
-              : null
-            return (
-              <Link key={project.id} href={`/admin/projects/${project.id}`} className="p-project-row">
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.15rem' }}>
-                    <span className="p-project-name">{project.name}</span>
-                    <ProjectStatusBadge status={project.status} />
-                  </div>
-                  <div className="p-project-meta">
-                    {project.client?.company_name ?? project.client?.full_name ?? '—'}
-                    {project.package ? ` · ${project.package}` : ''}
-                    {project.client_deadline
-                      ? ` · Due ${new Date(project.client_deadline + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`
-                      : ''}
-                  </div>
-                </div>
-
-                <div style={{ flexShrink: 0 }}>
-                  {project.team.length > 0 ? (
-                    <div className="p-avatar-stack">
-                      {project.team.slice(0, 4).map(m => (
-                        <Avatar key={m.id} name={m.full_name} size="sm" />
-                      ))}
-                      {project.team.length > 4 && (
-                        <div className="p-avatar-sm p-avatar-overflow">+{project.team.length - 4}</div>
-                      )}
-                    </div>
-                  ) : (
-                    <span className="p-unassigned">Unassigned</span>
-                  )}
-                </div>
-
-                {progress !== null ? (
-                  <div className="p-progress-wrap">
-                    <div className="p-progress-track">
-                      <div className="p-progress-fill" style={{ width: `${progress}%` }} />
-                    </div>
-                    <span className="p-progress-pct">{progress}%</span>
-                  </div>
-                ) : (
-                  <span className="p-progress-pct" style={{ color: 'var(--ds-text-3)' }}>—</span>
-                )}
-              </Link>
-            )
-          })}
-        </div>
+        <ProjectsListView projects={projects} />
       )}
     </div>
   )

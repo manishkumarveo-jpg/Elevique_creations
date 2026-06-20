@@ -31,12 +31,15 @@ export default async function TeamDashboardPage() {
 
   return (
     <div className="p-content-wrap">
-      <div style={{ marginBottom: '1.75rem' }}>
-        <p className="p-eyebrow">Team Workspace</p>
-        <h1 className="p-page-title">Good morning, {displayName}.</h1>
-        <p className="p-page-sub">
-          {activeProjects.length} active project{activeProjects.length !== 1 ? 's' : ''} assigned to you.
-        </p>
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap', marginBottom: '1.75rem' }}>
+        <div>
+          <p className="p-eyebrow">Team Workspace</p>
+          <h1 className="p-page-title">Good morning, {displayName}.</h1>
+          <p className="p-page-sub">
+            {activeProjects.length} active project{activeProjects.length !== 1 ? 's' : ''} assigned to you.
+          </p>
+        </div>
+        <Link href="/team/communications" className="p-link-teal">Messages →</Link>
       </div>
 
       {/* Missed meeting alert */}
@@ -145,8 +148,7 @@ export default async function TeamDashboardPage() {
           {/* All projects list */}
           <div>
             <div className="p-section-header" style={{ marginBottom: '0.5rem' }}>
-              <span className="p-section-label">All Projects</span>
-              <Link href="/team/projects" className="p-link-teal">View all →</Link>
+              <span className="p-section-label">All Projects ({projects.length})</span>
             </div>
             <div className="p-project-rows">
               {projects.map(p => {

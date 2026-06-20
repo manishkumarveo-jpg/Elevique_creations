@@ -1,7 +1,6 @@
 import { getVideoGenerationTasks } from '@/lib/queries/video-tracker'
 import { StatTile } from '@/components/ui/StatTile'
-import { Avatar } from '@/components/ui/Avatar'
-import { VideoTaskStatusSelect } from './VideoTaskStatusSelect'
+import { VideoTrackerView } from './VideoTrackerView'
 
 export default async function AdminVideoTrackerPage() {
   const tasks = await getVideoGenerationTasks()
@@ -30,45 +29,7 @@ export default async function AdminVideoTrackerPage() {
           <p className="p-empty-sub">Tasks are created automatically when a team member is assigned to a video-deliverable project.</p>
         </div>
       ) : (
-        <div className="p-table-wrap">
-          <table className="p-table">
-            <thead>
-              <tr>
-                <th>Brand</th>
-                <th>Content Type</th>
-                <th>Script #</th>
-                <th>Assignee</th>
-                <th>Assigned</th>
-                <th>Status</th>
-                <th>Checks</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tasks.map(task => (
-                <tr key={task.id}>
-                  <td className="p-table-name">{task.brand_name}</td>
-                  <td>{task.content_type}</td>
-                  <td>{task.script_number}</td>
-                  <td>
-                    {task.assignee ? (
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <Avatar name={task.assignee.full_name} size="sm" />
-                        <span>{task.assignee.full_name}</span>
-                      </div>
-                    ) : '—'}
-                  </td>
-                  <td style={{ color: 'var(--ds-text-3)' }}>
-                    {new Date(task.assigned_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                  </td>
-                  <td>
-                    <VideoTaskStatusSelect taskId={task.id} projectId={task.project_id} status={task.status} />
-                  </td>
-                  <td style={{ color: 'var(--ds-text-3)' }}>{task.checks_performed.length} checked</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <VideoTrackerView tasks={tasks} />
       )}
     </div>
   )

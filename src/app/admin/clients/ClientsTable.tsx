@@ -3,7 +3,10 @@
 import { useState, useTransition, useRef, useEffect } from 'react'
 import { ClientAssignmentRow } from './ClientAssignmentRow'
 import { deactivateUser, reactivateUser } from '@/lib/actions/auth/deactivate-user'
+import { Pagination } from '@/components/ui/Pagination'
 import type { ClientWithAssignment } from '@/lib/queries/users'
+
+const PAGE_SIZE = 10
 
 type Client = ClientWithAssignment
 
@@ -137,6 +140,7 @@ export function ClientsTable({ clients: initialClients, teamMembers, projectCoun
   const [filterStatus, setFilterStatus] = useState<FilterStatus>('all')
   const [filterAssignment, setFilterAssignment] = useState<FilterAssignment>('all')
   const [filterOpen, setFilterOpen] = useState(false)
+  const [page, setPage] = useState(1)
   const filterRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -164,6 +168,12 @@ export function ClientsTable({ clients: initialClients, teamMembers, projectCoun
   })
 
   const hasActiveFilter = filterStatus !== 'all' || filterAssignment !== 'all'
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
+  const currentPage = Math.min(page, totalPages)
+  const paged = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+
+  function setFilterStatusAndResetPage(v: FilterStatus) { setFilterStatus(v); setPage(1) }
+  function setFilterAssignmentAndResetPage(v: FilterAssignment) { setFilterAssignment(v); setPage(1) }
 
   return (
     <>
@@ -205,7 +215,7 @@ export function ClientsTable({ clients: initialClients, teamMembers, projectCoun
                     <button
                       key={v}
                       type="button"
-                      onClick={() => setFilterStatus(v)}
+                      onClick={() => setFilterStatusAndResetPage(v)}
                       style={{
                         padding: '0.25rem 0.625rem',
                         fontSize: '0.72rem',
@@ -230,7 +240,7 @@ export function ClientsTable({ clients: initialClients, teamMembers, projectCoun
                     <button
                       key={v}
                       type="button"
-                      onClick={() => setFilterAssignment(v)}
+                      onClick={() => setFilterAssignmentAndResetPage(v)}
                       style={{
                         padding: '0.25rem 0.625rem',
                         fontSize: '0.72rem',
@@ -251,7 +261,7 @@ export function ClientsTable({ clients: initialClients, teamMembers, projectCoun
               {hasActiveFilter && (
                 <button
                   type="button"
-                  onClick={() => { setFilterStatus('all'); setFilterAssignment('all') }}
+                  onClick={() => { setFilterStatus('all'); setFilterAssignment('all'); setPage(1) }}
                   style={{ fontSize: '0.72rem', color: 'var(--p-t3)', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', padding: 0 }}
                 >
                   Clear filters
@@ -278,7 +288,7 @@ export function ClientsTable({ clients: initialClients, teamMembers, projectCoun
             </svg>
           </div>
           <p className="p-empty-title">No clients match these filters</p>
-          <button type="button" onClick={() => { setFilterStatus('all'); setFilterAssignment('all') }} style={{ fontSize: '0.78rem', color: 'var(--p-teal)', background: 'none', border: 'none', cursor: 'pointer', marginTop: '0.25rem' }}>
+          <button type="button" onClick={() => { setFilterStatus('all'); setFilterAssignment('all'); setPage(1) }} style={{ fontSize: '0.78rem', color: 'var(--p-teal)', background: 'none', border: 'none', cursor: 'pointer', marginTop: '0.25rem' }}>
             Clear filters
           </button>
         </div>
@@ -296,7 +306,7 @@ export function ClientsTable({ clients: initialClients, teamMembers, projectCoun
             ))}
           </div>
 
-          {filtered.map(client => {
+          {paged.map(client => {
             const assignedMember = teamMembers.find(m => m.id === client.assigned_team_member_id)
             const activeCount = projectCounts[client.id] ?? 0
 
@@ -345,6 +355,8 @@ export function ClientsTable({ clients: initialClients, teamMembers, projectCoun
           })}
         </div>
       )}
+
+      <Pagination page={currentPage} totalPages={totalPages} onPageChange={setPage} totalItems={filtered.length} pageSize={PAGE_SIZE} />
     </>
   )
 }

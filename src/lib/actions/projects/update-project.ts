@@ -29,7 +29,17 @@ export async function updateProject(id: string, input: unknown) {
   await requireAdmin()
   const parsed = UpdateProjectSchema.parse(input)
   const supabase = await createServerClient()
-  const { error } = await supabase.from('projects').update(parsed).eq('id', id)
+
+  const update: typeof parsed & { work_started_date?: string } = { ...parsed }
+  if (parsed.status === 'in_progress') {
+    const { data: current, error: fetchError } = await supabase.from('projects').select('work_started_date').eq('id', id).single()
+    if (fetchError || !current) throw new Error('Project not found: ' + (fetchError?.message ?? id))
+    if (!current.work_started_date) {
+      update.work_started_date = new Date().toISOString().split('T')[0]
+    }
+  }
+
+  const { error } = await supabase.from('projects').update(update).eq('id', id)
   if (error) throw new Error(error.message)
   revalidatePath(`/admin/projects/${id}`)
   revalidatePath('/admin/projects')

@@ -7,15 +7,15 @@ import Link from 'next/link'
 
 async function getStats() {
   const supabase = await createServerClient()
-  const [clientsRes, teamRes, deliveredRes] = await Promise.all([
+  const [clientsRes, teamRes, pendingApprovalRes] = await Promise.all([
     supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'client'),
     supabase.from('profiles').select('id', { count: 'exact', head: true }).eq('role', 'team_member'),
-    supabase.from('deliverables').select('id', { count: 'exact', head: true }).eq('status', 'delivered'),
+    supabase.from('projects').select('id', { count: 'exact', head: true }).eq('status', 'final_review').eq('admin_approved', false),
   ])
   return {
     totalClients: clientsRes.count ?? 0,
     totalTeam: teamRes.count ?? 0,
-    awaitingApproval: deliveredRes.count ?? 0,
+    awaitingApproval: pendingApprovalRes.count ?? 0,
   }
 }
 

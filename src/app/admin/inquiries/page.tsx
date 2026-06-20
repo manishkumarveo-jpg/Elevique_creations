@@ -1,6 +1,6 @@
 import { createServerClient } from "@/lib/supabase/server";
-import { Avatar } from "@/components/ui/Avatar";
-import { Mail, Phone, Calendar, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
+import { InquiriesTable } from "./InquiriesTable";
 
 export const dynamic = "force-dynamic";
 
@@ -69,63 +69,7 @@ export default async function AdminInquiriesPage() {
           <p className="p-empty-sub">Submissions from the public contact form will appear here.</p>
         </div>
       ) : (
-        <div className="p-table-wrap">
-          <table className="p-table">
-            <thead>
-              <tr>
-                <th>Sender</th>
-                <th>Contact</th>
-                <th>Message</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {submissions.map((sub) => (
-                <tr key={sub.id}>
-                  <td style={{ verticalAlign: "top" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-                      <Avatar name={sub.name} size="sm" />
-                      <span className="p-table-name">{sub.name}</span>
-                    </div>
-                  </td>
-                  <td style={{ verticalAlign: "top" }}>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
-                      <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "12px" }} className="mono">
-                        <Mail size={11} style={{ color: "var(--ds-text-3)", flexShrink: 0 }} />
-                        <a href={`mailto:${sub.email}`} style={{ color: "var(--ds-text-3)", textDecoration: "none" }}>
-                          {sub.email}
-                        </a>
-                      </span>
-                      {sub.phone && (
-                        <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "12px" }} className="mono">
-                          <Phone size={11} style={{ color: "var(--ds-text-3)", flexShrink: 0 }} />
-                          <a href={`tel:${sub.phone}`} style={{ color: "var(--ds-text-3)", textDecoration: "none" }}>
-                            {sub.phone}
-                          </a>
-                        </span>
-                      )}
-                    </div>
-                  </td>
-                  <td style={{ verticalAlign: "top", maxWidth: 400 }}>
-                    <p style={{ fontSize: "13px", lineHeight: "1.5", color: "var(--ds-text-2)", whiteSpace: "pre-wrap", margin: 0 }}>
-                      {sub.message}
-                    </p>
-                  </td>
-                  <td style={{ verticalAlign: "top", whiteSpace: "nowrap" }}>
-                    <span style={{ display: "flex", alignItems: "center", gap: "0.4rem", fontSize: "12px", color: "var(--ds-text-3)" }} className="mono">
-                      <Calendar size={11} style={{ flexShrink: 0 }} />
-                      {new Date(sub.created_at).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <InquiriesTable submissions={submissions} />
       )}
     </div>
   );

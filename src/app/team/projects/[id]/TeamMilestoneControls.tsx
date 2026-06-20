@@ -32,6 +32,7 @@ const selStyle: React.CSSProperties = {
 export function TeamMilestoneControls({ milestones, projectId }: { milestones: Milestone[]; projectId: string }) {
   const [selected, setSelected] = useState(milestones[0]?.id ?? '')
   const [status, setStatus] = useState<string>('')
+  const [comment, setComment] = useState('')
   const [isPending, startTransition] = useTransition()
   const [success, setSuccess] = useState(false)
 
@@ -39,13 +40,19 @@ export function TeamMilestoneControls({ milestones, projectId }: { milestones: M
   const priorPhasesIncomplete = currentMilestone
     ? milestones.some(m => m.phase_number < currentMilestone.phase_number && m.status !== 'done')
     : false
+  const finalPhaseNumber = milestones.length > 0 ? Math.max(...milestones.map(m => m.phase_number)) : null
+  const isFinalizingProject = status === 'done' && finalPhaseNumber !== null && currentMilestone?.phase_number === finalPhaseNumber
 
   function handleSave() {
     if (!selected || !status) return
     setSuccess(false)
     startTransition(async () => {
-      await updateMilestoneStatusTeam(selected, projectId, { status })
+      await updateMilestoneStatusTeam(selected, projectId, {
+        status,
+        ...(isFinalizingProject && comment.trim() ? { notes: comment.trim() } : {}),
+      })
       setStatus('')
+      setComment('')
       setSuccess(true)
       setTimeout(() => setSuccess(false), 2000)
     })
@@ -105,6 +112,32 @@ export function TeamMilestoneControls({ milestones, projectId }: { milestones: M
           {isPending ? 'Saving…' : 'Save'}
         </button>
       </div>
+
+      {isFinalizingProject && (
+        <div style={{ marginTop: '0.875rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+          <label style={{ fontSize: '0.58rem', fontWeight: 700, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.25)' }}>
+            Comment (optional) — visible to admin
+          </label>
+          <textarea
+            value={comment}
+            onChange={e => setComment(e.target.value)}
+            placeholder="Anything the admin should know before this project is finalized…"
+            rows={3}
+            style={{
+              background: '#161d2e',
+              border: '1px solid rgba(255,255,255,0.11)',
+              borderRadius: 9,
+              padding: '0.6rem 0.8rem',
+              fontSize: '0.78rem',
+              color: 'rgba(255,255,255,0.82)',
+              outline: 'none',
+              fontFamily: 'inherit',
+              resize: 'vertical',
+              maxWidth: 420,
+            }}
+          />
+        </div>
+      )}
 
       {priorPhasesIncomplete && (
         <p style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', marginTop: '0.625rem' }}>

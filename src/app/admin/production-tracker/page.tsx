@@ -1,6 +1,6 @@
 import { getProductionDeliverables } from '@/lib/queries/production-tracker'
 import { StatTile } from '@/components/ui/StatTile'
-import { ProductionDeliverableRow } from './ProductionDeliverableRow'
+import { ProductionTrackerView } from './ProductionTrackerView'
 
 export default async function AdminProductionTrackerPage() {
   const deliverables = await getProductionDeliverables()
@@ -31,29 +31,7 @@ export default async function AdminProductionTrackerPage() {
           <p className="p-empty-sub">Rows are created automatically when a team member is assigned to a project.</p>
         </div>
       ) : (
-        <div className="p-table-wrap">
-          <table className="p-table">
-            <thead>
-              <tr>
-                <th>Brand</th>
-                <th>Type</th>
-                <th>Details</th>
-                <th>Assets</th>
-                <th>Status</th>
-                <th>Pending With</th>
-                <th>Delivery</th>
-                <th>Priority</th>
-                <th>Comments</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {deliverables.map(d => (
-                <ProductionDeliverableRow key={d.id} deliverable={d} />
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <ProductionTrackerView deliverables={deliverables} />
       )}
     </div>
   )

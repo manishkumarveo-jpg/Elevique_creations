@@ -38,6 +38,38 @@ export async function giveAdminApproval(projectId: string) {
   revalidateProject(projectId)
 }
 
+export async function declineAdminApproval(projectId: string, reason?: string) {
+  const user = await requireAdmin()
+  const supabase = await createServerClient()
+
+  const { data, error } = await supabase
+    .from('projects')
+    .update({
+      status: 'in_progress',
+      admin_approved: false,
+      approved_by_admin: null,
+      admin_approved_at: null,
+    })
+    .eq('id', projectId)
+    .eq('status', 'final_review')
+    .select('id')
+
+  if (error) throw new Error(error.message)
+  if (!data || data.length === 0) throw new Error('Project is not pending final review')
+
+  await logActivity({
+    actor_id: user.id,
+    actor_role: 'admin',
+    action: 'admin_approval_declined',
+    project_id: projectId,
+    entity_type: 'project',
+    entity_id: projectId,
+    metadata: reason?.trim() ? { reason: reason.trim() } : {},
+  })
+
+  revalidateProject(projectId)
+}
+
 export async function revokeAdminApproval(projectId: string) {
   const user = await requireAdmin()
   const supabase = await createServerClient()

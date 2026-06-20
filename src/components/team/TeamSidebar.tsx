@@ -6,23 +6,19 @@ import { useEffect, useState, startTransition } from 'react'
 import { logoutTeam } from '@/lib/actions/auth/logout-admin'
 import {
   LayoutDashboard,
-  Folder,
-  Milestone,
+  ClipboardList,
   ChevronsUpDown,
   Check,
   X,
   LogOut,
-  Video,
 } from 'lucide-react'
 
 const NAV_GROUPS = [
   {
     label: 'Workspace',
     items: [
-      { href: '/team/dashboard', label: 'My Work', icon: LayoutDashboard, matchPrefix: '/team/dashboard' },
-      { href: '/team/projects', label: 'My Projects', icon: Folder, matchPrefix: '/team/projects' },
-      { href: '/team/milestones', label: 'Milestones', icon: Milestone, matchPrefix: '/team/milestones' },
-      { href: '/team/video-tracker', label: 'Video Gen Tracker', icon: Video, matchPrefix: '/team/video-tracker' },
+      { href: '/team/dashboard', label: 'Dashboard', icon: LayoutDashboard, matchPrefixes: ['/team/dashboard', '/team/projects', '/team/communications'] },
+      { href: '/team/work', label: 'My Work', icon: ClipboardList, matchPrefixes: ['/team/work', '/team/video-tracker'] },
     ],
   },
 ]
@@ -105,7 +101,7 @@ export function TeamSidebar({ userName = 'Team Member', userInitials = 'T' }: Te
               <div className="p-nav-items">
                 {group.items.map(item => {
                   const Icon = item.icon
-                  const active = pathname === item.href || pathname.startsWith(item.matchPrefix + '/')
+                  const active = item.matchPrefixes.some(prefix => pathname === prefix || pathname.startsWith(prefix + '/'))
                   return (
                     <Link
                       key={item.href}
