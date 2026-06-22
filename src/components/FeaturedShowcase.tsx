@@ -374,7 +374,7 @@ export default function FeaturedShowcase() {
       {/* ══ HERO (grid mode only) ══════════════════════════════ */}
       {viewMode === "grid" && (
         <div className="portfolio-hero">
-          <video ref={heroVideoRef} className="portfolio-hero-video" src={active.videoSrc} autoPlay loop muted playsInline aria-hidden="true" tabIndex={-1} />
+          <video ref={heroVideoRef} className="portfolio-hero-video" src={active.videoSrc} autoPlay loop muted playsInline preload="auto" aria-hidden="true" tabIndex={-1} />
           <div className="portfolio-hero-gradient-b" />
           <div className="portfolio-hero-gradient-l" />
           <div className="portfolio-label">
@@ -697,6 +697,7 @@ function FeaturedCard({ project, isActive, onClick }: { project: Project; isActi
             loop
             muted
             playsInline
+            preload="none"
             className="portfolio-feat-video"
             aria-hidden="true"
             tabIndex={-1}
@@ -793,6 +794,7 @@ function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject
               loop
               muted
               playsInline
+              preload="none"
               className="portfolio-grid-video"
               aria-hidden="true"
               tabIndex={-1}

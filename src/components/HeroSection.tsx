@@ -105,7 +105,7 @@ export default function HeroSection() {
         loop
         muted
         playsInline
-        preload="metadata"
+        preload="auto"
         aria-hidden="true"
         tabIndex={-1}
       />

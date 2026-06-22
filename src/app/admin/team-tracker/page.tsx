@@ -22,8 +22,8 @@ export default async function AdminTeamTrackerPage() {
     ...deliverables.map(d => ({
       id: `pd-${d.id}`,
       source: 'Production' as const,
-      teamMemberId: d.pending_with_id,
-      teamMemberName: d.pending_with?.full_name ?? 'Unassigned',
+      teamMemberIds: d.assignees.map(a => a.id),
+      teamMemberName: d.assignees.length ? d.assignees.map(a => a.full_name).join(', ') : 'Unassigned',
       brandName: d.brand_name,
       type: d.deliverable_type,
       detail: d.details ?? '—',
@@ -36,7 +36,7 @@ export default async function AdminTeamTrackerPage() {
     ...tasks.map(t => ({
       id: `vt-${t.id}`,
       source: 'Video' as const,
-      teamMemberId: t.assigned_to_id,
+      teamMemberIds: t.assigned_to_id ? [t.assigned_to_id] : [],
       teamMemberName: t.assignee?.full_name ?? 'Unassigned',
       brandName: t.brand_name,
       type: `${t.content_type} #${t.script_number}`,
@@ -50,8 +50,8 @@ export default async function AdminTeamTrackerPage() {
     ...milestones.map(m => ({
       id: `ms-${m.id}`,
       source: 'Milestone' as const,
-      teamMemberId: m.updated_by,
-      teamMemberName: m.updater?.full_name ?? 'Unassigned',
+      teamMemberIds: m.assignees.map(a => a.id),
+      teamMemberName: m.assignees.length ? m.assignees.map(a => a.full_name).join(', ') : 'Unassigned',
       brandName: m.project?.name ?? '—',
       type: `Phase ${m.phase_number}: ${m.phase_name}`,
       detail: m.phase_number === Math.max(...milestones.filter(x => x.project_id === m.project_id).map(x => x.phase_number)) ? 'Final phase' : '—',

@@ -17,6 +17,10 @@ type SocialLead = {
   company_name?: string | null;
   website?: string | null;
   created_at: string;
+  ai_summary?: string | null;
+  ai_priority?: string | null;
+  ai_category?: string | null;
+  ai_processed_at?: string | null;
 };
 
 export default async function AdminLeadsPage() {

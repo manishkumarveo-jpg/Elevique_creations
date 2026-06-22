@@ -56,7 +56,7 @@ export function ProductionDeliverableRow({ deliverable }: { deliverable: Product
           {STATUS_OPTIONS.map(s => <option key={s} value={s}>{s.replace('_', ' ')}</option>)}
         </select>
       </td>
-      <td>{deliverable.pending_with?.full_name ?? '—'}</td>
+      <td>{deliverable.assignees.length ? deliverable.assignees.map(a => a.full_name).join(', ') : '—'}</td>
       <td>{deliverable.delivery_date ? new Date(deliverable.delivery_date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'}</td>
       <td>
         <select

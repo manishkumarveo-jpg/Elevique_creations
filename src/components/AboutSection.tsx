@@ -3,9 +3,8 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
-import dynamic from "next/dynamic";
-
-const AboutScene3D = dynamic(() => import("./AboutScene3D"), { ssr: false });
+import { SplineScene } from "@/components/ui/spline";
+import { Spotlight } from "@/components/ui/spotlight";
 
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 
@@ -100,6 +99,7 @@ export default function AboutSection() {
               position: "relative",
               borderRadius: "24px",
               overflow: "hidden",
+              background: "var(--black)",
             }}
             className="about-scene-wrapper"
           >
@@ -116,7 +116,14 @@ export default function AboutSection() {
                 zIndex: 1,
               }}
             />
-            <AboutScene3D />
+            <Spotlight
+              className="-top-40 left-0 md:left-60 md:-top-20"
+              fill="white"
+            />
+            <SplineScene
+              scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
+              className="w-full h-full"
+            />
           </motion.div>
         </div>
 

@@ -515,6 +515,10 @@ export type Database = {
           phone: string | null
           message: string
           created_at: string
+          ai_summary: string | null
+          ai_priority: 'hot' | 'warm' | 'cold' | null
+          ai_category: string | null
+          ai_processed_at: string | null
         }
         Insert: {
           id?: string
@@ -523,6 +527,10 @@ export type Database = {
           phone?: string | null
           message: string
           created_at?: string
+          ai_summary?: string | null
+          ai_priority?: 'hot' | 'warm' | 'cold' | null
+          ai_category?: string | null
+          ai_processed_at?: string | null
         }
         Update: {
           id?: string
@@ -531,6 +539,10 @@ export type Database = {
           phone?: string | null
           message?: string
           created_at?: string
+          ai_summary?: string | null
+          ai_priority?: 'hot' | 'warm' | 'cold' | null
+          ai_category?: string | null
+          ai_processed_at?: string | null
         }
         Relationships: []
       }
@@ -548,6 +560,10 @@ export type Database = {
           company_name: string | null
           website: string | null
           created_at: string
+          ai_summary: string | null
+          ai_priority: 'hot' | 'warm' | 'cold' | null
+          ai_category: string | null
+          ai_processed_at: string | null
         }
         Insert: {
           id?: string
@@ -562,6 +578,10 @@ export type Database = {
           company_name?: string | null
           website?: string | null
           created_at?: string
+          ai_summary?: string | null
+          ai_priority?: 'hot' | 'warm' | 'cold' | null
+          ai_category?: string | null
+          ai_processed_at?: string | null
         }
         Update: {
           id?: string
@@ -576,6 +596,10 @@ export type Database = {
           company_name?: string | null
           website?: string | null
           created_at?: string
+          ai_summary?: string | null
+          ai_priority?: 'hot' | 'warm' | 'cold' | null
+          ai_category?: string | null
+          ai_processed_at?: string | null
         }
         Relationships: []
       }
@@ -669,6 +693,27 @@ export type Database = {
           completed_at?: string | null
           created_at?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      production_deliverable_assignees: {
+        Row: {
+          id: string
+          deliverable_id: string
+          user_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          deliverable_id: string
+          user_id: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          deliverable_id?: string
+          user_id?: string
+          created_at?: string
         }
         Relationships: []
       }

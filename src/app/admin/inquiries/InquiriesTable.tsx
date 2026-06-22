@@ -1,9 +1,12 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useTransition } from 'react'
 import { Avatar } from '@/components/ui/Avatar'
+import { Badge } from '@/components/ui/Badge'
+import { Button } from '@/components/ui/Button'
 import { Pagination } from '@/components/ui/Pagination'
-import { Mail, Phone, Calendar } from 'lucide-react'
+import { classifyAllUnprocessed, classifySubmission } from '@/lib/actions/ai/classify-submission'
+import { Mail, Phone, Calendar, Sparkles } from 'lucide-react'
 
 type ContactSubmission = {
   id: string
@@ -12,6 +15,16 @@ type ContactSubmission = {
   phone?: string | null
   message: string
   created_at: string
+  ai_summary?: string | null
+  ai_priority?: string | null
+  ai_category?: string | null
+  ai_processed_at?: string | null
+}
+
+const priorityBadgeVariant: Record<string, 'red' | 'yellow' | 'gray'> = {
+  hot: 'red',
+  warm: 'yellow',
+  cold: 'gray',
 }
 
 const PAGE_SIZE = 10
@@ -30,6 +43,37 @@ const inputStyle: React.CSSProperties = {
 export function InquiriesTable({ submissions }: { submissions: ContactSubmission[] }) {
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
+  const [analyzingId, setAnalyzingId] = useState<string | null>(null)
+  const [analyzeError, setAnalyzeError] = useState<string | null>(null)
+  const [isPending, startTransition] = useTransition()
+
+  function analyzeRow(id: string) {
+    setAnalyzingId(id)
+    setAnalyzeError(null)
+    startTransition(async () => {
+      try {
+        await classifySubmission({ table: 'contact_submissions', id })
+      } catch (err) {
+        setAnalyzeError(err instanceof Error ? err.message : 'Failed to analyze submission.')
+      } finally {
+        setAnalyzingId(null)
+      }
+    })
+  }
+
+  function analyzeAll() {
+    setAnalyzingId('__bulk__')
+    setAnalyzeError(null)
+    startTransition(async () => {
+      try {
+        await classifyAllUnprocessed('contact_submissions')
+      } catch (err) {
+        setAnalyzeError(err instanceof Error ? err.message : 'Failed to analyze submissions.')
+      } finally {
+        setAnalyzingId(null)
+      }
+    })
+  }
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase()
@@ -60,7 +104,21 @@ export function InquiriesTable({ submissions }: { submissions: ContactSubmission
         <span style={{ fontSize: '0.78rem', color: 'var(--ds-text-3)', alignSelf: 'center', marginLeft: 'auto' }}>
           {filtered.length} of {submissions.length} inquiries
         </span>
+        <Button
+          variant="secondary"
+          size="sm"
+          disabled
+          loading={isPending && analyzingId === '__bulk__'}
+          title="AI analysis is temporarily disabled"
+          onClick={analyzeAll}
+        >
+          <Sparkles size={13} /> Analyze All New
+        </Button>
       </div>
+
+      {analyzeError && (
+        <p style={{ fontSize: '0.78rem', color: 'var(--ds-red)', marginBottom: '1rem' }}>{analyzeError}</p>
+      )}
 
       {filtered.length === 0 ? (
         <div className="p-empty">
@@ -108,6 +166,31 @@ export function InquiriesTable({ submissions }: { submissions: ContactSubmission
                     <p style={{ fontSize: '13px', lineHeight: '1.5', color: 'var(--ds-text-2)', whiteSpace: 'pre-wrap', margin: 0 }}>
                       {sub.message}
                     </p>
+                    {sub.ai_summary ? (
+                      <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                        <p style={{ fontSize: '12px', lineHeight: '1.4', color: 'var(--ds-text-3)', margin: 0, fontStyle: 'italic' }}>
+                          {sub.ai_summary}
+                        </p>
+                        <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap' }}>
+                          {sub.ai_priority && (
+                            <Badge variant={priorityBadgeVariant[sub.ai_priority] ?? 'gray'}>{sub.ai_priority}</Badge>
+                          )}
+                          {sub.ai_category && <Badge variant="gray">{sub.ai_category}</Badge>}
+                        </div>
+                      </div>
+                    ) : (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        disabled
+                        loading={isPending && analyzingId === sub.id}
+                        title="AI analysis is temporarily disabled"
+                        onClick={() => analyzeRow(sub.id)}
+                        style={{ marginTop: '0.4rem', padding: 0, height: 'auto' }}
+                      >
+                        <Sparkles size={12} /> Analyze
+                      </Button>
+                    )}
                   </td>
                   <td style={{ verticalAlign: 'top', whiteSpace: 'nowrap' }}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '12px', color: 'var(--ds-text-3)' }} className="mono">

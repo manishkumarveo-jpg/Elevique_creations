@@ -11,6 +11,10 @@ type ContactSubmission = {
   phone?: string | null;
   message: string;
   created_at: string;
+  ai_summary?: string | null;
+  ai_priority?: string | null;
+  ai_category?: string | null;
+  ai_processed_at?: string | null;
 };
 
 export default async function AdminInquiriesPage() {

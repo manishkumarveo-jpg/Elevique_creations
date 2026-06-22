@@ -1,9 +1,12 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useTransition } from 'react'
 import { Avatar } from '@/components/ui/Avatar'
+import { Badge } from '@/components/ui/Badge'
+import { Button } from '@/components/ui/Button'
 import { Pagination } from '@/components/ui/Pagination'
-import { Mail, Phone, MapPin, Video, DollarSign, Globe, Building, Briefcase, Calendar } from 'lucide-react'
+import { classifyAllUnprocessed, classifySubmission } from '@/lib/actions/ai/classify-submission'
+import { Mail, Phone, MapPin, Video, DollarSign, Globe, Building, Briefcase, Calendar, Sparkles } from 'lucide-react'
 
 type SocialLead = {
   id: string
@@ -18,6 +21,16 @@ type SocialLead = {
   company_name?: string | null
   website?: string | null
   created_at: string
+  ai_summary?: string | null
+  ai_priority?: string | null
+  ai_category?: string | null
+  ai_processed_at?: string | null
+}
+
+const priorityBadgeVariant: Record<string, 'red' | 'yellow' | 'gray'> = {
+  hot: 'red',
+  warm: 'yellow',
+  cold: 'gray',
 }
 
 const PAGE_SIZE = 10
@@ -37,6 +50,37 @@ export function LeadsTable({ leads }: { leads: SocialLead[] }) {
   const [search, setSearch] = useState('')
   const [service, setService] = useState('All')
   const [page, setPage] = useState(1)
+  const [analyzingId, setAnalyzingId] = useState<string | null>(null)
+  const [analyzeError, setAnalyzeError] = useState<string | null>(null)
+  const [isPending, startTransition] = useTransition()
+
+  function analyzeRow(id: string) {
+    setAnalyzingId(id)
+    setAnalyzeError(null)
+    startTransition(async () => {
+      try {
+        await classifySubmission({ table: 'social_leads', id })
+      } catch (err) {
+        setAnalyzeError(err instanceof Error ? err.message : 'Failed to analyze lead.')
+      } finally {
+        setAnalyzingId(null)
+      }
+    })
+  }
+
+  function analyzeAll() {
+    setAnalyzingId('__bulk__')
+    setAnalyzeError(null)
+    startTransition(async () => {
+      try {
+        await classifyAllUnprocessed('social_leads')
+      } catch (err) {
+        setAnalyzeError(err instanceof Error ? err.message : 'Failed to analyze leads.')
+      } finally {
+        setAnalyzingId(null)
+      }
+    })
+  }
 
   const serviceOptions = useMemo(() => {
     const set = new Set(leads.map(l => l.service_type).filter((s): s is string => !!s))
@@ -77,7 +121,21 @@ export function LeadsTable({ leads }: { leads: SocialLead[] }) {
         <span style={{ fontSize: '0.78rem', color: 'var(--ds-text-3)', alignSelf: 'center', marginLeft: 'auto' }}>
           {filtered.length} of {leads.length} leads
         </span>
+        <Button
+          variant="secondary"
+          size="sm"
+          disabled
+          loading={isPending && analyzingId === '__bulk__'}
+          title="AI analysis is temporarily disabled"
+          onClick={analyzeAll}
+        >
+          <Sparkles size={13} /> Analyze All New
+        </Button>
       </div>
+
+      {analyzeError && (
+        <p style={{ fontSize: '0.78rem', color: 'var(--ds-red)', marginBottom: '1rem' }}>{analyzeError}</p>
+      )}
 
       {filtered.length === 0 ? (
         <div className="p-empty">
@@ -148,6 +206,31 @@ export function LeadsTable({ leads }: { leads: SocialLead[] }) {
                     <p style={{ fontSize: '13px', lineHeight: '1.5', color: 'var(--ds-text-2)', margin: 0, whiteSpace: 'pre-wrap' }}>
                       {lead.requirement_brief || <span style={{ color: 'var(--ds-text-3)', fontStyle: 'italic' }}>No brief provided</span>}
                     </p>
+                    {lead.ai_summary ? (
+                      <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                        <p style={{ fontSize: '12px', lineHeight: '1.4', color: 'var(--ds-text-3)', margin: 0, fontStyle: 'italic' }}>
+                          {lead.ai_summary}
+                        </p>
+                        <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap' }}>
+                          {lead.ai_priority && (
+                            <Badge variant={priorityBadgeVariant[lead.ai_priority] ?? 'gray'}>{lead.ai_priority}</Badge>
+                          )}
+                          {lead.ai_category && <Badge variant="gray">{lead.ai_category}</Badge>}
+                        </div>
+                      </div>
+                    ) : (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        disabled
+                        loading={isPending && analyzingId === lead.id}
+                        title="AI analysis is temporarily disabled"
+                        onClick={() => analyzeRow(lead.id)}
+                        style={{ marginTop: '0.4rem', padding: 0, height: 'auto' }}
+                      >
+                        <Sparkles size={12} /> Analyze
+                      </Button>
+                    )}
                   </td>
 
                   <td style={{ verticalAlign: 'top' }}>

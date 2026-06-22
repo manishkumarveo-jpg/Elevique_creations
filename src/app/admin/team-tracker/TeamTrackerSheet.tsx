@@ -7,7 +7,7 @@ import { Pagination } from '@/components/ui/Pagination'
 export type TrackerRow = {
   id: string
   source: 'Production' | 'Video' | 'Milestone'
-  teamMemberId: string | null
+  teamMemberIds: string[]
   teamMemberName: string
   brandName: string
   type: string
@@ -49,7 +49,7 @@ export function TeamTrackerSheet({ rows, teamMembers }: { rows: TrackerRow[]; te
 
   const filtered = useMemo(() => {
     let result = rows
-    if (memberFilter !== 'All') result = result.filter(r => r.teamMemberId === memberFilter)
+    if (memberFilter !== 'All') result = result.filter(r => r.teamMemberIds.includes(memberFilter))
     if (sourceFilter !== 'All') result = result.filter(r => r.source === sourceFilter)
     if (statusFilter !== 'All') result = result.filter(r => r.status === statusFilter)
 
