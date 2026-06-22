@@ -51,6 +51,10 @@ BEGIN
     ELSE 'General'
   END;
 
+  -- pending_with_id is deprecated: it's set once here from the first assignment
+  -- and is never updated when later assignees are added below, so it can go
+  -- stale. Use production_deliverable_assignees as the authoritative source
+  -- for who is currently assigned to a deliverable.
   INSERT INTO production_deliverables (
     project_id, brand_name, deliverable_type, details, status, pending_with_id, delivery_date, priority
   )

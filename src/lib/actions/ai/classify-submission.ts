@@ -92,17 +92,5 @@ async function runClassification(input: unknown) {
 }
 
 export async function classifyAllUnprocessed(table: 'social_leads' | 'contact_submissions') {
-  await requireAdmin()
-  const adminClient = createAdminClient()
-  const { data: rows } = await adminClient
-    .from(table)
-    .select('id')
-    .is('ai_processed_at', null)
-    .limit(25)
-
-  for (const row of rows ?? []) {
-    await classifySubmission({ table, id: row.id })
-  }
-
-  return { success: true, count: rows?.length ?? 0 }
+  throw new Error('AI classification is temporarily disabled.')
 }
