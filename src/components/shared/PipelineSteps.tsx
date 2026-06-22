@@ -40,6 +40,7 @@ export function PipelineSteps({
             {/* Body */}
             <div className="p-pipeline-body">
               <p className={`p-pipeline-name${!isDone && !isActive ? ' p-pipeline-name--pending' : ''}`}>
+                {m.icon && <span style={{ marginRight: '0.4rem' }}>{m.icon}</span>}
                 Phase {m.phase_number}: {m.phase_name}
               </p>
 

@@ -85,6 +85,7 @@ export function MilestoneTimeline({
                   textDecoration: isDone && !pendingApproval ? 'line-through' : 'none',
                   margin: 0,
                 }}>
+                  {m.icon && <span style={{ marginRight: '0.4rem' }}>{m.icon}</span>}
                   Phase {m.phase_number}: {m.phase_name}
                 </p>
                 {m.scheduled_date && (

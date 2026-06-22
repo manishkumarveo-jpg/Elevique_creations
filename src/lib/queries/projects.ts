@@ -93,14 +93,29 @@ export const getProjectsForTeam = cache(async (userId: string) => {
 
   if (assignedIds.length === 0) return []
 
-  const { data, error } = await supabase
-    .from('projects')
-    .select('id, name, client_id, package, status, priority, internal_deadline, start_date, work_started_date, completion_date, progress_percent, description, client_note, created_by, is_archived, admin_approved, created_at, updated_at, client:profiles!projects_client_id_fkey(id, full_name, email, company_name)')
-    .eq('is_archived', false)
-    .in('id', assignedIds)
-    .order('created_at', { ascending: false })
+  const [{ data, error }, { data: milestones, error: milestonesError }] = await Promise.all([
+    supabase
+      .from('projects')
+      .select('id, name, client_id, package, status, priority, internal_deadline, start_date, work_started_date, completion_date, progress_percent, description, client_note, created_by, is_archived, admin_approved, created_at, updated_at, client:profiles!projects_client_id_fkey(id, full_name, email, company_name)')
+      .eq('is_archived', false)
+      .in('id', assignedIds)
+      .order('created_at', { ascending: false }),
+    supabase
+      .from('milestones')
+      .select('project_id, status')
+      .in('project_id', assignedIds),
+  ])
   if (error) throw error
-  return data
+  if (milestonesError) throw milestonesError
+
+  return (data ?? []).map(p => {
+    const projectMilestones = (milestones ?? []).filter(m => m.project_id === p.id)
+    return {
+      ...p,
+      milestone_total: projectMilestones.length,
+      milestone_done: projectMilestones.filter(m => m.status === 'done').length,
+    }
+  })
 })
 
 // Clients: explicit column selection excludes internal_deadline

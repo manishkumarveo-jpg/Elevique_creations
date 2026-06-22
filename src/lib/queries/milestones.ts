@@ -17,6 +17,7 @@ export type MilestoneWithDetails = {
   project_id: string
   phase_number: number
   phase_name: string
+  icon: string | null
   status: 'pending' | 'in_progress' | 'done'
   scheduled_date: string | null
   completed_date: string | null
@@ -33,7 +34,7 @@ export const getAllMilestonesWithDetails = cache(async (): Promise<MilestoneWith
     supabase
       .from('milestones')
       .select(`
-        id, project_id, phase_number, phase_name, status, scheduled_date, completed_date, notes, updated_by,
+        id, project_id, phase_number, phase_name, icon, status, scheduled_date, completed_date, notes, updated_by,
         project:projects!milestones_project_id_fkey(id, name)
       `)
       .order('updated_at', { ascending: false }),

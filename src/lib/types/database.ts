@@ -201,6 +201,7 @@ export type Database = {
           project_id: string
           phase_number: number
           phase_name: string
+          icon: string | null
           status: 'pending' | 'in_progress' | 'done'
           scheduled_date: string | null
           completed_date: string | null
@@ -214,6 +215,7 @@ export type Database = {
           project_id: string
           phase_number: number
           phase_name: string
+          icon?: string | null
           status?: 'pending' | 'in_progress' | 'done'
           scheduled_date?: string | null
           completed_date?: string | null
@@ -227,6 +229,7 @@ export type Database = {
           project_id?: string
           phase_number?: number
           phase_name?: string
+          icon?: string | null
           status?: 'pending' | 'in_progress' | 'done'
           scheduled_date?: string | null
           completed_date?: string | null

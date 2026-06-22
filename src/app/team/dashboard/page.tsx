@@ -135,8 +135,8 @@ export default async function TeamDashboardPage() {
                       clientName={client?.company_name ?? client?.full_name ?? '—'}
                       status={p.status}
                       dueDate={p.internal_deadline ?? null}
-                      milestoneDone={0}
-                      milestoneTotal={0}
+                      milestoneDone={p.milestone_done}
+                      milestoneTotal={p.milestone_total}
                       href={`/team/projects/${p.id}`}
                     />
                   )

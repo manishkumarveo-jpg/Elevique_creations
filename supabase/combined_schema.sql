@@ -133,6 +133,7 @@ CREATE TABLE milestones (
   project_id     UUID             NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
   phase_number   SMALLINT         NOT NULL,
   phase_name     TEXT             NOT NULL,
+  icon           TEXT,
   status         milestone_status NOT NULL DEFAULT 'pending',
   scheduled_date DATE,
   completed_date DATE,
@@ -243,12 +244,13 @@ CREATE INDEX idx_activity_actor   ON activity_log(actor_id,   created_at DESC);
 CREATE OR REPLACE FUNCTION seed_new_project()
 RETURNS TRIGGER AS $$
 BEGIN
-  -- 4 default milestones
-  INSERT INTO milestones (project_id, phase_number, phase_name) VALUES
-    (NEW.id, 1, 'Briefing & Asset Intake'),
-    (NEW.id, 2, 'Scripting & Approval'),
-    (NEW.id, 3, 'AI Generation + Editing'),
-    (NEW.id, 4, 'Final Delivery');
+  -- 5 default milestones
+  INSERT INTO milestones (project_id, phase_number, phase_name, icon) VALUES
+    (NEW.id, 1, 'Briefing & Asset Intake',  '📋'),
+    (NEW.id, 2, 'Scripting & Approval',     '📝'),
+    (NEW.id, 3, 'AI Generation + Editing',  '🤖'),
+    (NEW.id, 4, 'Video Editing',            '🎬'),
+    (NEW.id, 5, 'Final Delivery',           '🚀');
 
   -- 6 default folders with role-based upload permissions
   INSERT INTO folders (project_id, name, icon, sort_order, upload_roles) VALUES
