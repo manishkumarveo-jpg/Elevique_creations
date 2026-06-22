@@ -20,6 +20,7 @@ export type ProjectWithTeam = {
   internal_deadline: string | null
   client_deadline: string | null
   created_at: string
+  admin_approved: boolean
   client: { id: string; full_name: string; company_name: string | null } | null
   team: { id: string; full_name: string }[]
   milestone_total: number
@@ -32,7 +33,7 @@ export const getProjectsWithTeam = cache(async (): Promise<ProjectWithTeam[]> =>
   const [projectsRes, assignmentsRes, milestonesRes] = await Promise.all([
     supabase
       .from('projects')
-      .select('id, name, status, package, internal_deadline, client_deadline, created_at, client_id')
+      .select('id, name, status, package, internal_deadline, client_deadline, created_at, client_id, admin_approved')
       .eq('is_archived', false)
       .order('created_at', { ascending: false }),
     supabase
@@ -71,6 +72,7 @@ export const getProjectsWithTeam = cache(async (): Promise<ProjectWithTeam[]> =>
       internal_deadline: p.internal_deadline,
       client_deadline: p.client_deadline,
       created_at: p.created_at,
+      admin_approved: p.admin_approved,
       client: clientProfile
         ? { id: p.client_id, full_name: clientProfile.full_name, company_name: clientProfile.company_name ?? null }
         : null,

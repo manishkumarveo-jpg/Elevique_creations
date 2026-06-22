@@ -19,6 +19,7 @@ interface ProjectRow {
   internalDeadline: string | null
   milestoneDone: number
   milestoneTotal: number
+  adminApproved: boolean
   team: { id: string; full_name: string }[]
 }
 
@@ -80,8 +81,21 @@ export default function DashboardViews({
   missedMeetings,
 }: DashboardViewsProps) {
   const [view, setView] = useState('Cards')
+  const [listFilter, setListFilter] = useState<'all' | 'attention' | 'approval'>('all')
 
   const activeProjects = projects.filter(p => p.status !== 'completed')
+  const isAtRisk = (p: ProjectRow) =>
+    p.status !== 'completed' &&
+    (p.team.length === 0 || (!!p.clientDeadline && new Date(p.clientDeadline) < new Date()))
+  const isAwaitingApproval = (p: ProjectRow) => p.status === 'final_review' && !p.adminApproved
+  const visibleProjects =
+    listFilter === 'attention' ? projects.filter(isAtRisk) :
+      listFilter === 'approval' ? projects.filter(isAwaitingApproval) :
+        projects
+  const attentionOnly = listFilter === 'attention'
+  const approvalOnly = listFilter === 'approval'
+  const listLabel = attentionOnly ? 'Needs Attention' : approvalOnly ? 'Awaiting Approval' : 'All Projects'
+  const listEmptyText = attentionOnly ? 'No projects need attention' : 'No projects awaiting approval'
   const r = 36, circ = 2 * Math.PI * r
   const dash = (globalPct / 100) * circ
 
@@ -146,16 +160,35 @@ export default function DashboardViews({
               </div>
             </div>
 
-            <div className="p-stat">
+            <button
+              type="button"
+              className="p-stat"
+              onClick={() => setListFilter(f => f === 'approval' ? 'all' : 'approval')}
+              style={{
+                cursor: 'pointer',
+                textAlign: 'left',
+                border: approvalOnly ? '1px solid var(--ds-amber, #f59e0b)' : undefined,
+              }}
+            >
               <div className="p-stat-label">Awaiting Approval</div>
               <div className="p-stat-value mono">{pad2(awaitingApproval)}</div>
-            </div>
+              <div className="p-stat-foot">{approvalOnly ? 'Showing pending only · click to clear' : 'in final review'}</div>
+            </button>
 
-            <div className="p-stat">
+            <button
+              type="button"
+              className="p-stat"
+              onClick={() => setListFilter(f => f === 'attention' ? 'all' : 'attention')}
+              style={{
+                cursor: 'pointer',
+                textAlign: 'left',
+                border: attentionOnly ? '1px solid var(--ds-amber, #f59e0b)' : undefined,
+              }}
+            >
               <div className="p-stat-label">Needs Attention</div>
               <div className={`p-stat-value mono${attention > 0 ? ' p-stat-value--warn' : ''}`}>{pad2(attention)}</div>
-              <div className="p-stat-foot">{activeCount} active projects</div>
-            </div>
+              <div className="p-stat-foot">{attentionOnly ? 'Showing at-risk only · click to clear' : `${activeCount} active projects`}</div>
+            </button>
           </div>
 
           {/* Two-col: cards + activity */}
@@ -196,48 +229,61 @@ export default function DashboardViews({
               {/* All projects list */}
               {projects.length > 0 && (
                 <div style={{ marginTop: '0.5rem' }}>
-                  <div className="p-section-label" style={{ marginBottom: '0.5rem' }}>All Projects</div>
-                  <div className="p-project-rows">
-                    {projects.map(p => {
-                      const pct = p.milestoneTotal > 0 ? Math.round((p.milestoneDone / p.milestoneTotal) * 100) : null
-                      return (
-                        <Link key={p.id} href={`/admin/projects/${p.id}`} className="p-project-row">
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                              <span className="p-project-name">{p.name}</span>
-                              <ProjectStatusBadge status={p.status as 'briefing' | 'in_progress' | 'final_review' | 'completed' | 'paused'} />
-                            </div>
-                            <div className="p-project-meta">
-                              {p.clientName}
-                              {p.clientDeadline ? ` · Due ${fmtDate(p.clientDeadline)}` : ''}
-                            </div>
-                          </div>
-                          <div style={{ flexShrink: 0 }}>
-                            {p.team.length > 0 ? (
-                              <div className="p-avatar-stack">
-                                {p.team.slice(0, 3).map(m => (
-                                  <Avatar key={m.id} name={m.full_name} size="sm" />
-                                ))}
-                                {p.team.length > 3 && (
-                                  <div className="p-avatar-sm p-avatar-overflow">+{p.team.length - 3}</div>
-                                )}
-                              </div>
-                            ) : (
-                              <span className="p-unassigned">Unassigned</span>
-                            )}
-                          </div>
-                          {pct !== null && (
-                            <div className="p-progress-wrap">
-                              <div className="p-progress-track">
-                                <div className="p-progress-fill" style={{ width: `${pct}%` }} />
-                              </div>
-                              <span className="p-progress-pct">{pct}%</span>
-                            </div>
-                          )}
-                        </Link>
-                      )
-                    })}
+                  <div className="p-section-header" style={{ marginBottom: '0.5rem' }}>
+                    <span className="p-section-label">{listLabel}</span>
+                    {listFilter !== 'all' && (
+                      <button type="button" onClick={() => setListFilter('all')} className="p-link-teal" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+                        Clear filter
+                      </button>
+                    )}
                   </div>
+                  {visibleProjects.length === 0 ? (
+                    <div className="p-empty">
+                      <p className="p-empty-title">{listEmptyText}</p>
+                    </div>
+                  ) : (
+                    <div className="p-project-rows">
+                      {visibleProjects.map(p => {
+                        const pct = p.milestoneTotal > 0 ? Math.round((p.milestoneDone / p.milestoneTotal) * 100) : null
+                        return (
+                          <Link key={p.id} href={`/admin/projects/${p.id}`} className="p-project-row">
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                <span className="p-project-name">{p.name}</span>
+                                <ProjectStatusBadge status={p.status as 'briefing' | 'in_progress' | 'final_review' | 'completed' | 'paused'} />
+                              </div>
+                              <div className="p-project-meta">
+                                {p.clientName}
+                                {p.clientDeadline ? ` · Due ${fmtDate(p.clientDeadline)}` : ''}
+                              </div>
+                            </div>
+                            <div style={{ flexShrink: 0 }}>
+                              {p.team.length > 0 ? (
+                                <div className="p-avatar-stack">
+                                  {p.team.slice(0, 3).map(m => (
+                                    <Avatar key={m.id} name={m.full_name} size="sm" />
+                                  ))}
+                                  {p.team.length > 3 && (
+                                    <div className="p-avatar-sm p-avatar-overflow">+{p.team.length - 3}</div>
+                                  )}
+                                </div>
+                              ) : (
+                                <span className="p-unassigned">Unassigned</span>
+                              )}
+                            </div>
+                            {pct !== null && (
+                              <div className="p-progress-wrap">
+                                <div className="p-progress-track">
+                                  <div className="p-progress-fill" style={{ width: `${pct}%` }} />
+                                </div>
+                                <span className="p-progress-pct">{pct}%</span>
+                              </div>
+                            )}
+                          </Link>
+                        )
+                      })}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -257,18 +303,36 @@ export default function DashboardViews({
               <div className="p-kpi-value mono">{globalPct}%</div>
               <ProgressBar value={globalPct} />
             </div>
-            <div className="p-kpi-cell">
+            <button
+              type="button"
+              className="p-kpi-cell"
+              onClick={() => setListFilter(f => f === 'approval' ? 'all' : 'approval')}
+              style={{
+                cursor: 'pointer',
+                textAlign: 'left',
+                border: approvalOnly ? '1px solid var(--ds-amber, #f59e0b)' : undefined,
+              }}
+            >
               <div className="p-kpi-label">Awaiting Approval</div>
               <div className="p-kpi-value mono">{pad2(awaitingApproval)}</div>
-              <div className="p-kpi-foot">deliverables pending</div>
-            </div>
-            <div className="p-kpi-cell">
+              <div className="p-kpi-foot">{approvalOnly ? 'showing pending only' : 'deliverables pending'}</div>
+            </button>
+            <button
+              type="button"
+              className="p-kpi-cell"
+              onClick={() => setListFilter(f => f === 'attention' ? 'all' : 'attention')}
+              style={{
+                cursor: 'pointer',
+                textAlign: 'left',
+                border: attentionOnly ? '1px solid var(--ds-amber, #f59e0b)' : undefined,
+              }}
+            >
               <div className="p-kpi-label">Needs Attention</div>
               <div className="p-kpi-value mono" style={attention > 0 ? { color: 'var(--ds-amber)' } : {}}>
                 {pad2(attention)}
               </div>
-              <div className="p-kpi-foot">projects at risk</div>
-            </div>
+              <div className="p-kpi-foot">{attentionOnly ? 'showing at-risk only' : 'projects at risk'}</div>
+            </button>
             <div className="p-kpi-cell">
               <div className="p-kpi-label">Milestones Done</div>
               <div className="p-kpi-value mono">{doneMilestones}<span style={{ fontSize: 16, color: 'var(--ds-text-3)' }}>/{totalMilestones}</span></div>
@@ -278,7 +342,14 @@ export default function DashboardViews({
 
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem', alignItems: 'start' }}>
             <div>
-              <div className="p-section-label" style={{ marginBottom: '0.5rem' }}>All Projects</div>
+              <div className="p-section-header" style={{ marginBottom: '0.5rem' }}>
+                <span className="p-section-label">{listLabel}</span>
+                {listFilter !== 'all' && (
+                  <button type="button" onClick={() => setListFilter('all')} className="p-link-teal" style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+                    Clear filter
+                  </button>
+                )}
+              </div>
               <div className="p-table-wrap">
                 <table className="p-table">
                   <thead>
@@ -291,7 +362,7 @@ export default function DashboardViews({
                     </tr>
                   </thead>
                   <tbody>
-                    {projects.map(p => {
+                    {visibleProjects.map(p => {
                       const pct = p.milestoneTotal > 0 ? Math.round((p.milestoneDone / p.milestoneTotal) * 100) : 0
                       return (
                         <tr key={p.id}>

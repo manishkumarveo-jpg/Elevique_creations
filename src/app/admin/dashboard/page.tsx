@@ -122,6 +122,7 @@ export default async function AdminDashboardPage() {
           internalDeadline: p.internal_deadline ?? null,
           milestoneDone: p.milestone_done,
           milestoneTotal: p.milestone_total,
+          adminApproved: p.admin_approved,
           team: p.team,
         }))}
         activity={activity.map(log => ({
