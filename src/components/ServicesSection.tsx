@@ -1,7 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
-import { motion, useInView } from "framer-motion";
+import { useState } from "react";
 import { StaggerContainer, StaggerItem } from "@/components/shared/StaggerGroup";
 import {
   Video,
@@ -267,34 +266,13 @@ function DotGrid() {
   );
 }
 
-/* ─── Flip Card — hover on desktop, tap on touch ───────────────── */
-function FlipCard({
-  svc,
-  onStart,
-  isFlipped,
-  onFlipToggle,
-}: {
-  svc: (typeof SERVICES)[0];
-  onStart: () => void;
-  isFlipped: boolean;
-  onFlipToggle: (flipped: boolean) => void;
-}) {
+/* ─── Flip Card — pure CSS hover, no React state ───────────────── */
+function FlipCard({ svc, onStart }: { svc: (typeof SERVICES)[0]; onStart: () => void }) {
   return (
     <div
-      className={`svc-flip-wrapper${isFlipped ? " svc-flip-wrapper--tapped" : ""}`}
-      role="button"
-      tabIndex={0}
+      className="svc-flip-wrapper"
+      role="article"
       aria-label={`Service: ${svc.title}`}
-      onClick={(e) => {
-        e.stopPropagation();
-        onFlipToggle(!isFlipped);
-      }}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onFlipToggle(!isFlipped);
-        }
-      }}
     >
       <div className="svc-flip-inner">
         {/* ── FRONT ── */}
@@ -302,132 +280,6 @@ function FlipCard({
           <DotGrid />
           <div className="svc-card-icon">{svc.icon}</div>
           <h3 className="svc-card-title">{svc.title}</h3>
-
-          <div className="svc-front-animation">
-            {svc.id === "ai-video-ads" && (
-              <div className="anim-video">
-                <div className="video-player">
-                  <div className="video-scanline" />
-                  <div className="play-ring">
-                    <div className="play-triangle" />
-                  </div>
-                </div>
-                <div className="video-timeline">
-                  <div className="timeline-track">
-                    <div className="timeline-fill" />
-                    <div className="timeline-head" />
-                  </div>
-                  <div className="timeline-marks">
-                    <span className="tmark" />
-                    <span className="tmark" />
-                    <span className="tmark" />
-                  </div>
-                </div>
-              </div>
-            )}
-            {svc.id === "content-creation" && (
-              <div className="anim-content">
-                <div className="doc-stack">
-                  <div className="doc-shadow doc-shadow-2" />
-                  <div className="doc-shadow doc-shadow-1" />
-                  <div className="doc-sheet">
-                    <div className="doc-title-line" />
-                    <div className="doc-divider" />
-                    <div className="doc-line line-1" />
-                    <div className="doc-line line-2" />
-                    <div className="doc-line line-3" />
-                    <div className="doc-line-container">
-                      <div className="doc-line line-4" />
-                      <div className="cursor-bar" />
-                    </div>
-                  </div>
-                </div>
-                <div className="ai-pill">AI</div>
-              </div>
-            )}
-            {svc.id === "immersive-grap" && (
-              <div className="anim-graphic">
-                <div className="design-canvas">
-                  <svg className="canvas-svg" viewBox="0 0 55 55" width="55" height="55" aria-hidden="true">
-                    <rect className="canvas-rect" x="8" y="8" width="39" height="39" rx="5"
-                      fill="rgba(20,184,166,0.04)" stroke="rgba(20,184,166,0.7)" strokeWidth="1.2" />
-                  </svg>
-                  <span className="handle h-tl" />
-                  <span className="handle h-tr" />
-                  <span className="handle h-bl" />
-                  <span className="handle h-br" />
-                </div>
-                <div className="swatch-row">
-                  <span className="swatch sw-1" />
-                  <span className="swatch sw-2" />
-                  <span className="swatch sw-3" />
-                  <span className="swatch sw-4" />
-                </div>
-              </div>
-            )}
-            {svc.id === "brand-strategy" && (
-              <div className="anim-lead">
-                <div className="funnel-wrap">
-                  <svg viewBox="0 0 80 62" width="80" height="62" className="lead-funnel" aria-hidden="true">
-                    <path d="M4,4 L76,4 L46,56 L34,56 Z"
-                      fill="rgba(20,184,166,0.07)" stroke="rgba(20,184,166,0.45)"
-                      strokeWidth="1.4" strokeLinejoin="round" />
-                  </svg>
-                  <div className="funnel-particles">
-                    <span className="fp fp-1" />
-                    <span className="fp fp-2" />
-                    <span className="fp fp-3" />
-                    <span className="fp fp-4" />
-                  </div>
-                </div>
-                <div className="lead-drop-dot" />
-              </div>
-            )}
-            {svc.id === "ai-photography" && (
-              <div className="anim-social">
-                <div className="phone-outline">
-                  <div className="phone-notch" />
-                  <div className="phone-screen">
-                    <div className="sicon sicon-1">
-                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                      </svg>
-                    </div>
-                    <div className="sicon sicon-2">
-                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                        <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3" />
-                      </svg>
-                    </div>
-                    <div className="sicon sicon-3">
-                      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                        <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
-                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                      </svg>
-                    </div>
-                    <div className="engage-bar"><div className="engage-fill" /></div>
-                  </div>
-                  <div className="notif-badge">3</div>
-                </div>
-              </div>
-            )}
-            {svc.id === "motion-graphics" && (
-              <div className="anim-meta">
-                <div className="rings-container">
-                  <span className="meta-ring meta-ring-1" />
-                  <span className="meta-ring meta-ring-2" />
-                  <span className="meta-ring meta-ring-3" />
-                </div>
-                <div className="meta-circle">
-                  <div className="meta-crosshair">
-                    <div className="ch-h" />
-                    <div className="ch-v" />
-                  </div>
-                  <div className="ad-badge">AD</div>
-                </div>
-              </div>
-            )}
-          </div>
-
           <div className="svc-card-hover-badge">
             Hover to learn more
             <ChevronRight size={13} className="svc-badge-chevron" />
@@ -439,13 +291,11 @@ function FlipCard({
           <DotGrid />
           <p className="svc-card-synopsis">{svc.synopsis}</p>
           <button
-            type="button"
             className="svc-card-cta"
             onClick={(e) => {
               e.stopPropagation();
               onStart();
             }}
-            onTouchEnd={(e) => e.stopPropagation()}
             aria-label={`Start project for ${svc.title}`}
           >
             Start Now
@@ -456,65 +306,15 @@ function FlipCard({
   );
 }
 
-const CARD_EASE = [0.16, 1, 0.3, 1] as const;
-
-/* ─── Animated grid ─────────────────────────────────────────────── */
+/* ─── Grid ───────────────────────────────────────────────────────── */
 function ServicesGrid({ onStart }: { onStart: (svc: (typeof SERVICES)[0]) => void }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-60px 0px" });
-  const [activeCardId, setActiveCardId] = useState<string | null>(null);
-
-  useEffect(() => {
-    const handleOutsideClick = (e: MouseEvent | TouchEvent) => {
-      if (ref.current && ref.current.contains(e.target as Node)) {
-        return;
-      }
-      setActiveCardId(null);
-    };
-    document.addEventListener("click", handleOutsideClick);
-    document.addEventListener("touchstart", handleOutsideClick, { passive: true });
-    return () => {
-      document.removeEventListener("click", handleOutsideClick);
-      document.removeEventListener("touchstart", handleOutsideClick);
-    };
-  }, []);
-
   return (
-    <div ref={ref} className="svc-grid" role="list">
-      {SERVICES.map((svc, i) => {
-        const tilt = i % 2 === 0 ? -3 : 3;
-        return (
-          <motion.div
-            key={svc.id}
-            role="listitem"
-            initial={{
-              opacity: 0,
-              y: 80,
-              rotateX: 18,
-              rotateY: tilt * 3,
-              transformPerspective: 1200,
-            }}
-            animate={inView ? {
-              opacity: 1,
-              y: 0,
-              rotateX: 0,
-              rotateY: 0,
-            } : {}}
-            transition={{
-              duration: 0.95,
-              delay: i * 0.12,
-              ease: CARD_EASE,
-            }}
-          >
-            <FlipCard
-              svc={svc}
-              onStart={() => onStart(svc)}
-              isFlipped={activeCardId === svc.id}
-              onFlipToggle={(flipped) => setActiveCardId(flipped ? svc.id : null)}
-            />
-          </motion.div>
-        );
-      })}
+    <div className="svc-grid" role="list">
+      {SERVICES.map((svc) => (
+        <div key={svc.id} role="listitem">
+          <FlipCard svc={svc} onStart={() => onStart(svc)} />
+        </div>
+      ))}
     </div>
   );
 }
@@ -551,7 +351,7 @@ export default function ServicesSection() {
             </p>
           </div>
 
-          {/* 3-column flip card grid — staggered tilt-rise on scroll */}
+          {/* 3-column flip card grid */}
           <ServicesGrid onStart={setActiveModal} />
         </div>
       </section>

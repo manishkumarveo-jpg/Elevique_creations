@@ -46,11 +46,73 @@ function Typewriter({ phrases, speed = 80, delay = 1800, deleteSpeed = 40 }: { p
 }
 
 const VIDEO_SRC =
-  "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Music%20video%20-%20Gauddly.mp4";
+  "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Itsme%20red%20carpet.mp4";
 const POSTER_SRC =
   "";
 
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
+
+function CountUpNumber({ value, suffix = "", duration = 2000, delay = 1000 }: { value: number; suffix?: string; duration?: number; delay?: number }) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let startTimestamp: number | null = null;
+    let timerId: ReturnType<typeof setTimeout>;
+
+    const step = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+
+      // Easing: easeOutExpo
+      const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+
+      setCount(Math.floor(easeProgress * value));
+
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+
+    timerId = setTimeout(() => {
+      window.requestAnimationFrame(step);
+    }, delay);
+
+    return () => clearTimeout(timerId);
+  }, [value, duration, delay]);
+
+  return <>{count}{suffix}</>;
+}
+
+const STATS = [
+  { value: 300, suffix: "+", label: "Brands Served" },
+  { value: 1500, suffix: "+", label: "AI Ads Delivered" },
+  { value: 5, suffix: "x", label: "AI Video Ads ROAS" },
+  { value: 80, suffix: "%", label: "Savings On Production" },
+  { value: 5, suffix: "x", label: "CTR Boost" },
+];
+
+const statsContainerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      delayChildren: 0.85,
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const statsItemVariants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: EASE_OUT,
+    },
+  },
+};
 
 export default function HeroSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -179,6 +241,28 @@ export default function HeroSection() {
           </Link>
         </motion.div>
       </div>
+
+      <motion.div
+        className="hero-stats-bar"
+        variants={statsContainerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className="hero-stats-grid">
+          {STATS.map((stat, idx) => (
+            <motion.div
+              key={stat.label}
+              className="hero-stat-item"
+              variants={statsItemVariants}
+            >
+              <span className="hero-stat-number">
+                <CountUpNumber value={stat.value} suffix={stat.suffix} delay={1000 + idx * 100} />
+              </span>
+              <span className="hero-stat-label">{stat.label}</span>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
     </section>
   );
 }
