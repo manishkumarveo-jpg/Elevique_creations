@@ -13,7 +13,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 import PortfolioReels from "./PortfolioReels";
-import { GRID_PROJECTS, AI_VISUALS, EDITORIAL, PRODUCT_FILM, BRAND_FILM, TECH_UI, EXPERIMENTAL, type GridProject } from "@/data/gridVideos";
+import { GRID_PROJECTS, type GridProject } from "@/data/gridVideos";
 import { PKG_AI_VISUALS, PKG_EDITORIAL, PKG_PRODUCT_FILM, PKG_BRAND_FILM, PKG_TECH_UI, PKG_EXPERIMENTAL } from "@/data/packagesVideo";
 
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
@@ -27,12 +27,8 @@ interface Project {
   id: number;
   title: string;
   category: string;
-  year: string;
-  role: string;
   description: string;
   techStack: string[];
-  colorFrom: string;
-  colorTo: string;
   videoSrc: string;
   verticalVideoSrc?: string;
 }
@@ -42,51 +38,42 @@ const PROJECTS: Project[] = [
     id: 1,
     title: "Elevique Creation",
     category: "AI Visuals",
-    year: "2024",
-    role: "Creative Direction",
     description: "A visceral exploration of human endurance pushing the boundaries of motion and light.",
     techStack: ["AI Generation", "Motion Design", "Color Grading", "VFX"],
-    colorFrom: "#ff6b35",
-    colorTo: "#ff1a1a",
-    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Ladakh%20Bike%20tours%20-%20Avatar.mp4",
+    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/feature_sectoin/Mahindra%20XEV%20car.mp4",
   },
   {
     id: 2,
     title: "Fashion Film",
     category: "Editorial",
-    year: "2023",
-    role: "Cinematography & Edit",
     description: "Haute couture meets surrealism in a dreamlike sequence of fabric, motion, and identity.",
     techStack: ["AI Cinematics", "Editorial", "Sound Design", "Compositing"],
-    colorFrom: "#e879f9",
-    colorTo: "#7c3aed",
-    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Cosmetics%20-%20Premium%20(5).mp4",
+    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/feature_sectoin/Kobala.mp4",
   },
   {
     id: 3,
     title: "Automotive Launch",
     category: "Product Film",
-    year: "2024",
-    role: "Interactive Frontend",
     description: "An immersive product reveal where engineering precision meets cinematic grandeur.",
     techStack: ["3D Render", "AI Upscale", "Particle FX", "WebGL"],
-    colorFrom: "#3b82f6",
-    colorTo: "#06b6d4",
-    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/Fashion%20&%20Lifestyle%20-%20Escale%20Dubai.mp4",
+    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/feature_sectoin/Gauddly%20Music%20Video.mp4",
   },
   {
     id: 4,
     title: "Luxury Perfume",
     category: "Brand Film",
-    year: "2024",
-    role: "Packaging & Brand System",
     description: "Sensory storytelling distilled into 60 seconds of atmospheric brand cinema.",
     techStack: ["Product Viz", "AI Styling", "Motion Graphics", "Grade"],
-    colorFrom: "#f59e0b",
-    colorTo: "#ec4899",
-    videoSrc: "https://gqgzhfsqukqoweceyyhd.supabase.co/storage/v1/object/public/reel-videos/KM%20Hospital%20-%20Scenario%20stories%20(2).mp4",
+    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/feature_sectoin/Gangsters%20punjab.mp4",
   },
-
+  {
+    id: 5,
+    title: "Luxury Perfume",
+    category: "Brand Film",
+    description: "Sensory storytelling distilled into 60 seconds of atmospheric brand cinema.",
+    techStack: ["Product Viz", "AI Styling", "Motion Graphics", "Grade"],
+    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/feature_sectoin/Electronics%20-%20Cooler%20Ad.mp4",
+  },
 ];
 
 interface PopupState {
@@ -382,9 +369,6 @@ export default function FeaturedShowcase() {
             Portfolio Section
           </div>
           <div className="portfolio-hero-content">
-            <span className="portfolio-category-badge" style={{ borderColor: active.colorFrom + "99", background: active.colorFrom + "22", color: active.colorFrom }}>
-              {active.category}
-            </span>
             <h2 className="portfolio-hero-title">{active.title}</h2>
             <p className="portfolio-hero-desc">{active.description}</p>
             <div className="portfolio-hero-actions">
@@ -442,7 +426,14 @@ export default function FeaturedShowcase() {
             <p className="portfolio-featured-label">Featured Projects</p>
             <div className="portfolio-featured-row">
               {PROJECTS.slice(0, 6).map((p) => (
-                <FeaturedCard key={p.id} project={p} isActive={active.id === p.id} onClick={() => switchProject(p)} />
+                <FeaturedCard
+                  key={p.id}
+                  project={p}
+                  isActive={active.id === p.id}
+                  onClick={() => switchProject(p)}
+                  onEnter={onCardEnter}
+                  onLeave={onCardLeave}
+                />
               ))}
             </div>
           </div>
@@ -519,10 +510,6 @@ export default function FeaturedShowcase() {
                 <ChevronDown size={13} />
               </button>
             </div>
-            <div className="portfolio-popup-meta">
-              <span className="portfolio-popup-category" style={{ color: popup.project.colorFrom }}>{popup.project.year}</span>
-              <span className="portfolio-popup-role">{popup.project.role.toUpperCase()}</span>
-            </div>
             <h4 className="portfolio-popup-title">{popup.project.title}</h4>
             <p className="portfolio-popup-desc">{popup.project.description}</p>
             <div className="portfolio-popup-tags">
@@ -566,9 +553,8 @@ export default function FeaturedShowcase() {
             {/* bottom info bar */}
             <div className="vo-info">
               <div className="vo-info-left">
-                <span className="vo-category" style={{ color: videoOverlay.colorFrom }}>{videoOverlay.category}</span>
                 <h2 className="vo-title">{videoOverlay.title}</h2>
-                <p className="vo-role">{videoOverlay.role}</p>
+
               </div>
             </div>
 
@@ -631,11 +617,6 @@ export default function FeaturedShowcase() {
             {/* ── details below video ── */}
             <div className="bs-details">
               <div className="bs-meta">
-                <span className="portfolio-category-badge" style={{ borderColor: bottomSheet.colorFrom + "99", background: bottomSheet.colorFrom + "22", color: bottomSheet.colorFrom }}>
-                  {bottomSheet.category}
-                </span>
-                <span className="bs-year">{bottomSheet.year}</span>
-                <span className="bs-role" style={{ marginLeft: "auto" }}>{bottomSheet.role}</span>
               </div>
 
               <p className="bs-desc">{bottomSheet.description}</p>
@@ -661,16 +642,18 @@ export default function FeaturedShowcase() {
 }
 
 /* ─── Featured Card ─────────────────────────────────────────── */
-function FeaturedCard({ project, isActive, onClick }: { project: Project; isActive: boolean; onClick: () => void }) {
+function FeaturedCard({ project, isActive, onClick, onEnter: onCardEnter, onLeave: onCardLeave }: { project: Project; isActive: boolean; onClick: () => void; onEnter: (p: GridProject, e: React.MouseEvent<HTMLElement>) => void; onLeave: () => void }) {
   const cardRef = useRef<HTMLButtonElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const onEnter = () => {
+  const onEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!isActive) gsap.to(cardRef.current, { scale: 1.04, duration: 0.22, ease: "power4.out" });
     if (project.videoSrc) videoRef.current?.play().catch(() => { });
+    onCardEnter(project as unknown as GridProject, e);
   };
   const onLeave = () => {
     gsap.to(cardRef.current, { scale: 1, duration: 0.22, ease: "power4.out" });
     videoRef.current?.pause();
+    onCardLeave();
   };
   return (
     <ScrollReveal direction="scale" scaleFrom={0.95} amount={0.2} margin="0px -5%" className="shrink-0">
@@ -678,12 +661,7 @@ function FeaturedCard({ project, isActive, onClick }: { project: Project; isActi
         ref={cardRef}
         type="button"
         className={`portfolio-feat-card${isActive ? " portfolio-feat-card--active" : ""}`}
-        style={{
-          background: "transparent",
-          padding: 0,
-          cursor: "pointer",
-          ...(isActive ? { boxShadow: `0 0 18px 2px ${project.colorFrom}8C`, borderColor: project.colorFrom } : {})
-        }}
+
         onClick={onClick}
         onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { if (e.key === " ") e.preventDefault(); onClick(); } }}
         onMouseEnter={onEnter}
@@ -697,7 +675,7 @@ function FeaturedCard({ project, isActive, onClick }: { project: Project; isActi
             loop
             muted
             playsInline
-            preload="none"
+            preload="metadata"
             className="portfolio-feat-video"
             aria-hidden="true"
             tabIndex={-1}
@@ -707,7 +685,6 @@ function FeaturedCard({ project, isActive, onClick }: { project: Project; isActi
         ) : (
           <motion.div
             className="portfolio-feat-video"
-            style={{ background: `linear-gradient(135deg, ${project.colorFrom}33 0%, ${project.colorTo}22 100%)` }}
             aria-hidden="true"
             variants={imageRevealVariants}
             transition={{ duration: 0.6, delay: 0.1, ease: EASE_OUT }}
@@ -794,7 +771,7 @@ function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject
               loop
               muted
               playsInline
-              preload="none"
+              preload="metadata"
               className="portfolio-grid-video"
               aria-hidden="true"
               tabIndex={-1}
