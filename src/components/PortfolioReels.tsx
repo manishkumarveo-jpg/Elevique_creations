@@ -7,8 +7,6 @@ import {
   VolumeX,
   Share2,
   ExternalLink,
-  Wifi,
-  Battery,
   Play,
   Pause,
   ArrowLeft,
@@ -88,13 +86,6 @@ export default function PortfolioReels({ onViewDetails, onBack }: PortfolioReels
           }}
         />
 
-        <div className="reels-status-bar">
-          <span>10:09</span>
-          <div className="reels-status-icons">
-            <Wifi size={12} />
-            <Battery size={14} />
-          </div>
-        </div>
 
         {/* Back Button inside phone frame */}
         <button
@@ -157,7 +148,6 @@ function ReelCard({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
   const [liked, setLiked] = useState<boolean>(false);
-  const [likeCount, setLikeCount] = useState<number>(120);
   const [copied, setCopied] = useState<boolean | 'error'>(false);
   const [isBuffering, setIsBuffering] = useState<boolean>(false);
   const prevActiveRef = useRef<boolean>(isActive);
@@ -233,7 +223,6 @@ function ReelCard({
   const handleLike = useCallback(() => {
     if (!liked) {
       setLiked(true);
-      setLikeCount((prev) => prev + 1);
     }
 
     // Create new float-up particles
@@ -387,7 +376,7 @@ function ReelCard({
           >
             <Heart size={14} fill={liked ? "currentColor" : "none"} />
           </button>
-          <span className="reel-action-label">{likeCount}</span>
+          <span className="reel-action-label">{liked ? "Liked" : "Like"}</span>
         </div>
 
         {/* Share action */}

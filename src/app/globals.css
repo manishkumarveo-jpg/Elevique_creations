@@ -9546,3 +9546,36 @@ body {
     transform: none !important;
   }
 }
+
+/* Packages Grid 4-Column Layout */
+.packages-grid-4cols {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1400px;
+  margin: 1.5rem auto 0;
+  padding: 0 1rem;
+}
+
+@media (max-width: 1200px) {
+  .packages-grid-4cols {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .packages-grid-4cols {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 550px) {
+  .packages-grid-4cols {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}
+

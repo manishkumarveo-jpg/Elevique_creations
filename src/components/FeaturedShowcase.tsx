@@ -165,6 +165,7 @@ export default function FeaturedShowcase() {
 
   const [overlayLoading, setOverlayLoading] = useState<boolean>(false);
   const [sheetLoading, setSheetLoading] = useState<boolean>(false);
+  const [popupLoading, setPopupLoading] = useState<boolean>(false);
 
   const heroVideoRef = useRef<HTMLVideoElement>(null);
   const popupRef = useRef<HTMLDivElement>(null);
@@ -325,10 +326,19 @@ export default function FeaturedShowcase() {
   }, [popup]);
 
   const hidePopup = useCallback(() => {
-    if (!popupRef.current) { setPopup(null); activePopupProject.current = null; return; }
+    if (!popupRef.current) {
+      setPopup(null);
+      activePopupProject.current = null;
+      setPopupLoading(false);
+      return;
+    }
     gsap.to(popupRef.current, {
       scale: 0.88, opacity: 0, duration: 0.22, ease: "power3.in",
-      onComplete: () => { setPopup(null); activePopupProject.current = null; },
+      onComplete: () => {
+        setPopup(null);
+        activePopupProject.current = null;
+        setPopupLoading(false);
+      },
     });
   }, []);
 
@@ -502,7 +512,27 @@ export default function FeaturedShowcase() {
           aria-label={`View details for ${popup.project.title}`}
           style={{ cursor: "pointer" }}
         >
-          <video src={popup.project.videoSrc} autoPlay loop muted playsInline className="portfolio-popup-video" aria-label={`${popup.project.title} video preview`} />
+          <video
+            src={popup.project.videoSrc}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="portfolio-popup-video"
+            aria-label={`${popup.project.title} video preview`}
+            onWaiting={() => setPopupLoading(true)}
+            onPlaying={() => setPopupLoading(false)}
+            onCanPlay={() => setPopupLoading(false)}
+            onLoadStart={() => setPopupLoading(true)}
+          />
+          {popupLoading && (
+            <div className="video-modal-loader">
+              <div
+                className="reel-loader-spinner"
+                style={{ "--accent-color": popup.project.colorFrom || "#ec4899" } as React.CSSProperties}
+              />
+            </div>
+          )}
           <div className="portfolio-popup-scanline" aria-hidden="true" />
           <div className="portfolio-popup-fade" aria-hidden="true" />
           <div className="portfolio-popup-overlay">
@@ -859,6 +889,8 @@ function PackagesSection({
   const [activeTab, setActiveTab] = useState<PackageTab>("impact");
   const section = PACKAGE_SECTIONS[activeTab];
 
+  const flattenedProjects = section.rows.reduce<GridProject[]>((acc, row) => [...acc, ...row.items], []);
+
   return (
     <div className="packages-section-wrap">
       <div className="packages-tabs-wrap">
@@ -874,16 +906,17 @@ function PackagesSection({
         ))}
       </div>
       <div className="portfolio-rows-wrap" style={{ paddingTop: "0.5rem" }}>
-        {section.rows.map(({ category, items }) => (
-          <CategoryRow
-            key={category}
-            category={category}
-            projects={items}
-            onCardEnter={onCardEnter}
-            onCardLeave={onCardLeave}
-            onCardClick={onCardClick}
-          />
-        ))}
+        <div className="packages-grid-4cols">
+          {flattenedProjects.map((p) => (
+            <GridCard
+              key={p.id}
+              project={p}
+              onEnter={onCardEnter}
+              onLeave={onCardLeave}
+              onClick={() => onCardClick(p)}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
