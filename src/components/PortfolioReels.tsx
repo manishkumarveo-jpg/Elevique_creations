@@ -107,17 +107,21 @@ export default function PortfolioReels({ onViewDetails, onBack }: PortfolioReels
         </button>
 
         <div ref={containerRef} className="reels-snap-container" data-lenis-prevent>
-          {REEL_VIDEOS.map((reel, idx) => (
-            <ReelCard
-              key={reel.id}
-              reel={reel}
-              index={idx}
-              isActive={idx === activeIndex}
-              isMuted={isMuted}
-              toggleMute={toggleMute}
-              onViewDetails={onViewDetails}
-            />
-          ))}
+          {REEL_VIDEOS.map((reel, idx) => {
+            const isAdjacent = Math.abs(idx - activeIndex) <= 1;
+            return (
+              <ReelCard
+                key={reel.id}
+                reel={reel}
+                index={idx}
+                isActive={idx === activeIndex}
+                isAdjacent={isAdjacent}
+                isMuted={isMuted}
+                toggleMute={toggleMute}
+                onViewDetails={onViewDetails}
+              />
+            );
+          })}
         </div>
       </div>
     </div>
@@ -129,6 +133,7 @@ interface ReelCardProps {
   reel: ReelVideo;
   index: number;
   isActive: boolean;
+  isAdjacent: boolean;
   isMuted: boolean;
   toggleMute: (e: React.MouseEvent) => void;
   onViewDetails: (project: Project) => void;
@@ -144,6 +149,7 @@ function ReelCard({
   reel,
   index,
   isActive,
+  isAdjacent,
   isMuted,
   toggleMute,
   onViewDetails,
@@ -153,6 +159,14 @@ function ReelCard({
   const [liked, setLiked] = useState<boolean>(false);
   const [likeCount, setLikeCount] = useState<number>(120);
   const [copied, setCopied] = useState<boolean | 'error'>(false);
+  const [isBuffering, setIsBuffering] = useState<boolean>(false);
+  const prevActiveRef = useRef<boolean>(isActive);
+  if (isActive !== prevActiveRef.current) {
+    prevActiveRef.current = isActive;
+    if (!isActive) {
+      setIsBuffering(false);
+    }
+  }
 
   // Double-tap and play/pause action feedback
   const [showHeartPop, setShowHeartPop] = useState<boolean>(false);
@@ -282,11 +296,25 @@ function ReelCard({
         loop
         muted={isMuted}
         playsInline
-        preload={isActive ? "auto" : "none"}
+        preload={isActive ? "auto" : (isAdjacent ? "auto" : "none")}
         className="reel-video-element"
         onClick={handleVideoInteraction}
         aria-label={`Video demo for ${reel.title}`}
+        onWaiting={() => { if (isActive) setIsBuffering(true); }}
+        onPlaying={() => setIsBuffering(false)}
+        onCanPlay={() => setIsBuffering(false)}
+        onLoadStart={() => { if (isActive) setIsBuffering(true); }}
       />
+
+      {/* Loading/Buffering Spinner overlay */}
+      {isActive && isBuffering && (
+        <div className="reel-video-loader">
+          <div
+            className="reel-loader-spinner"
+            style={{ "--accent-color": reel.colorFrom } as React.CSSProperties}
+          />
+        </div>
+      )}
 
       {/* Atmospheric gradients */}
       <div className="reel-gradient-bottom" />

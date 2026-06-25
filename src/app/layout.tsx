@@ -64,6 +64,10 @@ export default function RootLayout({
         "font-sans"
       )}
     >
+      <head>
+        <link rel="preconnect" href="https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://gqgzhfsqukqoweceyyhd.supabase.co" crossOrigin="anonymous" />
+      </head>
       <body className="antialiased">{children}</body>
     </html>
   );

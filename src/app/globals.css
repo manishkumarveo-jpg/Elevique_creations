@@ -6451,6 +6451,58 @@ body {
   background: #000;
 }
 
+/* Reel and Video Modal loaders */
+.reel-video-loader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  z-index: 10;
+  pointer-events: none;
+  animation: reelLoaderFadeIn 0.25s ease-out;
+}
+
+.video-modal-loader {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  z-index: 10;
+  pointer-events: none;
+  animation: reelLoaderFadeIn 0.25s ease-out;
+}
+
+.reel-loader-spinner {
+  width: 42px;
+  height: 42px;
+  border: 3.5px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--accent-color, #ec4899);
+  border-radius: 50%;
+  animation: reelSpin 0.75s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.2);
+}
+
+@keyframes reelSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes reelLoaderFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 /* Reel Video styling */
 .reel-video-element {
   width: 100%;

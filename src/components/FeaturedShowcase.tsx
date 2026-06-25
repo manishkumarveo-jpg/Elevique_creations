@@ -31,6 +31,8 @@ interface Project {
   techStack: string[];
   videoSrc: string;
   verticalVideoSrc?: string;
+  colorFrom?: string;
+  colorTo?: string;
 }
 
 const PROJECTS: Project[] = [
@@ -161,6 +163,9 @@ export default function FeaturedShowcase() {
   const [bottomSheet, setBottomSheet] = useState<Project | null>(null);
   const [popup, setPopup] = useState<PopupState | null>(null);
 
+  const [overlayLoading, setOverlayLoading] = useState<boolean>(false);
+  const [sheetLoading, setSheetLoading] = useState<boolean>(false);
+
   const heroVideoRef = useRef<HTMLVideoElement>(null);
   const popupRef = useRef<HTMLDivElement>(null);
 
@@ -230,7 +235,10 @@ export default function FeaturedShowcase() {
     gsap.to(overlayBoxRef.current, { scale: 0.94, opacity: 0, duration: 0.3, ease: "power3.in" });
     gsap.to(overlayBgRef.current, {
       opacity: 0, duration: 0.3, ease: "power2.in",
-      onComplete: () => setVideoOverlay(null),
+      onComplete: () => {
+        setVideoOverlay(null);
+        setOverlayLoading(false);
+      },
     });
   }, []);
 
@@ -256,7 +264,10 @@ export default function FeaturedShowcase() {
     gsap.to(sheetPanelRef.current, { xPercent: -50, yPercent: -50, scale: 0.92, opacity: 0, duration: 0.3, ease: "power3.in" });
     gsap.to(sheetBgRef.current, {
       opacity: 0, duration: 0.3, ease: "power2.in",
-      onComplete: () => setBottomSheet(null),
+      onComplete: () => {
+        setBottomSheet(null);
+        setSheetLoading(false);
+      },
     });
   }, []);
 
@@ -548,7 +559,20 @@ export default function FeaturedShowcase() {
               playsInline
               className="vo-video"
               aria-label={`${videoOverlay.title} full film`}
+              onWaiting={() => setOverlayLoading(true)}
+              onPlaying={() => setOverlayLoading(false)}
+              onCanPlay={() => setOverlayLoading(false)}
+              onLoadStart={() => setOverlayLoading(true)}
             />
+
+            {overlayLoading && (
+              <div className="video-modal-loader">
+                <div
+                  className="reel-loader-spinner"
+                  style={{ "--accent-color": "#ec4899" } as React.CSSProperties}
+                />
+              </div>
+            )}
 
             {/* bottom info bar */}
             <div className="vo-info">
@@ -593,8 +617,28 @@ export default function FeaturedShowcase() {
             </button>
 
             {/* ── video (full width, 16:9) ── */}
-            <div className="bs-video-col">
-              <video src={bottomSheet.videoSrc} autoPlay loop muted playsInline className="bs-video" aria-label={`${bottomSheet.title} highlight video`} />
+            <div className="bs-video-col" style={{ position: "relative" }}>
+              <video
+                src={bottomSheet.videoSrc}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="bs-video"
+                aria-label={`${bottomSheet.title} highlight video`}
+                onWaiting={() => setSheetLoading(true)}
+                onPlaying={() => setSheetLoading(false)}
+                onCanPlay={() => setSheetLoading(false)}
+                onLoadStart={() => setSheetLoading(true)}
+              />
+              {sheetLoading && (
+                <div className="video-modal-loader">
+                  <div
+                    className="reel-loader-spinner"
+                    style={{ "--accent-color": bottomSheet.colorFrom || "#ec4899" } as React.CSSProperties}
+                  />
+                </div>
+              )}
               <div className="bs-video-overlay" />
 
               {/* title + action btns float over gradient */}
