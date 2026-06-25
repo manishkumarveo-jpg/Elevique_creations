@@ -14,7 +14,8 @@ export interface ReelVideo {
   role: string;
   description: string;
   techStack: string[];
-
+  colorFrom: string;
+  colorTo: string;
   videoSrc: string | undefined;
 }
 
@@ -29,9 +30,9 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "Creative Direction",
     description: "A sneaker showcase built on motion and material, where every angle sells the craft.",
     techStack: ["AI Styling", "Editorial", "Motion Design"],
-
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Cult%20Shoes%20showcase.mp4"
-
+    colorFrom: "#ec4899",
+    colorTo: "#f59e0b",
+    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Cult%20Shoes%20showcase.mp4",
   },
   {
     id: 4,
@@ -41,9 +42,9 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "Creative Direction",
     description: "Lifestyle storytelling that puts the shoe in motion, on the street and off it.",
     techStack: ["AI Styling", "Editorial", "Motion Design"],
-
+    colorFrom: "#ec4899",
+    colorTo: "#f59e0b",
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/feature_sectoin/Forbes%20properties%20-%20Real%20estate%20-%20concept.MP4",
-
   },
   {
     id: 16,
@@ -53,7 +54,8 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "Creative Direction",
     description: "Premium eyewear styled into a lifestyle story, frame by frame.",
     techStack: ["AI Styling", "Editorial", "Motion Design"],
-
+    colorFrom: "#ec4899",
+    colorTo: "#f59e0b",
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/grid_videos/Beauty%2C%20Wellness%20%26%20Personal%20Care/Cosmetics%20-%20Premium%20(1).mp4",
   },
   {
@@ -64,7 +66,8 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "Creative Direction",
     description: "Haute couture meets surrealism in a dreamlike sequence of fabric and motion.",
     techStack: ["AI Styling", "Editorial", "Motion Design"],
-
+    colorFrom: "#ec4899",
+    colorTo: "#f59e0b",
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Cult%20shoes%20lifestyle.mp4",
   },
   {
@@ -75,7 +78,8 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "AI Avatar Director",
     description: "A digital influencer styled and directed to feel indistinguishable from the real thing.",
     techStack: ["AI Avatar", "UGC", "Brand Voice"],
-
+    colorFrom: "#ec4899",
+    colorTo: "#f59e0b",
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Cult%20shoes%20lifestyle.mp4",
   },
   {
@@ -86,7 +90,8 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "Creative Direction",
     description: "Haute couture meets surrealism in a dreamlike sequence of fabric and motion.",
     techStack: ["AI Styling", "Editorial", "Motion Design"],
-
+    colorFrom: "#ec4899",
+    colorTo: "#f59e0b",
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Harman%20tea%20concept.mp4",
   },
   {
@@ -97,6 +102,8 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "Creative Direction",
     description: "A travel-led lifestyle story shot for motion, mood, and escape.",
     techStack: ["AI Styling", "Editorial", "Motion Design"],
+    colorFrom: "#ec4899",
+    colorTo: "#f59e0b",
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/grid_videos/Beauty%2C%20Wellness%20%26%20Personal%20Care/Lifestyle%20-%20Retro%20concept%20Blush.mp4",
   },
   {
@@ -107,7 +114,9 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "Creative Direction",
     description: "Haute couture meets surrealism in a dreamlike sequence of fabric and motion.",
     techStack: ["AI Styling", "Editorial", "Motion Design"],
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/grid_videos/Beauty%2C%20Wellness%20%26%20Personal%20Care/Cosmetics%20-%20Aura%20concept.mp4"
+    colorFrom: "#ec4899",
+    colorTo: "#f59e0b",
+    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/grid_videos/Beauty%2C%20Wellness%20%26%20Personal%20Care/Cosmetics%20-%20Aura%20concept.mp4",
   },
   {
     id: 28,
@@ -117,6 +126,8 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "Creative Direction",
     description: "Packaging-led storytelling that puts material and craft front and centre.",
     techStack: ["AI Styling", "Editorial", "Motion Design"],
+    colorFrom: "#ec4899",
+    colorTo: "#f59e0b",
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Personal%20Branding/AI%20avatar%20-%20UGC%20testimonial.mp4", // not uploaded yet
   },
 
@@ -129,8 +140,9 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "Architectural Visualizer",
     description: "An architectural meditation on the cities we're building and the ones we dream.",
     techStack: ["Drone AI", "Architecture Viz", "Cinematic Grade"],
+    colorFrom: "#06b6d4",
+    colorTo: "#10b981",
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/grid_videos/Beauty%2C%20Wellness%20%26%20Personal%20Care/Cosmetics%20-%20Premium%20(8).mp4",
-
   },
   {
     id: 14,
@@ -140,6 +152,8 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "Architectural Visualizer",
     description: "A news-style hook built to stop the scroll and sell the property fast.",
     techStack: ["Drone AI", "Architecture Viz", "Cinematic Grade"],
+    colorFrom: "#06b6d4",
+    colorTo: "#10b981",
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/grid_videos/Beauty%2C%20Wellness%20%26%20Personal%20Care/Its%20me%20valentine_s%20concept.mp4",
   },
   {
@@ -150,6 +164,8 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "Architectural Visualizer",
     description: "An architectural meditation on the cities we're building and the ones we dream.",
     techStack: ["Drone AI", "Architecture Viz", "Cinematic Grade"],
+    colorFrom: "#06b6d4",
+    colorTo: "#10b981",
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Lifestyle%20-%20Eyewear%20premium.mp4",
   },
   {
@@ -160,6 +176,8 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "Architectural Visualizer",
     description: "A scenario-driven property story that builds tension before the reveal.",
     techStack: ["Drone AI", "Architecture Viz", "Cinematic Grade"],
+    colorFrom: "#06b6d4",
+    colorTo: "#10b981",
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Fashion%20%26%20Lifestyle%20-%20Women_s%20Dress%20(1).mp4",
   },
 
@@ -172,6 +190,8 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "Packaging & Brand System",
     description: "Sensory storytelling distilled into seconds of atmospheric brand cinema.",
     techStack: ["Product Viz", "AI Styling", "Color Grading"],
+    colorFrom: "#f59e0b",
+    colorTo: "#ec4899",
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Personal%20Branding/UGC%20review%20Avatar.mp4",
   },
   {
@@ -182,6 +202,8 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "Packaging & Brand System",
     description: "Sensory storytelling distilled into seconds of atmospheric brand cinema.",
     techStack: ["Product Viz", "AI Styling", "Color Grading"],
+    colorFrom: "#f59e0b",
+    colorTo: "#ec4899",
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/grid_videos/Beauty%2C%20Wellness%20%26%20Personal%20Care/Cosmetics%20-%20Premium%20(5).mp4",
   },
   {
@@ -192,8 +214,9 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "Packaging & Brand System",
     description: "A retro-toned mood piece built around colour, texture, and nostalgia.",
     techStack: ["Product Viz", "AI Styling", "Color Grading"],
+    colorFrom: "#f59e0b",
+    colorTo: "#ec4899",
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Influencer%20avatar%20(1).mp4",
-
   },
   {
     id: 9,
@@ -203,6 +226,8 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "Packaging & Brand System",
     description: "Sensory storytelling distilled into seconds of atmospheric brand cinema.",
     techStack: ["Product Viz", "AI Styling", "Color Grading"],
+    colorFrom: "#f59e0b",
+    colorTo: "#ec4899",
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/real%20Estate/Aar%20Kay%20Vox%20-%20scenario%20buildup%20(1).mp4",
   },
   {
@@ -213,6 +238,8 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "Packaging & Brand System",
     description: "Sensory storytelling distilled into seconds of atmospheric brand cinema.",
     techStack: ["Product Viz", "AI Styling", "Color Grading"],
+    colorFrom: "#f59e0b",
+    colorTo: "#ec4899",
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Fashion%20%26%20Lifestyle%20-%20Sweetfeel%20(1).mp4",
   },
   {
@@ -223,6 +250,8 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "Packaging & Brand System",
     description: "A concept reel exploring identity, light, and self-presentation.",
     techStack: ["Product Viz", "AI Styling", "Color Grading"],
+    colorFrom: "#f59e0b",
+    colorTo: "#ec4899",
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Lifestyle%20-%20travel%20(1).mp4",
   },
   {
@@ -233,6 +262,8 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "Packaging & Brand System",
     description: "Sensory storytelling distilled into seconds of atmospheric brand cinema.",
     techStack: ["Product Viz", "AI Styling", "Color Grading"],
+    colorFrom: "#f59e0b",
+    colorTo: "#ec4899",
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Fashion%20%26%20Lifestyle%20-%20Premium%20(3).mp4",
   },
   {
@@ -243,8 +274,9 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "Packaging & Brand System",
     description: "Sensory storytelling distilled into seconds of atmospheric brand cinema.",
     techStack: ["Product Viz", "AI Styling", "Color Grading"],
+    colorFrom: "#f59e0b",
+    colorTo: "#ec4899",
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/grid_videos/Beauty%2C%20Wellness%20%26%20Personal%20Care/Cosmetics%20-%20Premium%20(6).mp4",
-
   },
 
   // ── FMCG ── accent: orange → yellow
@@ -256,6 +288,8 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "Brand Film Director",
     description: "Crisp product storytelling that puts function and form centre stage.",
     techStack: ["Product Viz", "Brand Film", "Motion Graphics"],
+    colorFrom: "#f97316",
+    colorTo: "#eab308",
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Fashion%20%26%20Lifestyle%20-%20Sweetfeel%20(3).mp4",
   },
   {
@@ -266,7 +300,8 @@ export const REEL_VIDEOS: ReelVideo[] = [
     role: "Brand Film Director",
     description: "Crisp product storytelling that puts function and form centre stage.",
     techStack: ["Product Viz", "Brand Film", "Motion Graphics"],
-
+    colorFrom: "#f97316",
+    colorTo: "#eab308",
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Tech%20auto%2CIndustry/Almonds.AI%20concept.mp4", // not uploaded yet
   },
 ];
