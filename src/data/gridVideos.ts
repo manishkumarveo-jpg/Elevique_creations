@@ -25,7 +25,7 @@ export const AI_VISUALS: GridProject[] = [
   },
   {
     id: 2,
-    title: "Elevique Creation",
+    title: "Elevique creations",
     category: "Beauty, Wellness & Personal Care",
     year: "2024",
     role: "Creative Direction",

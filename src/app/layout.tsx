@@ -37,9 +37,9 @@ export const metadata: Metadata = {
   title: "Elevique | Creative AI Visuals Studio",
   description: "High-end AI visuals for premium brands.",
   icons: {
-    icon: "/Elevique (7).png",
-    shortcut: "/Elevique (7).png",
-    apple: "/Elevique (7).png",
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
   },
 };
 

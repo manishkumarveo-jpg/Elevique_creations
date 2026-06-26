@@ -324,7 +324,7 @@ function ReelCard({
         muted={isMuted}
         playsInline
         autoPlay={isActive}
-        preload={isActive ? "auto" : (isAdjacent ? "auto" : "none")}
+        preload={isActive ? "auto" : (isAdjacent ? "metadata" : "none")}
         className="reel-video-element"
         onClick={handleVideoInteraction}
         aria-label={`Video demo for ${reel.title}`}

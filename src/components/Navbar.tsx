@@ -86,22 +86,6 @@ export default function Navbar() {
           )}
 
           <Link href="/" className="navbar-logo" style={{ overflow: "visible", display: "flex", alignItems: "center", position: "relative" }}>
-            {/* SVG filter to key out the light grey background of the logo */}
-            <svg style={{ position: "absolute", width: 0, height: 0, overflow: "hidden" }} aria-hidden="true">
-              <defs>
-                <filter id="remove-white-bg" colorInterpolationFilters="sRGB">
-                  <feColorMatrix
-                    type="matrix"
-                    values="
-                      1 0 0 0 0
-                      0 1 0 0 0
-                      0 0 1 0 0
-                      -6 0 0 5 0
-                    "
-                  />
-                </filter>
-              </defs>
-            </svg>
             <Image
               src="/logo.png"
               alt="Elevique Logo"
@@ -109,7 +93,6 @@ export default function Navbar() {
               height={80}
               style={{
                 objectFit: "contain",
-                filter: "url(#remove-white-bg) brightness(2.2) contrast(1.1)",
                 marginTop: "-20px",
                 marginBottom: "-20px",
               }}

@@ -15,7 +15,7 @@ export interface PackageProject {
 export const PKG_AI_VISUALS: PackageProject[] = [
   {
     id: 101,
-    title: "Elevique Creation",
+    title: "Elevique creations",
     category: "AI Visuals",
     year: "2024",
     role: "Creative Direction",
@@ -27,7 +27,7 @@ export const PKG_AI_VISUALS: PackageProject[] = [
   },
   {
     id: 102,
-    title: "Elevique Creation",
+    title: "Elevique creations",
     category: "AI Visuals",
     year: "2024",
     role: "Creative Direction",

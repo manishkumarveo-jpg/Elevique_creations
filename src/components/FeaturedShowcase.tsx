@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, memo } from "react";
 import gsap from "gsap";
 import { motion, useInView } from "framer-motion";
 import { ScrollReveal } from "@/components/shared/ScrollReveal";
@@ -168,6 +168,8 @@ export default function FeaturedShowcase() {
   const [popupLoading, setPopupLoading] = useState<boolean>(false);
 
   const heroVideoRef = useRef<HTMLVideoElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const isHeroInView = useInView(sectionRef, { once: true, margin: "400px" });
   const popupRef = useRef<HTMLDivElement>(null);
 
   /* overlay refs */
@@ -218,6 +220,8 @@ export default function FeaturedShowcase() {
   const openVideoOverlay = useCallback((p: Project) => {
     setVideoOverlay(p);
   }, []);
+
+  const onCardClick = useCallback((p: GridProject) => openVideoOverlay(p as Project), [openVideoOverlay]);
 
   useEffect(() => {
     if (!videoOverlay || !overlayBgRef.current || !overlayBoxRef.current) return;
@@ -377,12 +381,14 @@ export default function FeaturedShowcase() {
 
   /* ════════════════════════════════════════════════════════════ */
   return (
-    <section id="work" style={{ background: "#000000" }}>
+    <section id="work" ref={sectionRef} style={{ background: "#000000" }}>
 
       {/* ══ HERO (grid mode only) ══════════════════════════════ */}
       {viewMode === "grid" && (
         <div className="portfolio-hero">
-          <video ref={heroVideoRef} className="portfolio-hero-video" src={active.videoSrc} autoPlay loop muted playsInline preload="auto" aria-hidden="true" tabIndex={-1} />
+          {isHeroInView && (
+            <video ref={heroVideoRef} className="portfolio-hero-video" src={active.videoSrc} autoPlay loop muted playsInline preload="metadata" aria-hidden="true" tabIndex={-1} />
+          )}
           <div className="portfolio-hero-gradient-b" />
           <div className="portfolio-hero-gradient-l" />
           <div className="portfolio-label">
@@ -451,7 +457,7 @@ export default function FeaturedShowcase() {
                   key={p.id}
                   project={p}
                   isActive={active.id === p.id}
-                  onClick={() => switchProject(p)}
+                  onClick={switchProject}
                   onEnter={onCardEnter}
                   onLeave={onCardLeave}
                 />
@@ -468,7 +474,7 @@ export default function FeaturedShowcase() {
                 projects={items}
                 onCardEnter={onCardEnter}
                 onCardLeave={onCardLeave}
-                onCardClick={(p: GridProject) => openVideoOverlay(p as Project)}
+                onCardClick={onCardClick}
               />
             ))}
           </div>
@@ -487,7 +493,7 @@ export default function FeaturedShowcase() {
           <PackagesSection
             onCardEnter={onCardEnter}
             onCardLeave={onCardLeave}
-            onCardClick={(p: GridProject) => openVideoOverlay(p as Project)}
+            onCardClick={onCardClick}
           />
         </div>
       )}
@@ -716,7 +722,7 @@ export default function FeaturedShowcase() {
 }
 
 /* ─── Featured Card ─────────────────────────────────────────── */
-function FeaturedCard({ project, isActive, onClick, onEnter: onCardEnter, onLeave: onCardLeave }: { project: Project; isActive: boolean; onClick: () => void; onEnter: (p: GridProject, e: React.MouseEvent<HTMLElement>) => void; onLeave: () => void }) {
+const FeaturedCard = memo(function FeaturedCard({ project, isActive, onClick, onEnter: onCardEnter, onLeave: onCardLeave }: { project: Project; isActive: boolean; onClick: (p: Project) => void; onEnter: (p: GridProject, e: React.MouseEvent<HTMLElement>) => void; onLeave: () => void }) {
   const cardRef = useRef<HTMLButtonElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const isInView = useInView(cardRef, { once: true, margin: "400px" });
@@ -730,6 +736,7 @@ function FeaturedCard({ project, isActive, onClick, onEnter: onCardEnter, onLeav
     videoRef.current?.pause();
     onCardLeave();
   };
+  const handleClick = () => onClick(project);
   return (
     <ScrollReveal direction="scale" scaleFrom={0.95} amount={0.2} margin="0px -5%" className="shrink-0">
       <button
@@ -737,8 +744,8 @@ function FeaturedCard({ project, isActive, onClick, onEnter: onCardEnter, onLeav
         type="button"
         className={`portfolio-feat-card${isActive ? " portfolio-feat-card--active" : ""}`}
 
-        onClick={onClick}
-        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { if (e.key === " ") e.preventDefault(); onClick(); } }}
+        onClick={handleClick}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { if (e.key === " ") e.preventDefault(); handleClick(); } }}
         onMouseEnter={onEnter}
         onMouseLeave={onLeave}
         aria-label={`Switch to ${project.title}`}
@@ -766,7 +773,7 @@ function FeaturedCard({ project, isActive, onClick, onEnter: onCardEnter, onLeav
       </button>
     </ScrollReveal>
   );
-}
+});
 
 /* ─── Category Row ──────────────────────────────────────────── */
 function CategoryRow({
@@ -798,7 +805,7 @@ function CategoryRow({
               project={p}
               onEnter={onCardEnter}
               onLeave={onCardLeave}
-              onClick={() => onCardClick(p)}
+              onClick={onCardClick}
             />
           ))}
         </div>
@@ -809,7 +816,7 @@ function CategoryRow({
 }
 
 /* ─── Grid Card ─────────────────────────────────────────────── */
-function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject; onEnter: (p: GridProject, e: React.MouseEvent<HTMLElement>) => void; onLeave: () => void; onClick: () => void }) {
+const GridCard = memo(function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject; onEnter: (p: GridProject, e: React.MouseEvent<HTMLElement>) => void; onLeave: () => void; onClick: (p: GridProject) => void }) {
   const cardRef = useRef<HTMLButtonElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const isInView = useInView(cardRef, { once: true, margin: "400px" });
@@ -821,6 +828,7 @@ function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject
     videoRef.current?.pause();
     onLeave();
   };
+  const handleClick = () => onClick(project);
   return (
     <ScrollReveal direction="scale" scaleFrom={0.95} amount={0.2} margin="0px -5%" className="shrink-0">
       <button
@@ -830,8 +838,8 @@ function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject
         style={{ border: "none", background: "transparent", padding: 0, cursor: "pointer" }}
         onMouseEnter={handleEnter}
         onMouseLeave={handleLeave}
-        onClick={onClick}
-        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { if (e.key === " ") e.preventDefault(); onClick(); } }}
+        onClick={handleClick}
+        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { if (e.key === " ") e.preventDefault(); handleClick(); } }}
         aria-label={`Play ${project.title}`}
       >
         <div className="portfolio-grid-card-inner">
@@ -860,7 +868,7 @@ function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject
       </button>
     </ScrollReveal>
   );
-}
+});
 
 /* ─── Packages Section ──────────────────────────────────────── */
 function PackagesSection({
@@ -899,7 +907,7 @@ function PackagesSection({
               project={p}
               onEnter={onCardEnter}
               onLeave={onCardLeave}
-              onClick={() => onCardClick(p)}
+              onClick={onCardClick}
             />
           ))}
         </div>

@@ -57,7 +57,7 @@ export default function LoginPage() {
 
             <div style={{ animation: '_logoPop 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.1s both', marginBottom: 20 }}>
               <Image
-                src="/Elevique (7).png"
+                src="/logo.png"
                 alt="Elevique"
                 width={180}
                 height={68}

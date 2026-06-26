@@ -7,7 +7,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="auth-inner">
         <div className="auth-brand">
           <Image
-            src="/Elevique (7).png"
+            src="/logo.png"
             alt="Elevique"
             width={160}
             height={60}
