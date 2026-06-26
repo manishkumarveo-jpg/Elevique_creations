@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import gsap from "gsap";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { ScrollReveal } from "@/components/shared/ScrollReveal";
 import {
   Play,
@@ -719,6 +719,7 @@ export default function FeaturedShowcase() {
 function FeaturedCard({ project, isActive, onClick, onEnter: onCardEnter, onLeave: onCardLeave }: { project: Project; isActive: boolean; onClick: () => void; onEnter: (p: GridProject, e: React.MouseEvent<HTMLElement>) => void; onLeave: () => void }) {
   const cardRef = useRef<HTMLButtonElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const isInView = useInView(cardRef, { once: true, margin: "400px" });
   const onEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!isActive) gsap.to(cardRef.current, { scale: 1.04, duration: 0.22, ease: "power4.out" });
     if (project.videoSrc) videoRef.current?.play().catch(() => { });
@@ -742,7 +743,7 @@ function FeaturedCard({ project, isActive, onClick, onEnter: onCardEnter, onLeav
         onMouseLeave={onLeave}
         aria-label={`Switch to ${project.title}`}
       >
-        {project.videoSrc ? (
+        {project.videoSrc && isInView && (
           <motion.video
             ref={videoRef}
             src={project.videoSrc}
@@ -753,13 +754,6 @@ function FeaturedCard({ project, isActive, onClick, onEnter: onCardEnter, onLeav
             className="portfolio-feat-video"
             aria-hidden="true"
             tabIndex={-1}
-            variants={imageRevealVariants}
-            transition={{ duration: 0.6, delay: 0.1, ease: EASE_OUT }}
-          />
-        ) : (
-          <motion.div
-            className="portfolio-feat-video"
-            aria-hidden="true"
             variants={imageRevealVariants}
             transition={{ duration: 0.6, delay: 0.1, ease: EASE_OUT }}
           />
@@ -816,7 +810,9 @@ function CategoryRow({
 
 /* ─── Grid Card ─────────────────────────────────────────────── */
 function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject; onEnter: (p: GridProject, e: React.MouseEvent<HTMLElement>) => void; onLeave: () => void; onClick: () => void }) {
+  const cardRef = useRef<HTMLButtonElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const isInView = useInView(cardRef, { once: true, margin: "400px" });
   const handleEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (project.videoSrc) videoRef.current?.play().catch(() => { });
     onEnter(project, e);
@@ -828,6 +824,7 @@ function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject
   return (
     <ScrollReveal direction="scale" scaleFrom={0.95} amount={0.2} margin="0px -5%" className="shrink-0">
       <button
+        ref={cardRef}
         type="button"
         className="portfolio-grid-card"
         style={{ border: "none", background: "transparent", padding: 0, cursor: "pointer" }}
@@ -838,7 +835,7 @@ function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject
         aria-label={`Play ${project.title}`}
       >
         <div className="portfolio-grid-card-inner">
-          {project.videoSrc ? (
+          {project.videoSrc && isInView && (
             <motion.video
               ref={videoRef}
               src={project.videoSrc}
@@ -849,17 +846,6 @@ function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject
               className="portfolio-grid-video"
               aria-hidden="true"
               tabIndex={-1}
-              variants={imageRevealVariants}
-              transition={{ duration: 0.6, delay: 0.1, ease: EASE_OUT }}
-            />
-          ) : (
-            <motion.div
-              className="portfolio-grid-video"
-              style={{
-                background: `linear-gradient(135deg, ${project.colorFrom}44 0%, ${project.colorTo}33 100%)`,
-                opacity: 0.7,
-              }}
-              aria-hidden="true"
               variants={imageRevealVariants}
               transition={{ duration: 0.6, delay: 0.1, ease: EASE_OUT }}
             />

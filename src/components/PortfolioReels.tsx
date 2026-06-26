@@ -99,7 +99,7 @@ export default function PortfolioReels({ onViewDetails, onBack }: PortfolioReels
 
         <div ref={containerRef} className="reels-snap-container" data-lenis-prevent>
           {REEL_VIDEOS.map((reel, idx) => {
-            const isAdjacent = Math.abs(idx - activeIndex) <= 1;
+            const isAdjacent = Math.abs(idx - activeIndex) <= 2;
             return (
               <ReelCard
                 key={reel.id}
@@ -146,7 +146,7 @@ function ReelCard({
   onViewDetails,
 }: ReelCardProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState<boolean>(true);
+  const isPlayingRef = useRef<boolean>(isActive);
   const [liked, setLiked] = useState<boolean>(false);
   const [copied, setCopied] = useState<boolean | 'error'>(false);
   const [isBuffering, setIsBuffering] = useState<boolean>(false);
@@ -171,23 +171,61 @@ function ReelCard({
     const video = videoRef.current;
     if (!video) return;
 
-    if (isActive) {
-      // Small timeout to allow transition stability
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise
+    let isCurrent = true;
+
+    const tryPlay = () => {
+      if (isActive && video.paused) {
+        video.play()
           .then(() => {
-            setIsPlaying(true);
+            if (isCurrent) {
+              isPlayingRef.current = true;
+            }
           })
           .catch((err: unknown) => {
-            console.error('[PortfolioReels] autoplay blocked:', err);
-            setIsPlaying(false);
+            if (isCurrent) {
+              isPlayingRef.current = false;
+              const errorName = err && typeof err === 'object' && 'name' in err ? (err as { name: string }).name : '';
+              if (errorName === 'AbortError') {
+                // Quietly ignore since it's just interrupted by a subsequent pause()
+              } else if (errorName === 'NotAllowedError') {
+                console.warn('[PortfolioReels] Autoplay blocked by browser policy (user interaction required)');
+              } else {
+                console.error('[PortfolioReels] autoplay failed:', err);
+              }
+            }
           });
       }
+    };
+
+    if (isActive) {
+      // Aggressive autoplay triggers
+      tryPlay();
+      video.addEventListener("loadeddata", tryPlay);
+      video.addEventListener("canplay", tryPlay);
+
+      // Listen to first user interaction on window to trigger playback if blocked by browser policy
+      const onFirstInteraction = () => {
+        tryPlay();
+        window.removeEventListener("touchstart", onFirstInteraction);
+        window.removeEventListener("click", onFirstInteraction);
+      };
+      window.addEventListener("touchstart", onFirstInteraction, { once: true, passive: true });
+      window.addEventListener("click", onFirstInteraction, { once: true });
+
+      return () => {
+        isCurrent = false;
+        video.removeEventListener("loadeddata", tryPlay);
+        video.removeEventListener("canplay", tryPlay);
+        window.removeEventListener("touchstart", onFirstInteraction);
+        window.removeEventListener("click", onFirstInteraction);
+      };
     } else {
       video.pause();
       video.currentTime = 0; // Rewind
-      startTransition(() => setIsPlaying(false));
+      isPlayingRef.current = false;
+      return () => {
+        isCurrent = false;
+      };
     }
   }, [isActive]);
 
@@ -203,13 +241,13 @@ function ReelCard({
     const video = videoRef.current;
     if (!video) return;
 
-    if (isPlaying) {
+    if (isPlayingRef.current) {
       video.pause();
-      setIsPlaying(false);
+      isPlayingRef.current = false;
       setPlayStateFeedback("pause");
     } else {
       video.play().catch(() => { });
-      setIsPlaying(true);
+      isPlayingRef.current = true;
       setPlayStateFeedback("play");
     }
 
@@ -217,7 +255,7 @@ function ReelCard({
     setTimeout(() => {
       setPlayStateFeedback(null);
     }, 500);
-  }, [isPlaying]);
+  }, []);
 
   // Trigger Like actions & float-up heart particles
   const handleLike = useCallback(() => {
@@ -285,6 +323,7 @@ function ReelCard({
         loop
         muted={isMuted}
         playsInline
+        autoPlay={isActive}
         preload={isActive ? "auto" : (isAdjacent ? "auto" : "none")}
         className="reel-video-element"
         onClick={handleVideoInteraction}
