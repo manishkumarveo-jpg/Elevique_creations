@@ -86,8 +86,9 @@ interface PopupState {
 function groupByCategory(projects: GridProject[]) {
   const map = new Map<string, GridProject[]>();
   for (const p of projects) {
-    if (!map.has(p.category)) map.set(p.category, []);
-    map.get(p.category)!.push(p);
+    const category = p.category ?? "Uncategorized";
+    if (!map.has(category)) map.set(category, []);
+    map.get(category)!.push(p);
   }
   return Array.from(map.entries()).map(([category, items]) => ({ category, items }));
 }
@@ -558,12 +559,16 @@ export default function FeaturedShowcase() {
               </button>
             </div>
             <h4 className="portfolio-popup-title">{popup.project.title}</h4>
-            <p className="portfolio-popup-desc">{popup.project.description}</p>
-            <div className="portfolio-popup-tags">
-              {popup.project.techStack.slice(0, 3).map((tag) => (
-                <span key={tag} className="portfolio-popup-tag">{tag}</span>
-              ))}
-            </div>
+            {popup.project.description && (
+              <p className="portfolio-popup-desc">{popup.project.description}</p>
+            )}
+            {popup.project.techStack && (
+              <div className="portfolio-popup-tags">
+                {popup.project.techStack.slice(0, 3).map((tag) => (
+                  <span key={tag} className="portfolio-popup-tag">{tag}</span>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -699,13 +704,15 @@ export default function FeaturedShowcase() {
               <div className="bs-meta">
               </div>
 
-              <p className="bs-desc">{bottomSheet.description}</p>
+              {bottomSheet.description && <p className="bs-desc">{bottomSheet.description}</p>}
 
-              <div className="bs-stack">
-                {bottomSheet.techStack.map((tag) => (
-                  <span key={tag} className="portfolio-modal-tag">{tag}</span>
-                ))}
-              </div>
+              {bottomSheet.techStack && (
+                <div className="bs-stack">
+                  {bottomSheet.techStack.map((tag) => (
+                    <span key={tag} className="portfolio-modal-tag">{tag}</span>
+                  ))}
+                </div>
+              )}
 
               <div className="bs-actions">
                 <button type="button" className="portfolio-btn-ghost" style={{ fontSize: "0.75rem" }}>
@@ -860,10 +867,12 @@ const GridCard = memo(function GridCard({ project, onEnter, onLeave, onClick }: 
           )}
           <div className="portfolio-grid-overlay" />
         </div>
-        <span className="portfolio-grid-year">{project.year}</span>
+        {project.year && <span className="portfolio-grid-year">{project.year}</span>}
         <div className="portfolio-grid-info">
           <span className="portfolio-grid-title">{project.title}</span>
-          <span className="portfolio-grid-category">{project.category.toUpperCase()}</span>
+          {project.category && (
+            <span className="portfolio-grid-category">{project.category.toUpperCase()}</span>
+          )}
         </div>
       </button>
     </ScrollReveal>

@@ -2,306 +2,66 @@
 // Sourced from Cloudflare R2. `videoSrc: undefined` means no clip is uploaded yet —
 // the UI falls back to a poster/placeholder for that entry.
 //
-// Entries are grouped by `category` below. Each group shares the same
-// colorFrom/colorTo accent and techStack tags — keep new entries within a
-// group consistent with its siblings unless the project genuinely differs.
+// `title` is derived automatically from the video file name in `videoSrc` —
+// don't hand-write titles here. To add a clip, just add `{ id, videoSrc }` to
+// the right accent group below.
+
+import { expandWithMeta } from "@/lib/utils";
 
 export interface ReelVideo {
   id: number;
   title: string;
-  category: string;
-  year: string;
-  role: string;
-  description: string;
-  techStack: string[];
   colorFrom: string;
   colorTo: string;
   videoSrc: string | undefined;
 }
 
+interface RawReel {
+  id: number;
+  videoSrc: string | undefined;
+}
+
+function reelGroup(colorFrom: string, colorTo: string, items: RawReel[]): ReelVideo[] {
+  return expandWithMeta({ colorFrom, colorTo }, items);
+}
 
 export const REEL_VIDEOS: ReelVideo[] = [
   // ── Fashion & Lifestyle ── accent: pink → amber
-  {
-    id: 1,
-    title: "Cult Shoes Showcase",
-    category: "Fashion & Lifestyle",
-    year: "2024",
-    role: "Creative Direction",
-    description: "A sneaker showcase built on motion and material, where every angle sells the craft.",
-    techStack: ["AI Styling", "Editorial", "Motion Design"],
-    colorFrom: "#ec4899",
-    colorTo: "#f59e0b",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Cult%20Shoes%20showcase.mp4",
-  },
-  {
-    id: 4,
-    title: "Cult Shoes Lifestyle",
-    category: "Fashion & Lifestyle",
-    year: "2024",
-    role: "Creative Direction",
-    description: "Lifestyle storytelling that puts the shoe in motion, on the street and off it.",
-    techStack: ["AI Styling", "Editorial", "Motion Design"],
-    colorFrom: "#ec4899",
-    colorTo: "#f59e0b",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/feature_sectoin/Forbes%20properties%20-%20Real%20estate%20-%20concept.MP4",
-  },
-  {
-    id: 16,
-    title: "Lifestyle – Eyewear Premium",
-    category: "Fashion & Lifestyle",
-    year: "2024",
-    role: "Creative Direction",
-    description: "Premium eyewear styled into a lifestyle story, frame by frame.",
-    techStack: ["AI Styling", "Editorial", "Motion Design"],
-    colorFrom: "#ec4899",
-    colorTo: "#f59e0b",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/grid_videos/Beauty%2C%20Wellness%20%26%20Personal%20Care/Cosmetics%20-%20Premium%20(1).mp4",
-  },
-  {
-    id: 18,
-    title: "Fashion & Lifestyle – Women's Dress (1)",
-    category: "Fashion & Lifestyle",
-    year: "2024",
-    role: "Creative Direction",
-    description: "Haute couture meets surrealism in a dreamlike sequence of fabric and motion.",
-    techStack: ["AI Styling", "Editorial", "Motion Design"],
-    colorFrom: "#ec4899",
-    colorTo: "#f59e0b",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Cult%20shoes%20lifestyle.mp4",
-  },
-  {
-    id: 22,
-    title: "Influencer Avatar (1)",
-    category: "Fashion & Lifestyle",
-    year: "2024",
-    role: "AI Avatar Director",
-    description: "A digital influencer styled and directed to feel indistinguishable from the real thing.",
-    techStack: ["AI Avatar", "UGC", "Brand Voice"],
-    colorFrom: "#ec4899",
-    colorTo: "#f59e0b",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Cult%20shoes%20lifestyle.mp4",
-  },
-  {
-    id: 24,
-    title: "Fashion & Lifestyle – Sweetfeel (1)",
-    category: "Fashion & Lifestyle",
-    year: "2024",
-    role: "Creative Direction",
-    description: "Haute couture meets surrealism in a dreamlike sequence of fabric and motion.",
-    techStack: ["AI Styling", "Editorial", "Motion Design"],
-    colorFrom: "#ec4899",
-    colorTo: "#f59e0b",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Harman%20tea%20concept.mp4",
-  },
-  {
-    id: 25,
-    title: "Lifestyle – Travel (1)",
-    category: "Fashion & Lifestyle",
-    year: "2024",
-    role: "Creative Direction",
-    description: "A travel-led lifestyle story shot for motion, mood, and escape.",
-    techStack: ["AI Styling", "Editorial", "Motion Design"],
-    colorFrom: "#ec4899",
-    colorTo: "#f59e0b",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/grid_videos/Beauty%2C%20Wellness%20%26%20Personal%20Care/Lifestyle%20-%20Retro%20concept%20Blush.mp4",
-  },
-  {
-    id: 27,
-    title: "Fashion & Lifestyle – Sweetfeel (3)",
-    category: "Fashion & Lifestyle",
-    year: "2024",
-    role: "Creative Direction",
-    description: "Haute couture meets surrealism in a dreamlike sequence of fabric and motion.",
-    techStack: ["AI Styling", "Editorial", "Motion Design"],
-    colorFrom: "#ec4899",
-    colorTo: "#f59e0b",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/grid_videos/Beauty%2C%20Wellness%20%26%20Personal%20Care/Cosmetics%20-%20Aura%20concept.mp4",
-  },
-  {
-    id: 28,
-    title: "Mezvo Tote Bags",
-    category: "Fashion & Lifestyle",
-    year: "2024",
-    role: "Creative Direction",
-    description: "Packaging-led storytelling that puts material and craft front and centre.",
-    techStack: ["AI Styling", "Editorial", "Motion Design"],
-    colorFrom: "#ec4899",
-    colorTo: "#f59e0b",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Personal%20Branding/AI%20avatar%20-%20UGC%20testimonial.mp4", // not uploaded yet
-  },
+  ...reelGroup("#ec4899", "#f59e0b", [
+    { id: 1, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Cult%20Shoes%20showcase.mp4" },
+    { id: 4, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/feature_sectoin/Forbes%20properties%20-%20Real%20estate%20-%20concept.MP4" },
+    { id: 16, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/grid_videos/Beauty%2C%20Wellness%20%26%20Personal%20Care/Cosmetics%20-%20Premium%20(1).mp4" },
+    { id: 18, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Cult%20shoes%20lifestyle.mp4" },
+    { id: 22, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Cult%20shoes%20lifestyle.mp4" },
+    { id: 24, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Harman%20tea%20concept.mp4" },
+    { id: 25, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/grid_videos/Beauty%2C%20Wellness%20%26%20Personal%20Care/Lifestyle%20-%20Retro%20concept%20Blush.mp4" },
+    { id: 27, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/grid_videos/Beauty%2C%20Wellness%20%26%20Personal%20Care/Cosmetics%20-%20Aura%20concept.mp4" },
+    { id: 28, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Personal%20Branding/AI%20avatar%20-%20UGC%20testimonial.mp4" }, // not uploaded yet
+  ]),
 
   // ── Real Estate ── accent: cyan → emerald
-  {
-    id: 2,
-    title: "Forbes Properties – Real Estate",
-    category: "Real Estate",
-    year: "2024",
-    role: "Architectural Visualizer",
-    description: "An architectural meditation on the cities we're building and the ones we dream.",
-    techStack: ["Drone AI", "Architecture Viz", "Cinematic Grade"],
-    colorFrom: "#06b6d4",
-    colorTo: "#10b981",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/grid_videos/Beauty%2C%20Wellness%20%26%20Personal%20Care/Cosmetics%20-%20Premium%20(8).mp4",
-  },
-  {
-    id: 14,
-    title: "Aar Kay Vox – News Hook",
-    category: "Real Estate",
-    year: "2024",
-    role: "Architectural Visualizer",
-    description: "A news-style hook built to stop the scroll and sell the property fast.",
-    techStack: ["Drone AI", "Architecture Viz", "Cinematic Grade"],
-    colorFrom: "#06b6d4",
-    colorTo: "#10b981",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/grid_videos/Beauty%2C%20Wellness%20%26%20Personal%20Care/Its%20me%20valentine_s%20concept.mp4",
-  },
-  {
-    id: 17,
-    title: "Forbes Reel – Real Estate",
-    category: "Real Estate",
-    year: "2024",
-    role: "Architectural Visualizer",
-    description: "An architectural meditation on the cities we're building and the ones we dream.",
-    techStack: ["Drone AI", "Architecture Viz", "Cinematic Grade"],
-    colorFrom: "#06b6d4",
-    colorTo: "#10b981",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Lifestyle%20-%20Eyewear%20premium.mp4",
-  },
-  {
-    id: 23,
-    title: "Aar Kay Vox – Scenario Buildup (1)",
-    category: "Real Estate",
-    year: "2024",
-    role: "Architectural Visualizer",
-    description: "A scenario-driven property story that builds tension before the reveal.",
-    techStack: ["Drone AI", "Architecture Viz", "Cinematic Grade"],
-    colorFrom: "#06b6d4",
-    colorTo: "#10b981",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Fashion%20%26%20Lifestyle%20-%20Women_s%20Dress%20(1).mp4",
-  },
+  ...reelGroup("#06b6d4", "#10b981", [
+    { id: 2, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/grid_videos/Beauty%2C%20Wellness%20%26%20Personal%20Care/Cosmetics%20-%20Premium%20(8).mp4" },
+    { id: 14, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/grid_videos/Beauty%2C%20Wellness%20%26%20Personal%20Care/Its%20me%20valentine_s%20concept.mp4" },
+    { id: 17, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Lifestyle%20-%20Eyewear%20premium.mp4" },
+    { id: 23, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Fashion%20%26%20Lifestyle%20-%20Women_s%20Dress%20(1).mp4" },
+  ]),
 
   // ── Beauty & Wellness ── accent: amber → pink
-  {
-    id: 3,
-    title: "Cosmetics – Premium (1)",
-    category: "Beauty & Wellness",
-    year: "2024",
-    role: "Packaging & Brand System",
-    description: "Sensory storytelling distilled into seconds of atmospheric brand cinema.",
-    techStack: ["Product Viz", "AI Styling", "Color Grading"],
-    colorFrom: "#f59e0b",
-    colorTo: "#ec4899",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Personal%20Branding/UGC%20review%20Avatar.mp4",
-  },
-  {
-    id: 5,
-    title: "Cosmetics – Lipstick Showreel",
-    category: "Beauty & Wellness",
-    year: "2024",
-    role: "Packaging & Brand System",
-    description: "Sensory storytelling distilled into seconds of atmospheric brand cinema.",
-    techStack: ["Product Viz", "AI Styling", "Color Grading"],
-    colorFrom: "#f59e0b",
-    colorTo: "#ec4899",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/grid_videos/Beauty%2C%20Wellness%20%26%20Personal%20Care/Cosmetics%20-%20Premium%20(5).mp4",
-  },
-  {
-    id: 7,
-    title: "Lifestyle – Retro Concept Blush",
-    category: "Beauty & Wellness",
-    year: "2024",
-    role: "Packaging & Brand System",
-    description: "A retro-toned mood piece built around colour, texture, and nostalgia.",
-    techStack: ["Product Viz", "AI Styling", "Color Grading"],
-    colorFrom: "#f59e0b",
-    colorTo: "#ec4899",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Influencer%20avatar%20(1).mp4",
-  },
-  {
-    id: 9,
-    title: "Cosmetics – Aura Concept",
-    category: "Beauty & Wellness",
-    year: "2024",
-    role: "Packaging & Brand System",
-    description: "Sensory storytelling distilled into seconds of atmospheric brand cinema.",
-    techStack: ["Product Viz", "AI Styling", "Color Grading"],
-    colorFrom: "#f59e0b",
-    colorTo: "#ec4899",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/real%20Estate/Aar%20Kay%20Vox%20-%20scenario%20buildup%20(1).mp4",
-  },
-  {
-    id: 11,
-    title: "Cosmetics – Premium (8)",
-    category: "Beauty & Wellness",
-    year: "2024",
-    role: "Packaging & Brand System",
-    description: "Sensory storytelling distilled into seconds of atmospheric brand cinema.",
-    techStack: ["Product Viz", "AI Styling", "Color Grading"],
-    colorFrom: "#f59e0b",
-    colorTo: "#ec4899",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Fashion%20%26%20Lifestyle%20-%20Sweetfeel%20(1).mp4",
-  },
-  {
-    id: 12,
-    title: "Itsme – Concept Reel",
-    category: "Beauty & Wellness",
-    year: "2024",
-    role: "Packaging & Brand System",
-    description: "A concept reel exploring identity, light, and self-presentation.",
-    techStack: ["Product Viz", "AI Styling", "Color Grading"],
-    colorFrom: "#f59e0b",
-    colorTo: "#ec4899",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Lifestyle%20-%20travel%20(1).mp4",
-  },
-  {
-    id: 21,
-    title: "Cosmetics – Premium (5)",
-    category: "Beauty & Wellness",
-    year: "2024",
-    role: "Packaging & Brand System",
-    description: "Sensory storytelling distilled into seconds of atmospheric brand cinema.",
-    techStack: ["Product Viz", "AI Styling", "Color Grading"],
-    colorFrom: "#f59e0b",
-    colorTo: "#ec4899",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Fashion%20%26%20Lifestyle%20-%20Premium%20(3).mp4",
-  },
-  {
-    id: 26,
-    title: "Cosmetics – Premium (6)",
-    category: "Beauty & Wellness",
-    year: "2024",
-    role: "Packaging & Brand System",
-    description: "Sensory storytelling distilled into seconds of atmospheric brand cinema.",
-    techStack: ["Product Viz", "AI Styling", "Color Grading"],
-    colorFrom: "#f59e0b",
-    colorTo: "#ec4899",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/grid_videos/Beauty%2C%20Wellness%20%26%20Personal%20Care/Cosmetics%20-%20Premium%20(6).mp4",
-  },
+  ...reelGroup("#f59e0b", "#ec4899", [
+    { id: 3, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Personal%20Branding/UGC%20review%20Avatar.mp4" },
+    { id: 5, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/grid_videos/Beauty%2C%20Wellness%20%26%20Personal%20Care/Cosmetics%20-%20Premium%20(5).mp4" },
+    { id: 7, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Influencer%20avatar%20(1).mp4" },
+    { id: 9, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/real%20Estate/Aar%20Kay%20Vox%20-%20scenario%20buildup%20(1).mp4" },
+    { id: 11, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Fashion%20%26%20Lifestyle%20-%20Sweetfeel%20(1).mp4" },
+    { id: 12, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Lifestyle%20-%20travel%20(1).mp4" },
+    { id: 21, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Fashion%20%26%20Lifestyle%20-%20Premium%20(3).mp4" },
+    { id: 26, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/grid_videos/Beauty%2C%20Wellness%20%26%20Personal%20Care/Cosmetics%20-%20Premium%20(6).mp4" },
+  ]),
 
   // ── FMCG ── accent: orange → yellow
-  {
-    id: 6,
-    title: "Tweak Tea Sachets",
-    category: "FMCG",
-    year: "2024",
-    role: "Brand Film Director",
-    description: "Crisp product storytelling that puts function and form centre stage.",
-    techStack: ["Product Viz", "Brand Film", "Motion Graphics"],
-    colorFrom: "#f97316",
-    colorTo: "#eab308",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Fashion%20%26%20Lifestyle%20-%20Sweetfeel%20(3).mp4",
-  },
-  {
-    id: 20,
-    title: "Tweak Tea Reel",
-    category: "FMCG",
-    year: "2024",
-    role: "Brand Film Director",
-    description: "Crisp product storytelling that puts function and form centre stage.",
-    techStack: ["Product Viz", "Brand Film", "Motion Graphics"],
-    colorFrom: "#f97316",
-    colorTo: "#eab308",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Tech%20auto%2CIndustry/Almonds.AI%20concept.mp4", // not uploaded yet
-  },
+  ...reelGroup("#f97316", "#eab308", [
+    { id: 6, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Fashion%20%26%20Lifestyle%20-%20Sweetfeel%20(3).mp4" },
+    { id: 20, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Tech%20auto%2CIndustry/Almonds.AI%20concept.mp4" }, // not uploaded yet
+  ]),
 ];

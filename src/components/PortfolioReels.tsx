@@ -379,25 +379,7 @@ function ReelCard({
 
       {/* Left Bottom Metadata Overlay */}
       <div className="reel-meta-overlay">
-        <span
-          className="reel-meta-badge"
-          style={{
-            borderColor: `${reel.colorFrom}99`,
-            background: `${reel.colorFrom}1A`,
-            color: reel.colorFrom,
-          }}
-        >
-          {reel.category}
-        </span>
         <h4 className="reel-meta-title">{reel.title}</h4>
-        <p className="reel-meta-desc">{reel.description}</p>
-        <div className="reel-meta-tags">
-          {reel.techStack.slice(0, 3).map((tech) => (
-            <span key={tech} className="reel-meta-tag">
-              {tech}
-            </span>
-          ))}
-        </div>
       </div>
 
       {/* Right Actions Column */}
