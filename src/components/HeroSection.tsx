@@ -84,9 +84,9 @@ function CountUpNumber({ value, suffix = "", duration = 2000, delay = 1000 }: { 
 }
 
 const STATS = [
-  { value: 300, suffix: "+", label: "Brands Served" },
-  { value: 1500, suffix: "+", label: "AI Ads Delivered" },
-  { value: 5, suffix: "x", label: "AI Video Ads ROAS" },
+  { value: 500, suffix: "+", label: "Brand's Served" },
+  { value: 2000, suffix: "+", label: "Ai Ads Delivered" },
+  { value: 5, suffix: "x", label: "Ai Video Ads ROAS" },
   { value: 80, suffix: "%", label: "Savings On Production" },
   { value: 5, suffix: "x", label: "CTR Boost" },
 ];
@@ -240,29 +240,29 @@ export default function HeroSection() {
             <span className="arrow" aria-hidden="true">→</span>
           </Link>
         </motion.div>
-      </div>
 
-      <motion.div
-        className="hero-stats-bar"
-        variants={statsContainerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <div className="hero-stats-grid">
-          {STATS.map((stat, idx) => (
-            <motion.div
-              key={stat.label}
-              className="hero-stat-item"
-              variants={statsItemVariants}
-            >
-              <span className="hero-stat-number">
-                <CountUpNumber value={stat.value} suffix={stat.suffix} delay={1000 + idx * 100} />
-              </span>
-              <span className="hero-stat-label">{stat.label}</span>
-            </motion.div>
-          ))}
-        </div>
-      </motion.div>
+        <motion.div
+          className="hero-stats-bar"
+          variants={statsContainerVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <div className="hero-stats-grid">
+            {STATS.map((stat, idx) => (
+              <motion.div
+                key={stat.label}
+                className="hero-stat-item"
+                variants={statsItemVariants}
+              >
+                <span className="hero-stat-number">
+                  <CountUpNumber value={stat.value} suffix={stat.suffix} delay={1000 + idx * 100} />
+                </span>
+                <span className="hero-stat-label">{stat.label}</span>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
     </section>
   );
 }
