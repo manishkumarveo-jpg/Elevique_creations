@@ -22,6 +22,16 @@ const imageRevealVariants = {
   visible: { clipPath: "inset(0% 0 0 0)" },
 };
 
+// Touch devices never fire mouseenter, so hover-to-play videos would
+// otherwise sit on an unpainted (black) first frame forever.
+function useNoHover() {
+  const [noHover, setNoHover] = useState(false);
+  useEffect(() => {
+    setNoHover(window.matchMedia("(hover: none)").matches);
+  }, []);
+  return noHover;
+}
+
 /* ─── Data ───────────────────────────────────────────────────── */
 interface Project {
   id: number;
@@ -36,7 +46,7 @@ interface Project {
 const PROJECTS: Project[] = [
   {
     id: 1,
-    title: "Elevique Creation",
+    title: "Elevique Creations",
     category: "AI Visuals",
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/feature_sectoin/Mahindra%20XEV%20car.mp4",
   },
@@ -697,7 +707,11 @@ export default function FeaturedShowcase() {
 const FeaturedCard = memo(function FeaturedCard({ project, isActive, onClick, onEnter: onCardEnter, onLeave: onCardLeave }: { project: Project; isActive: boolean; onClick: (p: Project) => void; onEnter: (p: GridProject, e: React.MouseEvent<HTMLElement>) => void; onLeave: () => void }) {
   const cardRef = useRef<HTMLButtonElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const isInView = useInView(cardRef, { once: true, margin: "400px" });
+  const isInView = useInView(cardRef, { once: true, margin: "150px" });
+  const noHover = useNoHover();
+  useEffect(() => {
+    if (noHover && isInView && project.videoSrc) videoRef.current?.play().catch(() => { });
+  }, [noHover, isInView, project.videoSrc]);
   const onEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!isActive) gsap.to(cardRef.current, { scale: 1.04, duration: 0.22, ease: "power4.out" });
     if (project.videoSrc) videoRef.current?.play().catch(() => { });
@@ -705,7 +719,7 @@ const FeaturedCard = memo(function FeaturedCard({ project, isActive, onClick, on
   };
   const onLeave = () => {
     gsap.to(cardRef.current, { scale: 1, duration: 0.22, ease: "power4.out" });
-    videoRef.current?.pause();
+    if (!noHover) videoRef.current?.pause();
     onCardLeave();
   };
   const handleClick = () => onClick(project);
@@ -791,13 +805,17 @@ function CategoryRow({
 const GridCard = memo(function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject; onEnter: (p: GridProject, e: React.MouseEvent<HTMLElement>) => void; onLeave: () => void; onClick: (p: GridProject) => void }) {
   const cardRef = useRef<HTMLButtonElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const isInView = useInView(cardRef, { once: true, margin: "400px" });
+  const isInView = useInView(cardRef, { once: true, margin: "150px" });
+  const noHover = useNoHover();
+  useEffect(() => {
+    if (noHover && isInView && project.videoSrc) videoRef.current?.play().catch(() => { });
+  }, [noHover, isInView, project.videoSrc]);
   const handleEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (project.videoSrc) videoRef.current?.play().catch(() => { });
     onEnter(project, e);
   };
   const handleLeave = () => {
-    videoRef.current?.pause();
+    if (!noHover) videoRef.current?.pause();
     onLeave();
   };
   const handleClick = () => onClick(project);

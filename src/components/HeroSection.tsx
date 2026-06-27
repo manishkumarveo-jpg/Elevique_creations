@@ -187,7 +187,7 @@ export default function HeroSection() {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75" />
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-teal-400" />
           </span>
-          India&apos;s Fastest Growing Creative AI Visuals Studio
+          <span className="hero-eyebrow-text">India&apos;s Fastest Growing Creative AI Visuals Studio</span>
         </motion.div>
 
         <h1 className="hero-title">
