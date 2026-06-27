@@ -19,11 +19,11 @@ export function titleFromVideoSrc(videoSrc: string | undefined): string {
  */
 export function expandWithMeta<
   TMeta extends object,
-  TItem extends { id: number; videoSrc?: string },
+  TItem extends { id: number; videoSrc?: string; title?: string },
 >(meta: TMeta, items: TItem[]): (TItem & TMeta & { title: string })[] {
   return items.map((item) => ({
     ...meta,
     ...item,
-    title: titleFromVideoSrc(item.videoSrc),
+    title: item.title ?? titleFromVideoSrc(item.videoSrc),
   }))
 }

@@ -27,8 +27,6 @@ interface Project {
   id: number;
   title: string;
   category: string;
-  description: string;
-  techStack: string[];
   videoSrc: string;
   verticalVideoSrc?: string;
   colorFrom?: string;
@@ -40,40 +38,30 @@ const PROJECTS: Project[] = [
     id: 1,
     title: "Elevique Creation",
     category: "AI Visuals",
-    description: "A visceral exploration of human endurance pushing the boundaries of motion and light.",
-    techStack: ["AI Generation", "Motion Design", "Color Grading", "VFX"],
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/feature_sectoin/Mahindra%20XEV%20car.mp4",
   },
   {
     id: 2,
     title: "Fashion Film",
     category: "Editorial",
-    description: "Haute couture meets surrealism in a dreamlike sequence of fabric, motion, and identity.",
-    techStack: ["AI Cinematics", "Editorial", "Sound Design", "Compositing"],
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/feature_sectoin/Kobala.mp4",
   },
   {
     id: 3,
     title: "Automotive Launch",
     category: "Product Film",
-    description: "An immersive product reveal where engineering precision meets cinematic grandeur.",
-    techStack: ["3D Render", "AI Upscale", "Particle FX", "WebGL"],
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/feature_sectoin/Gauddly%20Music%20Video.mp4",
   },
   {
     id: 4,
     title: "Luxury Perfume",
     category: "Brand Film",
-    description: "Sensory storytelling distilled into 60 seconds of atmospheric brand cinema.",
-    techStack: ["Product Viz", "AI Styling", "Motion Graphics", "Grade"],
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/feature_sectoin/Gangsters%20punjab.mp4",
   },
   {
     id: 5,
     title: "Luxury Perfume",
     category: "Brand Film",
-    description: "Sensory storytelling distilled into 60 seconds of atmospheric brand cinema.",
-    techStack: ["Product Viz", "AI Styling", "Motion Graphics", "Grade"],
     videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/feature_sectoin/Electronics%20-%20Cooler%20Ad.mp4",
   },
 ];
@@ -398,7 +386,6 @@ export default function FeaturedShowcase() {
           </div>
           <div className="portfolio-hero-content">
             <h2 className="portfolio-hero-title">{active.title}</h2>
-            <p className="portfolio-hero-desc">{active.description}</p>
             <div className="portfolio-hero-actions">
               <button type="button" className="portfolio-btn-primary" onClick={() => openVideoOverlay(active)}>
                 <Play size={15} fill="currentColor" />
@@ -559,16 +546,6 @@ export default function FeaturedShowcase() {
               </button>
             </div>
             <h4 className="portfolio-popup-title">{popup.project.title}</h4>
-            {popup.project.description && (
-              <p className="portfolio-popup-desc">{popup.project.description}</p>
-            )}
-            {popup.project.techStack && (
-              <div className="portfolio-popup-tags">
-                {popup.project.techStack.slice(0, 3).map((tag) => (
-                  <span key={tag} className="portfolio-popup-tag">{tag}</span>
-                ))}
-              </div>
-            )}
           </div>
         </div>
       )}
@@ -701,18 +678,6 @@ export default function FeaturedShowcase() {
 
             {/* ── details below video ── */}
             <div className="bs-details">
-              <div className="bs-meta">
-              </div>
-
-              {bottomSheet.description && <p className="bs-desc">{bottomSheet.description}</p>}
-
-              {bottomSheet.techStack && (
-                <div className="bs-stack">
-                  {bottomSheet.techStack.map((tag) => (
-                    <span key={tag} className="portfolio-modal-tag">{tag}</span>
-                  ))}
-                </div>
-              )}
 
               <div className="bs-actions">
                 <button type="button" className="portfolio-btn-ghost" style={{ fontSize: "0.75rem" }}>
@@ -867,7 +832,6 @@ const GridCard = memo(function GridCard({ project, onEnter, onLeave, onClick }: 
           )}
           <div className="portfolio-grid-overlay" />
         </div>
-        {project.year && <span className="portfolio-grid-year">{project.year}</span>}
         <div className="portfolio-grid-info">
           <span className="portfolio-grid-title">{project.title}</span>
           {project.category && (
