@@ -729,14 +729,12 @@ const FeaturedCard = memo(function FeaturedCard({ project, isActive, onClick, on
   const noHover = useNoHover();
   useEffect(() => {
     if (!isInView || !project.videoSrc || !videoRef.current) return;
-    if (noHover) {
-      videoRef.current.play().catch(() => { });
-    } else {
-      // Paint the first frame so the card isn't black before hover, then
-      // immediately pause so playback only resumes on mouseenter.
-      videoRef.current.play().then(() => videoRef.current?.pause()).catch(() => { });
-    }
-  }, [noHover, isInView, project.videoSrc]);
+    // Paint the first frame so the card isn't black, then immediately pause.
+    // On touch devices there's no mouseenter to resume playback, so this
+    // also prevents every scrolled-into-view card from autoplaying at once
+    // and competing for mobile bandwidth.
+    videoRef.current.play().then(() => videoRef.current?.pause()).catch(() => { });
+  }, [isInView, project.videoSrc]);
   const onEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!isActive) gsap.to(cardRef.current, { scale: 1.04, duration: 0.22, ease: "power4.out" });
     if (project.videoSrc) videoRef.current?.play().catch(() => { });
@@ -834,14 +832,12 @@ const GridCard = memo(function GridCard({ project, onEnter, onLeave, onClick }: 
   const noHover = useNoHover();
   useEffect(() => {
     if (!isInView || !project.videoSrc || !videoRef.current) return;
-    if (noHover) {
-      videoRef.current.play().catch(() => { });
-    } else {
-      // Paint the first frame so the card isn't black before hover, then
-      // immediately pause so playback only resumes on mouseenter.
-      videoRef.current.play().then(() => videoRef.current?.pause()).catch(() => { });
-    }
-  }, [noHover, isInView, project.videoSrc]);
+    // Paint the first frame so the card isn't black, then immediately pause.
+    // On touch devices there's no mouseenter to resume playback, so this
+    // also prevents every scrolled-into-view card from autoplaying at once
+    // and competing for mobile bandwidth.
+    videoRef.current.play().then(() => videoRef.current?.pause()).catch(() => { });
+  }, [isInView, project.videoSrc]);
   const handleEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (project.videoSrc) videoRef.current?.play().catch(() => { });
     onEnter(project, e);
