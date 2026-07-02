@@ -98,21 +98,17 @@ export default function PortfolioReels({ onViewDetails, onBack }: PortfolioReels
         </button>
 
         <div ref={containerRef} className="reels-snap-container" data-lenis-prevent>
-          {REEL_VIDEOS.map((reel, idx) => {
-            const isAdjacent = Math.abs(idx - activeIndex) <= 2;
-            return (
-              <ReelCard
-                key={reel.id}
-                reel={reel}
-                index={idx}
-                isActive={idx === activeIndex}
-                isAdjacent={isAdjacent}
-                isMuted={isMuted}
-                toggleMute={toggleMute}
-                onViewDetails={onViewDetails}
-              />
-            );
-          })}
+          {REEL_VIDEOS.map((reel, idx) => (
+            <ReelCard
+              key={reel.id}
+              reel={reel}
+              index={idx}
+              isActive={idx === activeIndex}
+              isMuted={isMuted}
+              toggleMute={toggleMute}
+              onViewDetails={onViewDetails}
+            />
+          ))}
         </div>
       </div>
     </div>
@@ -124,7 +120,6 @@ interface ReelCardProps {
   reel: ReelVideo;
   index: number;
   isActive: boolean;
-  isAdjacent: boolean;
   isMuted: boolean;
   toggleMute: (e: React.MouseEvent) => void;
   onViewDetails: (project: Project) => void;
@@ -140,7 +135,6 @@ function ReelCard({
   reel,
   index,
   isActive,
-  isAdjacent,
   isMuted,
   toggleMute,
   onViewDetails,
@@ -169,7 +163,7 @@ function ReelCard({
   // Sync video play/pause with active visibility state
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !reel.videoSrc) return;
 
     let isCurrent = true;
 
@@ -324,7 +318,7 @@ function ReelCard({
         muted={isMuted}
         playsInline
         autoPlay={isActive}
-        preload={isActive ? "auto" : (isAdjacent ? "metadata" : "none")}
+        preload="auto"
         className="reel-video-element"
         onClick={handleVideoInteraction}
         aria-label={`Video demo for ${reel.title}`}

@@ -7,14 +7,13 @@ import { ScrollReveal } from "@/components/shared/ScrollReveal";
 import {
   Play,
   X,
-  Plus,
-  ThumbsUp,
   ChevronDown,
   ExternalLink,
 } from "lucide-react";
 import PortfolioReels from "./PortfolioReels";
 import { GRID_PROJECTS, type GridProject } from "@/data/gridVideos";
 import { PKG_AI_VISUALS, PKG_EDITORIAL, PKG_PRODUCT_FILM, PKG_BRAND_FILM, PKG_TECH_UI, PKG_EXPERIMENTAL } from "@/data/packagesVideo";
+import { titleFromVideoSrc } from "@/lib/utils";
 
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 const imageRevealVariants = {
@@ -36,63 +35,24 @@ function useNoHover() {
 interface Project {
   id: number;
   title: string;
-  category: string;
   videoSrc: string;
   verticalVideoSrc?: string;
   colorFrom?: string;
   colorTo?: string;
 }
 
+// Titles are derived from each video's file name (see titleFromVideoSrc) so
+// every card's label always matches the clip it plays.
 const PROJECTS: Project[] = [
-  {
-    id: 1,
-    title: "Elevique Creations",
-    category: "AI Visuals",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Animated%20movie%20-%20Hero%20Cat%20(1)%20(1).mp4",
-  },
-  {
-    id: 2,
-    title: "Fashion Film",
-    category: "Editorial",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Forbes%20properties%20-%20Real%20estate%20-%20concept.mp4",
-  },
-  {
-    id: 3,
-    title: "Automotive Launch",
-    category: "Product Film",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Electronics%20-%20Cooler%20Ad%20(1).mp4",
-  },
-  {
-    id: 4,
-    title: "Luxury Perfume",
-    category: "Brand Film",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Gangsters%20punjab.mp4",
-  },
-  {
-    id: 5,
-    title: "Luxury Perfume",
-    category: "Brand Film",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Gauddly%20Music%20Video.mp4",
-  },
-  {
-    id: 6,
-    title: "Luxury Perfume",
-    category: "Brand Film",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Itsme%20Music%20Video.mp4",
-  },
-  {
-    id: 7,
-    title: "Luxury Perfume",
-    category: "Brand Film",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Kobala%20(1).mp4",
-  },
-  {
-    id: 8,
-    title: "Luxury Perfume",
-    category: "Brand Film",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Mahindra%20XEV%20car%20(1).mp4",
-  },
-];
+  { id: 1, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Animated%20movie%20-%20Hero%20Cat%20(1)%20(1).mp4" },
+  { id: 2, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Forbes%20properties%20-%20Real%20estate%20-%20concept.mp4" },
+  { id: 3, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Electronics%20-%20Cooler%20Ad%20(1).mp4" },
+  { id: 4, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Gangsters%20punjab.mp4" },
+  { id: 5, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Gauddly%20Music%20Video.mp4" },
+  { id: 6, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Itsme%20Music%20Video.mp4" },
+  { id: 7, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Kobala%20(1).mp4" },
+  { id: 8, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Mahindra%20XEV%20car%20(1).mp4" },
+].map((p) => ({ ...p, title: titleFromVideoSrc(p.videoSrc) }));
 
 interface PopupState {
   project: Project;
@@ -404,7 +364,7 @@ export default function FeaturedShowcase() {
       {viewMode === "grid" && (
         <div className="portfolio-hero">
           {isHeroInView && (
-            <video ref={heroVideoRef} className="portfolio-hero-video" src={active.videoSrc} autoPlay loop muted playsInline preload="metadata" aria-hidden="true" tabIndex={-1} />
+            <video ref={heroVideoRef} className="portfolio-hero-video" src={active.videoSrc} autoPlay loop muted playsInline preload="auto" aria-hidden="true" tabIndex={-1} />
           )}
           <div className="portfolio-hero-gradient-b" />
           <div className="portfolio-hero-gradient-l" />
@@ -540,6 +500,7 @@ export default function FeaturedShowcase() {
             loop
             muted
             playsInline
+            preload="auto"
             className="portfolio-popup-video"
             aria-label={`${popup.project.title} video preview`}
             onWaiting={() => setPopupLoading(true)}
@@ -562,8 +523,6 @@ export default function FeaturedShowcase() {
               <button type="button" className="portfolio-popup-play" onClick={(e) => { e.stopPropagation(); hidePopup(); openVideoOverlay(popup.project); }} aria-label="Play">
                 <Play size={13} fill="currentColor" />
               </button>
-              <button type="button" className="portfolio-popup-icon-btn" onClick={(e) => e.stopPropagation()} aria-label="Add"><Plus size={13} /></button>
-              <button type="button" className="portfolio-popup-icon-btn" onClick={(e) => e.stopPropagation()} aria-label="Like"><ThumbsUp size={12} /></button>
               <button
                 type="button"
                 className="portfolio-popup-icon-btn portfolio-popup-icon-btn--right"
@@ -603,6 +562,7 @@ export default function FeaturedShowcase() {
               loop
               muted
               playsInline
+              preload="auto"
               className="vo-video"
               aria-label={`${videoOverlay.title} full film`}
               onWaiting={() => setOverlayLoading(true)}
@@ -670,6 +630,7 @@ export default function FeaturedShowcase() {
                 loop
                 muted
                 playsInline
+                preload="auto"
                 className="bs-video"
                 aria-label={`${bottomSheet.title} highlight video`}
                 onWaiting={() => setSheetLoading(true)}
@@ -727,6 +688,7 @@ const FeaturedCard = memo(function FeaturedCard({ project, isActive, onClick, on
   const videoRef = useRef<HTMLVideoElement>(null);
   const isInView = useInView(cardRef, { once: true, margin: "150px" });
   const noHover = useNoHover();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   useEffect(() => {
     if (!isInView || !project.videoSrc || !videoRef.current) return;
     // Paint the first frame so the card isn't black, then immediately pause.
@@ -772,12 +734,18 @@ const FeaturedCard = memo(function FeaturedCard({ project, isActive, onClick, on
             tabIndex={-1}
             variants={imageRevealVariants}
             transition={{ duration: 0.6, delay: 0.1, ease: EASE_OUT }}
+            onLoadedData={() => setIsLoading(false)}
+            onCanPlay={() => setIsLoading(false)}
           />
+        )}
+        {project.videoSrc && isInView && isLoading && (
+          <div className="card-video-loader">
+            <div className="card-loader-spinner" />
+          </div>
         )}
         <div className="portfolio-feat-overlay" />
         <div className="portfolio-feat-info">
           <span className="portfolio-feat-title">{project.title}</span>
-          <span className="portfolio-feat-category">{project.category.toUpperCase()}</span>
         </div>
       </button>
     </ScrollReveal>
@@ -825,11 +793,12 @@ function CategoryRow({
 }
 
 /* ─── Grid Card ─────────────────────────────────────────────── */
-const GridCard = memo(function GridCard({ project, onEnter, onLeave, onClick }: { project: GridProject; onEnter: (p: GridProject, e: React.MouseEvent<HTMLElement>) => void; onLeave: () => void; onClick: (p: GridProject) => void }) {
+const GridCard = memo(function GridCard({ project, onEnter, onLeave, onClick, disableHoverOnMobile, viewMargin = "150px" }: { project: GridProject; onEnter: (p: GridProject, e: React.MouseEvent<HTMLElement>) => void; onLeave: () => void; onClick: (p: GridProject) => void; disableHoverOnMobile?: boolean; viewMargin?: `${number}px` }) {
   const cardRef = useRef<HTMLButtonElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const isInView = useInView(cardRef, { once: true, margin: "150px" });
+  const isInView = useInView(cardRef, { once: true, margin: viewMargin });
   const noHover = useNoHover();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   useEffect(() => {
     if (!isInView || !project.videoSrc || !videoRef.current) return;
     // Paint the first frame so the card isn't black, then immediately pause.
@@ -839,10 +808,12 @@ const GridCard = memo(function GridCard({ project, onEnter, onLeave, onClick }: 
     videoRef.current.play().then(() => videoRef.current?.pause()).catch(() => { });
   }, [isInView, project.videoSrc]);
   const handleEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (disableHoverOnMobile && noHover) return;
     if (project.videoSrc) videoRef.current?.play().catch(() => { });
     onEnter(project, e);
   };
   const handleLeave = () => {
+    if (disableHoverOnMobile && noHover) return;
     if (!noHover) videoRef.current?.pause();
     onLeave();
   };
@@ -874,15 +845,19 @@ const GridCard = memo(function GridCard({ project, onEnter, onLeave, onClick }: 
               tabIndex={-1}
               variants={imageRevealVariants}
               transition={{ duration: 0.6, delay: 0.1, ease: EASE_OUT }}
+              onLoadedData={() => setIsLoading(false)}
+              onCanPlay={() => setIsLoading(false)}
             />
+          )}
+          {project.videoSrc && isInView && isLoading && (
+            <div className="card-video-loader">
+              <div className="card-loader-spinner" />
+            </div>
           )}
           <div className="portfolio-grid-overlay" />
         </div>
         <div className="portfolio-grid-info">
           <span className="portfolio-grid-title">{project.title}</span>
-          {project.category && (
-            <span className="portfolio-grid-category">{project.category.toUpperCase()}</span>
-          )}
         </div>
       </button>
     </ScrollReveal>
@@ -927,6 +902,8 @@ function PackagesSection({
               onEnter={onCardEnter}
               onLeave={onCardLeave}
               onClick={onCardClick}
+              disableHoverOnMobile
+              viewMargin="0px"
             />
           ))}
         </div>

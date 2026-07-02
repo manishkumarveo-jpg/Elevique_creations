@@ -12,7 +12,7 @@ export interface ReelVideo {
 
 export const REEL_VIDEOS: ReelVideo[] = [
   { id: 1, title: "Cult Shoes Showcase", colorFrom: "#ec4899", colorTo: "#f59e0b", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Cult%20Shoes%20showcase.compressed.mp4" },
-  { id: 2, title: "Forbes Properties Real Estate", colorFrom: "#ec4899", colorTo: "#f59e0b", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Forbes%20properties%20-%20Real%20estate%20-%20concept.mp4" },
+  { id: 2, title: "Forbes Properties Real Estate", colorFrom: "#ec4899", colorTo: "#f59e0b", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/real%20Estate/Forbes%20properties%20-%20Real%20estate.compressed.mp4" },
   { id: 3, title: "Premium Cosmetics", colorFrom: "#ec4899", colorTo: "#f59e0b", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Cosmetics%20-%20Premium%20(1).compressed.mp4" },
   { id: 4, title: "Cult Shoes Lifestyle", colorFrom: "#ec4899", colorTo: "#f59e0b", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Cult%20shoes%20lifestyle.compressed.mp4" },
   { id: 5, title: "Lipstick Showreel", colorFrom: "#ec4899", colorTo: "#f59e0b", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Cosmetics%20-%20Lipstick%20showreel%20(1).mp4" },
