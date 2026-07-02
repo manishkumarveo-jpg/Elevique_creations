@@ -6373,6 +6373,14 @@ body {
   margin-bottom: 1.5rem;
 }
 
+/* Packages mode has much shorter content than the full-screen reels feed,
+   so don't force it to fill the viewport — it creates a large empty gap
+   below the cards on mobile where the grid collapses to a single row. */
+.reels-feed-wrapper--packages {
+  min-height: auto;
+  padding-bottom: 3rem;
+}
+
 /* ─── View Toggle Switch ────────────────────────────────────────── */
 .portfolio-view-toggle-wrap {
   display: flex;
@@ -9656,6 +9664,15 @@ body {
   padding: 0 1rem;
 }
 
+/* Grid items need to fill their cell instead of the fixed pixel width
+   the same card uses in the horizontally-scrolling category rows. */
+.packages-grid-4cols .portfolio-grid-card {
+  width: 100%;
+  flex: none;
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+
 @media (max-width: 1200px) {
   .packages-grid-4cols {
     grid-template-columns: repeat(3, 1fr);
@@ -9672,22 +9689,17 @@ body {
 
 @media (max-width: 768px) {
   .packages-grid-4cols {
-    display: flex;
-    grid-template-columns: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    scrollbar-width: none;
     padding: 0 5vw;
     margin: 1.5rem 0 0;
   }
+}
 
-  .packages-grid-4cols::-webkit-scrollbar {
-    display: none;
-  }
-
-  .packages-grid-4cols > * {
-    flex: none;
+@media (max-width: 480px) {
+  .packages-grid-4cols {
+    grid-template-columns: 1fr;
   }
 }
 

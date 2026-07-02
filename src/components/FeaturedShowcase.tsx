@@ -504,7 +504,7 @@ export default function FeaturedShowcase() {
         </div>
       ) : (
         /* Packages mode */
-        <div className="reels-feed-wrapper">
+        <div className="reels-feed-wrapper reels-feed-wrapper--packages">
           <ViewToggle viewMode={viewMode} setViewMode={setViewMode} />
           <PackagesSection
             onCardEnter={onCardEnter}
@@ -728,7 +728,14 @@ const FeaturedCard = memo(function FeaturedCard({ project, isActive, onClick, on
   const isInView = useInView(cardRef, { once: true, margin: "150px" });
   const noHover = useNoHover();
   useEffect(() => {
-    if (noHover && isInView && project.videoSrc) videoRef.current?.play().catch(() => { });
+    if (!isInView || !project.videoSrc || !videoRef.current) return;
+    if (noHover) {
+      videoRef.current.play().catch(() => { });
+    } else {
+      // Paint the first frame so the card isn't black before hover, then
+      // immediately pause so playback only resumes on mouseenter.
+      videoRef.current.play().then(() => videoRef.current?.pause()).catch(() => { });
+    }
   }, [noHover, isInView, project.videoSrc]);
   const onEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!isActive) gsap.to(cardRef.current, { scale: 1.04, duration: 0.22, ease: "power4.out" });
@@ -826,7 +833,14 @@ const GridCard = memo(function GridCard({ project, onEnter, onLeave, onClick }: 
   const isInView = useInView(cardRef, { once: true, margin: "150px" });
   const noHover = useNoHover();
   useEffect(() => {
-    if (noHover && isInView && project.videoSrc) videoRef.current?.play().catch(() => { });
+    if (!isInView || !project.videoSrc || !videoRef.current) return;
+    if (noHover) {
+      videoRef.current.play().catch(() => { });
+    } else {
+      // Paint the first frame so the card isn't black before hover, then
+      // immediately pause so playback only resumes on mouseenter.
+      videoRef.current.play().then(() => videoRef.current?.pause()).catch(() => { });
+    }
   }, [noHover, isInView, project.videoSrc]);
   const handleEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (project.videoSrc) videoRef.current?.play().catch(() => { });
