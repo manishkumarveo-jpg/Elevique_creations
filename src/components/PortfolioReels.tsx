@@ -62,6 +62,14 @@ export default function PortfolioReels({ onViewDetails, onBack }: PortfolioReels
 
   const activeReel = REEL_VIDEOS[activeIndex] || REEL_VIDEOS[0];
 
+  // Once the last reel finishes playing, loop the whole feed back to the first.
+  const scrollToStart = useCallback(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    const firstCard = container.querySelector<HTMLElement>('[data-index="0"]');
+    firstCard?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
   return (
     <div className="reels-feed-section">
       <div
@@ -104,6 +112,9 @@ export default function PortfolioReels({ onViewDetails, onBack }: PortfolioReels
               reel={reel}
               index={idx}
               isActive={idx === activeIndex}
+              isAdjacent={Math.abs(idx - activeIndex) <= 2}
+              isLast={idx === REEL_VIDEOS.length - 1}
+              onReachEnd={scrollToStart}
               isMuted={isMuted}
               toggleMute={toggleMute}
               onViewDetails={onViewDetails}
@@ -120,6 +131,9 @@ interface ReelCardProps {
   reel: ReelVideo;
   index: number;
   isActive: boolean;
+  isAdjacent: boolean;
+  isLast: boolean;
+  onReachEnd: () => void;
   isMuted: boolean;
   toggleMute: (e: React.MouseEvent) => void;
   onViewDetails: (project: Project) => void;
@@ -135,6 +149,9 @@ function ReelCard({
   reel,
   index,
   isActive,
+  isAdjacent,
+  isLast,
+  onReachEnd,
   isMuted,
   toggleMute,
   onViewDetails,
@@ -314,11 +331,14 @@ function ReelCard({
       <video
         ref={videoRef}
         src={reel.videoSrc || undefined}
-        loop
+        poster={reel.thumbnail || undefined}
+        // The last reel doesn't loop in place — instead it hands off to
+        // onEnded below, which scrolls the whole feed back to the first reel.
+        loop={!isLast}
         muted={isMuted}
         playsInline
         autoPlay={isActive}
-        preload="auto"
+        preload={isActive ? "auto" : (isAdjacent ? "metadata" : "none")}
         className="reel-video-element"
         onClick={handleVideoInteraction}
         aria-label={`Video demo for ${reel.title}`}
@@ -326,6 +346,7 @@ function ReelCard({
         onPlaying={() => setIsBuffering(false)}
         onCanPlay={() => setIsBuffering(false)}
         onLoadStart={() => { if (isActive) setIsBuffering(true); }}
+        onEnded={() => { if (isLast) onReachEnd(); }}
       />
 
       {/* Loading/Buffering Spinner overlay */}

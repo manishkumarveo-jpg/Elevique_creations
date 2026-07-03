@@ -8,7 +8,8 @@ import {
   Play,
   X,
   ChevronDown,
-  ExternalLink,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import PortfolioReels from "./PortfolioReels";
 import { GRID_PROJECTS, type GridProject } from "@/data/gridVideos";
@@ -44,14 +45,14 @@ interface Project {
 
 // Titles are pre-filled from each video's file name — edit them freely below.
 const PROJECTS: Project[] = [
-  { id: 1, title: "Animated movie - Hero Cat (1) (1)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Animated%20movie%20-%20Hero%20Cat%20(1)%20(1).mp4", thumbnail: "" },
-  { id: 2, title: "Forbes properties - Real estate - concept", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Forbes%20properties%20-%20Real%20estate%20-%20concept.mp4", thumbnail: "" },
-  { id: 3, title: "Electronics - Cooler Ad (1)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Electronics%20-%20Cooler%20Ad%20(1).mp4", thumbnail: "" },
-  { id: 4, title: "Gangsters punjab", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Gangsters%20punjab.mp4", thumbnail: "" },
-  { id: 5, title: "Gauddly Music Video", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Gauddly%20Music%20Video.mp4", thumbnail: "" },
-  { id: 6, title: "Itsme Music Video", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Itsme%20Music%20Video.mp4", thumbnail: "" },
-  { id: 7, title: "Kobala (1)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Kobala%20(1).mp4", thumbnail: "" },
-  { id: 8, title: "Mahindra XEV car (1)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Mahindra%20XEV%20car%20(1).mp4", thumbnail: "" },
+  { id: 1, title: "Animated movie - Hero Cat ", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Animated%20movie%20-%20Hero%20Cat%20(1)%20(1).mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Animated%20movie%20-%20Hero%20Cat%20(1)%20(1).png" },
+  { id: 2, title: "Forbes properties - Real estate - concept", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Forbes%20properties%20-%20Real%20estate%20-%20concept.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Forbes%20properties%20-%20Real%20estate%20-%20concept.png" },
+  { id: 3, title: "Electronics - Cooler Ad (1)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Electronics%20-%20Cooler%20Ad%20(1).mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Electronics%20-%20Cooler%20Ad%20(1).png" },
+  { id: 4, title: "Gangsters punjab", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Gangsters%20punjab.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Gangsters%20punjab.png" },
+  { id: 5, title: "Gauddly Music Video", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Gauddly%20Music%20Video.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Gauddly%20Music%20Video.png" },
+  { id: 6, title: "Itsme Music Video", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Itsme%20Music%20Video.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Gauddly%20Music%20Video.png" },
+  { id: 7, title: "Kobala (1)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Kobala%20(1).mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Kobala%20(1).png" },
+  { id: 8, title: "Mahindra XEV car (1)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Mahindra%20XEV%20car%20(1).mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Mahindra%20XEV%20car%20(1).compressed.png" },
 ];
 
 interface PopupState {
@@ -143,6 +144,10 @@ export default function FeaturedShowcase() {
   const [overlayLoading, setOverlayLoading] = useState<boolean>(false);
   const [sheetLoading, setSheetLoading] = useState<boolean>(false);
   const [popupLoading, setPopupLoading] = useState<boolean>(false);
+
+  const [heroMuted, setHeroMuted] = useState<boolean>(true);
+  const [overlayMuted, setOverlayMuted] = useState<boolean>(true);
+  const [sheetMuted, setSheetMuted] = useState<boolean>(true);
 
   const heroVideoRef = useRef<HTMLVideoElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
@@ -364,10 +369,19 @@ export default function FeaturedShowcase() {
       {viewMode === "grid" && (
         <div className="portfolio-hero">
           {isHeroInView && (
-            <video ref={heroVideoRef} className="portfolio-hero-video" src={active.videoSrc} poster={active.thumbnail || undefined} autoPlay loop muted playsInline preload="auto" aria-hidden="true" tabIndex={-1} />
+            <video ref={heroVideoRef} className="portfolio-hero-video" src={active.videoSrc} poster={active.thumbnail || undefined} autoPlay loop muted={heroMuted} playsInline preload="auto" aria-hidden="true" tabIndex={-1} />
           )}
           <div className="portfolio-hero-gradient-b" />
           <div className="portfolio-hero-gradient-l" />
+          <button
+            type="button"
+            className="portfolio-hero-sound-btn"
+            onClick={() => setHeroMuted(!heroMuted)}
+            aria-label={heroMuted ? "Unmute showcase film" : "Mute showcase film"}
+            title={heroMuted ? "Unmute" : "Mute"}
+          >
+            {heroMuted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+          </button>
           <div className="portfolio-label">
             <span className="portfolio-label-line" />
             Portfolio Section
@@ -499,7 +513,7 @@ export default function FeaturedShowcase() {
             poster={popup.project.thumbnail || undefined}
             autoPlay
             loop
-            muted
+            muted={true}
             playsInline
             preload="auto"
             className="portfolio-popup-video"
@@ -562,7 +576,7 @@ export default function FeaturedShowcase() {
               poster={videoOverlay.thumbnail || undefined}
               autoPlay
               loop
-              muted
+              muted={overlayMuted}
               playsInline
               preload="auto"
               className="vo-video"
@@ -589,6 +603,17 @@ export default function FeaturedShowcase() {
 
               </div>
             </div>
+
+            {/* sound controls */}
+            <button
+              type="button"
+              className="vo-sound-btn"
+              onClick={() => setOverlayMuted(!overlayMuted)}
+              aria-label={overlayMuted ? "Unmute film" : "Mute film"}
+              title={overlayMuted ? "Unmute" : "Mute"}
+            >
+              {overlayMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+            </button>
 
             {/* close */}
             <button type="button" className="vo-close" onClick={closeVideoOverlay} aria-label="Close">
@@ -631,7 +656,7 @@ export default function FeaturedShowcase() {
                 poster={bottomSheet.thumbnail || undefined}
                 autoPlay
                 loop
-                muted
+                muted={sheetMuted}
                 playsInline
                 preload="auto"
                 className="bs-video"
@@ -641,6 +666,15 @@ export default function FeaturedShowcase() {
                 onCanPlay={() => setSheetLoading(false)}
                 onLoadStart={() => setSheetLoading(true)}
               />
+              <button
+                type="button"
+                className="bs-video-sound-btn"
+                onClick={() => setSheetMuted(!sheetMuted)}
+                aria-label={sheetMuted ? "Unmute details video" : "Mute details video"}
+                title={sheetMuted ? "Unmute" : "Mute"}
+              >
+                {sheetMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
+              </button>
               {sheetLoading && (
                 <div className="video-modal-loader">
                   <div
@@ -668,16 +702,6 @@ export default function FeaturedShowcase() {
               </div>
             </div>
 
-            {/* ── details below video ── */}
-            <div className="bs-details">
-
-              <div className="bs-actions">
-                <button type="button" className="portfolio-btn-ghost" style={{ fontSize: "0.75rem" }}>
-                  <ExternalLink size={13} />
-                  Case Study
-                </button>
-              </div>
-            </div>
           </dialog>
         </>
       )}
@@ -698,7 +722,12 @@ const FeaturedCard = memo(function FeaturedCard({ project, isActive, onClick, on
   };
   const onLeave = () => {
     gsap.to(cardRef.current, { scale: 1, duration: 0.22, ease: "power4.out" });
-    if (!noHover) videoRef.current?.pause();
+    if (!noHover && videoRef.current) {
+      videoRef.current.pause();
+      // .load() resets the element back to its poster-showing state — pause()
+      // alone leaves the last rendered video frame on screen, not the poster.
+      videoRef.current.load();
+    }
     onCardLeave();
   };
   const handleClick = () => onClick(project);
@@ -793,7 +822,12 @@ const GridCard = memo(function GridCard({ project, onEnter, onLeave, onClick, di
   };
   const handleLeave = () => {
     if (disableHoverOnMobile && noHover) return;
-    if (!noHover) videoRef.current?.pause();
+    if (!noHover && videoRef.current) {
+      videoRef.current.pause();
+      // .load() resets the element back to its poster-showing state — pause()
+      // alone leaves the last rendered video frame on screen, not the poster.
+      videoRef.current.load();
+    }
     onLeave();
   };
   const handleClick = () => onClick(project);

@@ -47,7 +47,7 @@ function Typewriter({ phrases, speed = 80, delay = 1800, deleteSpeed = 40 }: { p
 }
 
 const VIDEO_SRC =
-  "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Itsme%20red%20carpet.mp4";
+  "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Gauddly%20Music%20Video.mp4";
 const POSTER_SRC = posterFromVideoSrc(VIDEO_SRC);
 
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
@@ -84,9 +84,9 @@ function CountUpNumber({ value, suffix = "", duration = 2000, delay = 1000 }: { 
 }
 
 const STATS = [
-  { value: 500, suffix: "+", label: "Brand's Served" },
-  { value: 2000, suffix: "+", label: "Ai Ads Delivered" },
-  { value: 5, suffix: "x", label: "Ai Video Ads ROAS" },
+  { value: 500, suffix: "+", label: "Brands Served" },
+  { value: 2000, suffix: "+", label: "AI Ads Delivered" },
+  { value: 5, suffix: "x", label: "AI Video Ads ROAS" },
   { value: 80, suffix: "%", label: "Savings On Production" },
   { value: 5, suffix: "x", label: "CTR Boost" },
 ];
@@ -96,8 +96,8 @@ const statsContainerVariants = {
   visible: {
     opacity: 1,
     transition: {
-      delayChildren: 0.85,
-      staggerChildren: 0.1,
+      delayChildren: 0.2,
+      staggerChildren: 0.06,
     },
   },
 };
@@ -108,7 +108,7 @@ const statsItemVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      duration: 0.8,
+      duration: 0.4,
       ease: EASE_OUT,
     },
   },
@@ -116,6 +116,18 @@ const statsItemVariants = {
 
 export default function HeroSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [isMuted, setIsMuted] = useState(true);
+
+  // Sync mute state changes to video tag
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = isMuted;
+    }
+  }, [isMuted]);
+
+  const toggleMute = () => {
+    setIsMuted((prev) => !prev);
+  };
 
   /* Autoplay, but skip it when the user has asked for reduced motion —
      the poster frame still renders so the section isn't empty.
@@ -126,14 +138,14 @@ export default function HeroSection() {
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
+
+    // Mobile and standard autoplay trigger logic
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
     if (prefersReducedMotion) return;
 
-    v.muted = true;
     const tryPlay = () => v.play().catch(() => { });
-
     tryPlay();
     v.addEventListener("pause", tryPlay);
     v.addEventListener("loadeddata", tryPlay);
@@ -165,7 +177,7 @@ export default function HeroSection() {
         poster={POSTER_SRC}
         autoPlay
         loop
-        muted
+        muted={isMuted}
         playsInline
         preload="auto"
         aria-hidden="true"
@@ -174,6 +186,28 @@ export default function HeroSection() {
 
       <div className="hero-gradient-b" aria-hidden="true" />
       <div className="hero-gradient-l" aria-hidden="true" />
+
+      <button
+        type="button"
+        className="hero-sound-btn"
+        onClick={toggleMute}
+        aria-label={isMuted ? "Unmute video" : "Mute video"}
+        title={isMuted ? "Unmute" : "Mute"}
+      >
+        {isMuted ? (
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+            <line x1="23" y1="9" x2="17" y2="15" />
+            <line x1="17" y1="9" x2="23" y2="15" />
+          </svg>
+        ) : (
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+          </svg>
+        )}
+      </button>
 
       <div className="hero-content">
         <motion.div
@@ -214,15 +248,7 @@ export default function HeroSection() {
           </span>
         </h1>
 
-        <motion.p
-          className="hero-description"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.58, duration: 0.7, ease: EASE_OUT }}
-        >
-          We create cinematic commercials, product films, and social content
-          indistinguishable from traditional production.
-        </motion.p>
+
 
         <motion.div
           className="hero-actions"
@@ -243,22 +269,21 @@ export default function HeroSection() {
 
         <motion.div
           className="hero-stats-bar"
-          variants={statsContainerVariants}
-          initial="hidden"
-          animate="visible"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.85, duration: 0.8, ease: EASE_OUT }}
         >
           <div className="hero-stats-grid">
             {STATS.map((stat, idx) => (
-              <motion.div
+              <div
                 key={stat.label}
                 className="hero-stat-item"
-                variants={statsItemVariants}
               >
                 <span className="hero-stat-number">
-                  <CountUpNumber value={stat.value} suffix={stat.suffix} delay={1000 + idx * 100} />
+                  <CountUpNumber value={stat.value} suffix={stat.suffix} delay={300 + idx * 80} />
                 </span>
                 <span className="hero-stat-label">{stat.label}</span>
-              </motion.div>
+              </div>
             ))}
           </div>
         </motion.div>
