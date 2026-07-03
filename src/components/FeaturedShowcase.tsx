@@ -13,7 +13,6 @@ import {
 import PortfolioReels from "./PortfolioReels";
 import { GRID_PROJECTS, type GridProject } from "@/data/gridVideos";
 import { PKG_AI_VISUALS, PKG_EDITORIAL, PKG_PRODUCT_FILM, PKG_BRAND_FILM, PKG_TECH_UI, PKG_EXPERIMENTAL } from "@/data/packagesVideo";
-import { titleFromVideoSrc } from "@/lib/utils";
 
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 const imageRevealVariants = {
@@ -39,20 +38,21 @@ interface Project {
   verticalVideoSrc?: string;
   colorFrom?: string;
   colorTo?: string;
+  /** Poster image URL — fill in manually; falls back to a black card until set. */
+  thumbnail?: string;
 }
 
-// Titles are derived from each video's file name (see titleFromVideoSrc) so
-// every card's label always matches the clip it plays.
+// Titles are pre-filled from each video's file name — edit them freely below.
 const PROJECTS: Project[] = [
-  { id: 1, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Animated%20movie%20-%20Hero%20Cat%20(1)%20(1).mp4" },
-  { id: 2, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Forbes%20properties%20-%20Real%20estate%20-%20concept.mp4" },
-  { id: 3, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Electronics%20-%20Cooler%20Ad%20(1).mp4" },
-  { id: 4, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Gangsters%20punjab.mp4" },
-  { id: 5, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Gauddly%20Music%20Video.mp4" },
-  { id: 6, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Itsme%20Music%20Video.mp4" },
-  { id: 7, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Kobala%20(1).mp4" },
-  { id: 8, videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Mahindra%20XEV%20car%20(1).mp4" },
-].map((p) => ({ ...p, title: titleFromVideoSrc(p.videoSrc) }));
+  { id: 1, title: "Animated movie - Hero Cat (1) (1)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Animated%20movie%20-%20Hero%20Cat%20(1)%20(1).mp4", thumbnail: "" },
+  { id: 2, title: "Forbes properties - Real estate - concept", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Forbes%20properties%20-%20Real%20estate%20-%20concept.mp4", thumbnail: "" },
+  { id: 3, title: "Electronics - Cooler Ad (1)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Electronics%20-%20Cooler%20Ad%20(1).mp4", thumbnail: "" },
+  { id: 4, title: "Gangsters punjab", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Gangsters%20punjab.mp4", thumbnail: "" },
+  { id: 5, title: "Gauddly Music Video", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Gauddly%20Music%20Video.mp4", thumbnail: "" },
+  { id: 6, title: "Itsme Music Video", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Itsme%20Music%20Video.mp4", thumbnail: "" },
+  { id: 7, title: "Kobala (1)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Kobala%20(1).mp4", thumbnail: "" },
+  { id: 8, title: "Mahindra XEV car (1)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Mahindra%20XEV%20car%20(1).mp4", thumbnail: "" },
+];
 
 interface PopupState {
   project: Project;
@@ -364,7 +364,7 @@ export default function FeaturedShowcase() {
       {viewMode === "grid" && (
         <div className="portfolio-hero">
           {isHeroInView && (
-            <video ref={heroVideoRef} className="portfolio-hero-video" src={active.videoSrc} autoPlay loop muted playsInline preload="auto" aria-hidden="true" tabIndex={-1} />
+            <video ref={heroVideoRef} className="portfolio-hero-video" src={active.videoSrc} poster={active.thumbnail || undefined} autoPlay loop muted playsInline preload="auto" aria-hidden="true" tabIndex={-1} />
           )}
           <div className="portfolio-hero-gradient-b" />
           <div className="portfolio-hero-gradient-l" />
@@ -496,6 +496,7 @@ export default function FeaturedShowcase() {
         >
           <video
             src={popup.project.videoSrc}
+            poster={popup.project.thumbnail || undefined}
             autoPlay
             loop
             muted
@@ -558,6 +559,7 @@ export default function FeaturedShowcase() {
           <div ref={overlayBoxRef} className="vo-box" onClick={(e) => e.stopPropagation()} style={{ zIndex: 2 }}>
             <video
               src={videoOverlay.videoSrc}
+              poster={videoOverlay.thumbnail || undefined}
               autoPlay
               loop
               muted
@@ -626,6 +628,7 @@ export default function FeaturedShowcase() {
             <div className="bs-video-col" style={{ position: "relative" }}>
               <video
                 src={bottomSheet.videoSrc}
+                poster={bottomSheet.thumbnail || undefined}
                 autoPlay
                 loop
                 muted
@@ -688,15 +691,6 @@ const FeaturedCard = memo(function FeaturedCard({ project, isActive, onClick, on
   const videoRef = useRef<HTMLVideoElement>(null);
   const isInView = useInView(cardRef, { once: true, margin: "150px" });
   const noHover = useNoHover();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  useEffect(() => {
-    if (!isInView || !project.videoSrc || !videoRef.current) return;
-    // Paint the first frame so the card isn't black, then immediately pause.
-    // On touch devices there's no mouseenter to resume playback, so this
-    // also prevents every scrolled-into-view card from autoplaying at once
-    // and competing for mobile bandwidth.
-    videoRef.current.play().then(() => videoRef.current?.pause()).catch(() => { });
-  }, [isInView, project.videoSrc]);
   const onEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!isActive) gsap.to(cardRef.current, { scale: 1.04, duration: 0.22, ease: "power4.out" });
     if (project.videoSrc) videoRef.current?.play().catch(() => { });
@@ -725,23 +719,17 @@ const FeaturedCard = memo(function FeaturedCard({ project, isActive, onClick, on
           <motion.video
             ref={videoRef}
             src={project.videoSrc}
+            poster={project.thumbnail || undefined}
             loop
             muted
             playsInline
-            preload="metadata"
+            preload="none"
             className="portfolio-feat-video"
             aria-hidden="true"
             tabIndex={-1}
             variants={imageRevealVariants}
             transition={{ duration: 0.6, delay: 0.1, ease: EASE_OUT }}
-            onLoadedData={() => setIsLoading(false)}
-            onCanPlay={() => setIsLoading(false)}
           />
-        )}
-        {project.videoSrc && isInView && isLoading && (
-          <div className="card-video-loader">
-            <div className="card-loader-spinner" />
-          </div>
         )}
         <div className="portfolio-feat-overlay" />
         <div className="portfolio-feat-info">
@@ -798,15 +786,6 @@ const GridCard = memo(function GridCard({ project, onEnter, onLeave, onClick, di
   const videoRef = useRef<HTMLVideoElement>(null);
   const isInView = useInView(cardRef, { once: true, margin: viewMargin });
   const noHover = useNoHover();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  useEffect(() => {
-    if (!isInView || !project.videoSrc || !videoRef.current) return;
-    // Paint the first frame so the card isn't black, then immediately pause.
-    // On touch devices there's no mouseenter to resume playback, so this
-    // also prevents every scrolled-into-view card from autoplaying at once
-    // and competing for mobile bandwidth.
-    videoRef.current.play().then(() => videoRef.current?.pause()).catch(() => { });
-  }, [isInView, project.videoSrc]);
   const handleEnter = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (disableHoverOnMobile && noHover) return;
     if (project.videoSrc) videoRef.current?.play().catch(() => { });
@@ -836,23 +815,17 @@ const GridCard = memo(function GridCard({ project, onEnter, onLeave, onClick, di
             <motion.video
               ref={videoRef}
               src={project.videoSrc}
+              poster={project.thumbnail || undefined}
               loop
               muted
               playsInline
-              preload="metadata"
+              preload="none"
               className="portfolio-grid-video"
               aria-hidden="true"
               tabIndex={-1}
               variants={imageRevealVariants}
               transition={{ duration: 0.6, delay: 0.1, ease: EASE_OUT }}
-              onLoadedData={() => setIsLoading(false)}
-              onCanPlay={() => setIsLoading(false)}
             />
-          )}
-          {project.videoSrc && isInView && isLoading && (
-            <div className="card-video-loader">
-              <div className="card-loader-spinner" />
-            </div>
           )}
           <div className="portfolio-grid-overlay" />
         </div>

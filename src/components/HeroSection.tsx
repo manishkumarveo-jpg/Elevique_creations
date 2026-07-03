@@ -3,6 +3,7 @@
 import { useRef, useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { posterFromVideoSrc } from "@/lib/utils";
 
 function Typewriter({ phrases, speed = 80, delay = 1800, deleteSpeed = 40 }: { phrases: string[]; speed?: number; delay?: number; deleteSpeed?: number }) {
   const [currentPhraseIdx, setCurrentPhraseIdx] = useState(0);
@@ -47,8 +48,7 @@ function Typewriter({ phrases, speed = 80, delay = 1800, deleteSpeed = 40 }: { p
 
 const VIDEO_SRC =
   "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Itsme%20red%20carpet.mp4";
-const POSTER_SRC =
-  "";
+const POSTER_SRC = posterFromVideoSrc(VIDEO_SRC);
 
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 
