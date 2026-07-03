@@ -78,7 +78,6 @@ const PROJECTS: Project[] = [
     colorTo: "#ec4899",
     videoSrc: "https://res.cloudinary.com/dpm8hbhff/video/upload/q_auto/f_auto/v1781090224/Its_me_music_video_compressed_ug7wwp.mp4",
   },
-
 ];
 
 interface PopupState {
