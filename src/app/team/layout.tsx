@@ -1,7 +1,7 @@
-import { TeamSidebar } from '@/components/team/TeamSidebar'
-import { NavigationProgress } from '@/components/shared/NavigationProgress'
-import { MobileHeader } from '@/components/shared/MobileHeader'
-import { requireTeamMember, getCurrentUserAndProfile } from '@/lib/auth/require-role'
+import { TeamSidebar } from '@/dashboard/components/team/TeamSidebar'
+import { NavigationProgress } from '@/dashboard/components/shared/NavigationProgress'
+import { MobileHeader } from '@/dashboard/components/shared/MobileHeader'
+import { requireTeamMember, getCurrentUserAndProfile } from '@/dashboard/lib/auth/require-role'
 
 function getInitials(name: string) {
   return name

@@ -2,8 +2,8 @@
 
 import { useState, useTransition } from 'react'
 import { CalendarDays, Check, Clock, Trash2, AlertTriangle } from 'lucide-react'
-import { scheduleMeeting, deleteMeeting } from '@/lib/actions/meetings/schedule-meeting'
-import type { MeetingRow } from '@/lib/queries/meetings'
+import { scheduleMeeting, deleteMeeting } from '@/dashboard/lib/actions/meetings/schedule-meeting'
+import type { MeetingRow } from '@/dashboard/lib/queries/meetings'
 
 interface TeamMember {
   id: string

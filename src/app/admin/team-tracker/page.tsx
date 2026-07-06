@@ -1,7 +1,7 @@
-import { getProductionDeliverables } from '@/lib/queries/production-tracker'
-import { getVideoGenerationTasks } from '@/lib/queries/video-tracker'
-import { getAllMilestonesWithDetails } from '@/lib/queries/milestones'
-import { getTeamMembers } from '@/lib/queries/users'
+import { getProductionDeliverables } from '@/dashboard/lib/queries/production-tracker'
+import { getVideoGenerationTasks } from '@/dashboard/lib/queries/video-tracker'
+import { getAllMilestonesWithDetails } from '@/dashboard/lib/queries/milestones'
+import { getTeamMembers } from '@/dashboard/lib/queries/users'
 import { TeamTrackerSheet, type TrackerRow } from './TeamTrackerSheet'
 
 const MILESTONE_STATUS_MAP = {

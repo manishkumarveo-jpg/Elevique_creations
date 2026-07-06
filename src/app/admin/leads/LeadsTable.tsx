@@ -1,11 +1,11 @@
 'use client'
 
 import { useMemo, useState, useTransition } from 'react'
-import { Avatar } from '@/components/ui/Avatar'
-import { Badge } from '@/components/ui/Badge'
-import { Button } from '@/components/ui/Button'
-import { Pagination } from '@/components/ui/Pagination'
-import { classifyAllUnprocessed, classifySubmission } from '@/lib/actions/ai/classify-submission'
+import { Avatar } from '@/dashboard/components/ui/Avatar'
+import { Badge } from '@/dashboard/components/ui/Badge'
+import { Button } from '@/dashboard/components/ui/Button'
+import { Pagination } from '@/dashboard/components/ui/Pagination'
+import { classifyAllUnprocessed, classifySubmission } from '@/dashboard/lib/actions/ai/classify-submission'
 import { Mail, Phone, MapPin, Video, DollarSign, Globe, Building, Briefcase, Calendar, Sparkles } from 'lucide-react'
 
 type SocialLead = {

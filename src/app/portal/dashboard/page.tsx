@@ -1,8 +1,8 @@
-import { createServerClient } from '@/lib/supabase/server'
-import { getProjectsForClient } from '@/lib/queries/projects'
-import { getUpcomingMeetingsForClient, getMissedMeetingsForClient } from '@/lib/queries/meetings'
-import { FeaturedProjectCard } from '@/components/shared/FeaturedProjectCard'
-import { ProjectStatusBadge } from '@/components/shared/StatusBadge'
+import { createServerClient } from '@/shared/lib/supabase/server'
+import { getProjectsForClient } from '@/dashboard/lib/queries/projects'
+import { getUpcomingMeetingsForClient, getMissedMeetingsForClient } from '@/dashboard/lib/queries/meetings'
+import { FeaturedProjectCard } from '@/dashboard/components/shared/FeaturedProjectCard'
+import { ProjectStatusBadge } from '@/dashboard/components/shared/StatusBadge'
 import Link from 'next/link'
 import { CalendarDays, Folder } from 'lucide-react'
 

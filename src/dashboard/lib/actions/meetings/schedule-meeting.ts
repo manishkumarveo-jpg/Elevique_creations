@@ -1,0 +1,75 @@
+'use server'
+
+import { z } from 'zod'
+import { requireAdmin } from '@/dashboard/lib/auth/require-role'
+import { createServerClient } from '@/shared/lib/supabase/server'
+import { logActivity } from '@/dashboard/lib/actions/activity'
+import { revalidatePath } from 'next/cache'
+
+const ScheduleMeetingSchema = z.object({
+  title: z.string().min(1).max(200),
+  scheduled_at: z.string().min(1),
+  client_id: z.string().uuid().nullable(),
+  assigned_team_member_id: z.string().uuid().nullable(),
+  project_id: z.string().uuid().nullable(),
+  notes: z.string().nullable(),
+})
+
+export async function scheduleMeeting(input: unknown): Promise<{ success: boolean; error?: string }> {
+  const user = await requireAdmin()
+  const parseResult = ScheduleMeetingSchema.safeParse(input)
+  if (!parseResult.success) {
+    return { success: false, error: parseResult.error.issues[0]?.message ?? 'Invalid meeting data' }
+  }
+  const formData = parseResult.data
+  const supabase = await createServerClient()
+
+  const { data, error } = await supabase
+    .from('meetings')
+    .insert({
+      title: formData.title,
+      scheduled_at: formData.scheduled_at,
+      client_id: formData.client_id || null,
+      assigned_team_member_id: formData.assigned_team_member_id || null,
+      project_id: formData.project_id || null,
+      notes: formData.notes || null,
+      created_by: user.id,
+    })
+    .select('id')
+    .single()
+
+  if (error || !data) return { success: false, error: error?.message }
+
+  await logActivity({
+    actor_id: user.id,
+    actor_role: 'admin',
+    action: 'scheduled_meeting',
+    entity_type: 'meeting',
+    entity_id: data.id,
+    entity_name: formData.title,
+    metadata: { scheduled_at: formData.scheduled_at },
+  })
+
+  revalidatePath('/admin/dashboard')
+  revalidatePath('/team/dashboard')
+  revalidatePath('/portal/dashboard')
+  if (formData.assigned_team_member_id) {
+    revalidatePath(`/admin/team/${formData.assigned_team_member_id}`)
+  }
+
+  return { success: true }
+}
+
+export async function deleteMeeting(meetingId: string): Promise<{ success: boolean; error?: string }> {
+  await requireAdmin()
+  const supabase = await createServerClient()
+
+  const { error } = await supabase.from('meetings').delete().eq('id', meetingId)
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath('/admin/dashboard')
+  revalidatePath('/team/dashboard')
+  revalidatePath('/portal/dashboard')
+
+  return { success: true }
+}

@@ -1,5 +1,6 @@
-import DotBackground from "@/components/DotBackground";
-import SmoothScrollProvider from "@/components/SmoothScrollProvider";
+import "@/website/components/nav.css";
+import DotBackground from "@/website/components/DotBackground";
+import SmoothScrollProvider from "@/website/components/SmoothScrollProvider";
 
 export default function WebsiteLayout({ children }: { children: React.ReactNode }) {
   return (

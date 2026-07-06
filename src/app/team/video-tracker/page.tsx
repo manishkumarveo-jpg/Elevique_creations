@@ -1,8 +1,8 @@
-import { requireTeamMember } from '@/lib/auth/require-role'
-import { getVideoGenerationTasksForTeamMember } from '@/lib/queries/video-tracker'
-import { getProductionDeliverablesForTeamMember } from '@/lib/queries/production-tracker'
-import { Tabs } from '@/components/ui/Tabs'
-import { TrackerPriorityBadge, TrackerStatusBadge } from '@/components/shared/StatusBadge'
+import { requireTeamMember } from '@/dashboard/lib/auth/require-role'
+import { getVideoGenerationTasksForTeamMember } from '@/dashboard/lib/queries/video-tracker'
+import { getProductionDeliverablesForTeamMember } from '@/dashboard/lib/queries/production-tracker'
+import { Tabs } from '@/dashboard/components/ui/Tabs'
+import { TrackerPriorityBadge, TrackerStatusBadge } from '@/dashboard/components/shared/StatusBadge'
 import { VideoTaskCard } from './VideoTaskCard'
 
 export default async function TeamVideoTrackerPage() {

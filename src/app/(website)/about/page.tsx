@@ -1,10 +1,10 @@
-import Navbar from "@/components/Navbar";
-import AboutSection from "@/components/AboutSection";
-import { Demo as BrandsSection } from "@/components/ui/demo";
-import TestimonialsEditorial from "@/components/ui/editorial-testimonial";
-import ContactSection from "@/components/ContactSection";
-import { Footer } from "@/components/ui/footer-section";
-import { ScrollReveal } from "@/components/shared/ScrollReveal";
+import Navbar from "@/website/components/Navbar";
+import AboutSection from "@/website/components/AboutSection";
+import { Demo as BrandsSection } from "@/website/components/ui/demo";
+import TestimonialsEditorial from "@/website/components/ui/editorial-testimonial";
+import ContactSection from "@/website/components/ContactSection";
+import { Footer } from "@/website/components/ui/footer-section";
+import { ScrollReveal } from "@/website/components/ScrollReveal";
 
 export const metadata = {
   title: "About | Elevique",

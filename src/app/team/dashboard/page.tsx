@@ -1,10 +1,10 @@
-import { createServerClient } from '@/lib/supabase/server'
-import { getProjectsForTeam } from '@/lib/queries/projects'
-import { getUpcomingMeetingsForTeam, getMissedMeetingsForTeam } from '@/lib/queries/meetings'
+import { createServerClient } from '@/shared/lib/supabase/server'
+import { getProjectsForTeam } from '@/dashboard/lib/queries/projects'
+import { getUpcomingMeetingsForTeam, getMissedMeetingsForTeam } from '@/dashboard/lib/queries/meetings'
 import Link from 'next/link'
-import { FeaturedProjectCard } from '@/components/shared/FeaturedProjectCard'
-import { ProjectStatusBadge } from '@/components/shared/StatusBadge'
-import { MeetingAttendButton } from '@/components/team/MeetingAttendButton'
+import { FeaturedProjectCard } from '@/dashboard/components/shared/FeaturedProjectCard'
+import { ProjectStatusBadge } from '@/dashboard/components/shared/StatusBadge'
+import { MeetingAttendButton } from '@/dashboard/components/team/MeetingAttendButton'
 import { CalendarDays, Folder } from 'lucide-react'
 
 function formatMeetingDate(iso: string) {

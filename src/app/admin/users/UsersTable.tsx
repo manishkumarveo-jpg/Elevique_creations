@@ -2,12 +2,12 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
-import { RoleBadge } from '@/components/shared/StatusBadge'
-import { Avatar } from '@/components/ui/Avatar'
-import { Pagination } from '@/components/ui/Pagination'
+import { RoleBadge } from '@/dashboard/components/shared/StatusBadge'
+import { Avatar } from '@/dashboard/components/ui/Avatar'
+import { Pagination } from '@/dashboard/components/ui/Pagination'
 import { ToggleActiveButton } from './ToggleActiveButton'
 import { Eye } from 'lucide-react'
-import type { Database } from '@/lib/types/database'
+import type { Database } from '@/shared/lib/types/database'
 
 type User = Database['public']['Tables']['profiles']['Row']
 

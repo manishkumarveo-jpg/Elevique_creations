@@ -1,7 +1,7 @@
-import { createServerClient } from '@/lib/supabase/server'
-import { getRecentActivity } from '@/lib/queries/activity'
-import { getProjectsWithTeam } from '@/lib/queries/projects'
-import { getUpcomingMeetings, getMissedMeetings } from '@/lib/queries/meetings'
+import { createServerClient } from '@/shared/lib/supabase/server'
+import { getRecentActivity } from '@/dashboard/lib/queries/activity'
+import { getProjectsWithTeam } from '@/dashboard/lib/queries/projects'
+import { getUpcomingMeetings, getMissedMeetings } from '@/dashboard/lib/queries/meetings'
 import DashboardViews from './DashboardViews'
 import Link from 'next/link'
 

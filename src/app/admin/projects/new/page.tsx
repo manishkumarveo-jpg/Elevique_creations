@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { createProject } from '@/lib/actions/projects/create-project'
-import { Avatar } from '@/components/ui/Avatar'
-import { createClientSupabase } from '@/lib/supabase/client'
+import { createProject } from '@/dashboard/lib/actions/projects/create-project'
+import { Avatar } from '@/dashboard/components/ui/Avatar'
+import { createClientSupabase } from '@/shared/lib/supabase/client'
 import { Check } from 'lucide-react'
 
 interface Profile { id: string; full_name: string; company_name: string | null }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { finalizeProject } from '@/lib/actions/projects/approval'
+import { finalizeProject } from '@/dashboard/lib/actions/projects/approval'
 
 type Project = {
   id: string

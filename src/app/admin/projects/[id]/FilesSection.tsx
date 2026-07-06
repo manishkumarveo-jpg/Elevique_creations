@@ -1,12 +1,12 @@
 'use client'
 
 import { useTransition, useState } from 'react'
-import { FileLinkRow } from '@/components/shared/FileLinkRow'
-import { AddLinkForm } from '@/components/shared/AddLinkForm'
-import { addFileLink } from '@/lib/actions/files/add-file-link'
-import { softDeleteFile } from '@/lib/actions/files/delete-file'
-import type { Database } from '@/lib/types/database'
-import type { FileWithMeta } from '@/lib/queries/files'
+import { FileLinkRow } from '@/dashboard/components/shared/FileLinkRow'
+import { AddLinkForm } from '@/dashboard/components/shared/AddLinkForm'
+import { addFileLink } from '@/dashboard/lib/actions/files/add-file-link'
+import { softDeleteFile } from '@/dashboard/lib/actions/files/delete-file'
+import type { Database } from '@/shared/lib/types/database'
+import type { FileWithMeta } from '@/dashboard/lib/queries/files'
 import { FileText, Box, FolderOpen, Scroll, Film, Image as ImageIcon, Folder } from 'lucide-react'
 
 type FolderRow = Database['public']['Tables']['folders']['Row']

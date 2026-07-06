@@ -1,7 +1,7 @@
-import { ClientSidebar } from '@/components/portal/ClientSidebar'
-import { NavigationProgress } from '@/components/shared/NavigationProgress'
-import { MobileHeader } from '@/components/shared/MobileHeader'
-import { requireClient, getCurrentUserAndProfile } from '@/lib/auth/require-role'
+import { ClientSidebar } from '@/dashboard/components/portal/ClientSidebar'
+import { NavigationProgress } from '@/dashboard/components/shared/NavigationProgress'
+import { MobileHeader } from '@/dashboard/components/shared/MobileHeader'
+import { requireClient, getCurrentUserAndProfile } from '@/dashboard/lib/auth/require-role'
 
 function getInitials(name: string) {
   return name

@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
-import { requireAnyAuth } from '@/lib/auth/require-role'
-import { createServerClient } from '@/lib/supabase/server'
+import { requireAnyAuth } from '@/dashboard/lib/auth/require-role'
+import { createServerClient } from '@/shared/lib/supabase/server'
 
 const ROLE_DASHBOARDS: Record<string, string> = {
   admin: '/admin/dashboard',

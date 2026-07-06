@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClientSupabase } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
+import { createClientSupabase } from '@/shared/lib/supabase/client'
+import { Button } from '@/dashboard/components/ui/Button'
+import { Input } from '@/dashboard/components/ui/Input'
 
 export default function PortalLoginPage() {
   const router = useRouter()

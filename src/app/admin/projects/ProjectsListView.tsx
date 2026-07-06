@@ -2,10 +2,10 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
-import { ProjectStatusBadge } from '@/components/shared/StatusBadge'
-import { Avatar } from '@/components/ui/Avatar'
-import { Pagination } from '@/components/ui/Pagination'
-import type { ProjectWithTeam } from '@/lib/queries/projects'
+import { ProjectStatusBadge } from '@/dashboard/components/shared/StatusBadge'
+import { Avatar } from '@/dashboard/components/ui/Avatar'
+import { Pagination } from '@/dashboard/components/ui/Pagination'
+import type { ProjectWithTeam } from '@/dashboard/lib/queries/projects'
 
 const STATUS_OPTIONS = ['All', 'briefing', 'in_progress', 'final_review', 'completed', 'paused'] as const
 const PAGE_SIZE = 10

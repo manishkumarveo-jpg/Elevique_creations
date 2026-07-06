@@ -1,5 +1,5 @@
-import { getProductionDeliverables } from '@/lib/queries/production-tracker'
-import { StatTile } from '@/components/ui/StatTile'
+import { getProductionDeliverables } from '@/dashboard/lib/queries/production-tracker'
+import { StatTile } from '@/dashboard/components/ui/StatTile'
 import { ProductionTrackerView } from './ProductionTrackerView'
 
 export default async function AdminProductionTrackerPage() {

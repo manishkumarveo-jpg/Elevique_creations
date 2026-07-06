@@ -2,13 +2,13 @@
 
 import { useState, useTransition } from 'react'
 import Link from 'next/link'
-import { SegmentedControl } from '@/components/ui/SegmentedControl'
-import { FeaturedProjectCard } from '@/components/shared/FeaturedProjectCard'
-import { ProgressBar } from '@/components/ui/ProgressBar'
-import { ProjectStatusBadge, RoleBadge } from '@/components/shared/StatusBadge'
-import { Avatar } from '@/components/ui/Avatar'
+import { SegmentedControl } from '@/dashboard/components/ui/SegmentedControl'
+import { FeaturedProjectCard } from '@/dashboard/components/shared/FeaturedProjectCard'
+import { ProgressBar } from '@/dashboard/components/ui/ProgressBar'
+import { ProjectStatusBadge, RoleBadge } from '@/dashboard/components/shared/StatusBadge'
+import { Avatar } from '@/dashboard/components/ui/Avatar'
 import { CalendarDays, Check, Clock, Trash2, AlertTriangle } from 'lucide-react'
-import { deleteMeeting } from '@/lib/actions/meetings/schedule-meeting'
+import { deleteMeeting } from '@/dashboard/lib/actions/meetings/schedule-meeting'
 
 interface ProjectRow {
   id: string

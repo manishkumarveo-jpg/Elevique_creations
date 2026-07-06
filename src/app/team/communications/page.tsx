@@ -1,6 +1,6 @@
-import { createServerClient } from '@/lib/supabase/server'
-import { getConversationsForTeamMember, getMessagesForProject } from '@/lib/queries/messages'
-import { MessageThread } from '@/components/shared/MessageThread'
+import { createServerClient } from '@/shared/lib/supabase/server'
+import { getConversationsForTeamMember, getMessagesForProject } from '@/dashboard/lib/queries/messages'
+import { MessageThread } from '@/dashboard/components/shared/MessageThread'
 import Link from 'next/link'
 
 interface Props {

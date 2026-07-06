@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { updateMilestoneStatus } from '@/lib/actions/milestones/update-milestone'
-import type { Database } from '@/lib/types/database'
+import { updateMilestoneStatus } from '@/dashboard/lib/actions/milestones/update-milestone'
+import type { Database } from '@/shared/lib/types/database'
 
 type Milestone = Database['public']['Tables']['milestones']['Row']
 

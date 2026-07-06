@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { getProjectsWithTeam } from '@/lib/queries/projects'
+import { getProjectsWithTeam } from '@/dashboard/lib/queries/projects'
 import { ProjectsListView } from './ProjectsListView'
 
 export default async function AdminProjectsPage() {

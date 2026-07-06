@@ -1,0 +1,43 @@
+'use client'
+import { useEffect, useRef, useState } from 'react'
+import { createClientSupabase } from '@/shared/lib/supabase/client'
+import type { Database } from '@/shared/lib/types/database'
+
+type Profile = Database['public']['Tables']['profiles']['Row']
+
+export function useCurrentUser() {
+  const [profile, setProfile] = useState<Profile | null>(null)
+  const [loading, setLoading] = useState(true)
+  const supabaseRef = useRef(createClientSupabase())
+
+  useEffect(() => {
+    const supabase = supabaseRef.current
+    async function load() {
+      const { data: { user }, error } = await supabase.auth.getUser()
+      if (error?.name === 'AuthApiError') {
+        await supabase.auth.signOut({ scope: 'local' })
+        setLoading(false)
+        return
+      }
+      if (!user) { setLoading(false); return }
+
+      const { data } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single()
+
+      setProfile(data)
+      setLoading(false)
+    }
+    load()
+  }, [])
+
+  return {
+    profile,
+    loading,
+    isAdmin: profile?.role === 'admin',
+    isTeamMember: profile?.role === 'team_member',
+    isClient: profile?.role === 'client',
+  }
+}

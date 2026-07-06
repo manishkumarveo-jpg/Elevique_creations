@@ -1,7 +1,7 @@
-import { AdminSidebar } from '@/components/admin/AdminSidebar'
-import { NavigationProgress } from '@/components/shared/NavigationProgress'
-import { MobileHeader } from '@/components/shared/MobileHeader'
-import { requireAdmin, getCurrentUserAndProfile } from '@/lib/auth/require-role'
+import { AdminSidebar } from '@/dashboard/components/admin/AdminSidebar'
+import { NavigationProgress } from '@/dashboard/components/shared/NavigationProgress'
+import { MobileHeader } from '@/dashboard/components/shared/MobileHeader'
+import { requireAdmin, getCurrentUserAndProfile } from '@/dashboard/lib/auth/require-role'
 
 function getInitials(name: string) {
   return name

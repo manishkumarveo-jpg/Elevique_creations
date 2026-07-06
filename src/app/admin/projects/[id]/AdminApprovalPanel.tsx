@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { giveAdminApproval, revokeAdminApproval, adminApproveAndFinalize, declineAdminApproval } from '@/lib/actions/projects/approval'
+import { giveAdminApproval, revokeAdminApproval, adminApproveAndFinalize, declineAdminApproval } from '@/dashboard/lib/actions/projects/approval'
 
 type Project = {
   id: string

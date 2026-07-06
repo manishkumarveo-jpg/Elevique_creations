@@ -1,7 +1,7 @@
-import Navbar from "@/components/Navbar";
-import ServicesSection from "@/components/ServicesSection";
-import ContactSection from "@/components/ContactSection";
-import { Footer } from "@/components/ui/footer-section";
+import Navbar from "@/website/components/Navbar";
+import ServicesSection from "@/website/components/ServicesSection";
+import ContactSection from "@/website/components/ContactSection";
+import { Footer } from "@/website/components/ui/footer-section";
 
 export const metadata = {
   title: "Services | Elevique",
