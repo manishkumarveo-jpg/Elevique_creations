@@ -455,20 +455,6 @@ export default function TestimonialsEditorial() {
                   whileHover="hover"
                   initial="initial"
                 >
-                  {/* Spinning Ring + Avatar Wrapper */}
-                  <div className="te-avatar-container">
-                    <motion.div
-                      className="te-avatar-ring"
-                      variants={avatarRingVariants}
-                    />
-                    <div className="te-avatar">
-                      <svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg" width="38" height="38" aria-hidden="true">
-                        <rect width="38" height="38" rx="19" fill="rgba(20,184,166,0.08)" />
-                        <circle cx="19" cy="15" r="6.5" fill="rgba(255,255,255,0.22)" />
-                        <path d="M4 36c0-8.284 6.716-15 15-15s15 6.716 15 15" fill="rgba(255,255,255,0.18)" />
-                      </svg>
-                    </div>
-                  </div>
                   <div>
                     <p className="te-name">{current.author}</p>
                     <p className="te-role">

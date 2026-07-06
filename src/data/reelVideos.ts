@@ -44,7 +44,7 @@ export const REEL_VIDEOS: ReelVideo[] = [
   { id: 29, title: "Almonds.AI Concept", colorFrom: "#f97316", colorTo: "#eab308", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Tech%20auto%2CIndustry/Almonds.AI%20concept.compressed.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Almonds.AI%20concept.compressed.png" },
 
   // ── Not in the requested sequence — appended at the end ──
-  { id: 30, title: "Fashion & Lifestyle Premium", colorFrom: "#f59e0b", colorTo: "#ec4899", videoSrc: "", thumbnail: "" },
-  { id: 31, title: "Its Me Valentine's Concept", colorFrom: "#06b6d4", colorTo: "#10b981", videoSrc: "", thumbnail: "" },
-  { id: 32, title: "Harman Tea Concept", colorFrom: "#ec4899", colorTo: "#f59e0b", videoSrc: "", thumbnail: "" },
+
+  { id: 30, title: "Its Me Valentine's Concept", colorFrom: "#06b6d4", colorTo: "#10b981", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Its%20me%20valentine's%20concept.compressed.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Its%20me%20valentine's%20concept.compressed.png" },
+  { id: 31, title: "Harman Tea Concept", colorFrom: "#ec4899", colorTo: "#f59e0b", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Harman%20tea%20concept.compressed.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Harman%20tea%20concep.png" },
 ];

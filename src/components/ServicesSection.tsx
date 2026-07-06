@@ -345,10 +345,6 @@ export default function ServicesSection() {
             <h2 className="svc-heading" id="services-heading">
               Services We Offer
             </h2>
-            <p className="svc-subheading">
-              Precision-crafted AI visuals, content pipelines, and immersive
-              digital experiences — built for premium brands.
-            </p>
           </div>
 
           {/* 3-column flip card grid */}

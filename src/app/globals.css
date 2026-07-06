@@ -181,12 +181,14 @@
 }
 
 /* ─── Reset ─────────────────────────────────────────────────── */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
 }
 
 html {
@@ -488,11 +490,11 @@ body {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  font-size: 0.72rem;
+  font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: rgba(248, 250, 252, 0.7);
+  color: rgba(255, 255, 255, 0.95);
   margin-bottom: 1.2rem;
 }
 
@@ -7300,18 +7302,18 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-size: 0.52rem;
+  font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: rgba(248, 250, 252, 0.38);
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .portfolio-label-line {
   display: block;
   width: 20px;
-  height: 1px;
-  background: rgba(248, 250, 252, 0.3);
+  height: 1.5px;
+  background: rgba(255, 255, 255, 0.8);
 }
 
 .portfolio-hero-content {
@@ -8346,7 +8348,8 @@ body {
   position: relative;
   background: var(--black);
   overflow: hidden;
-  padding-block: var(--section-padding);
+  padding-top: 2.5rem;
+  padding-bottom: var(--section-padding);
 }
 
 .proc-container {
@@ -8712,12 +8715,19 @@ body {
    ========================================================================= */
 
 /* ─── Shared layout ─────────────────────────────────────────── */
-.svc-section,
-.svc-diff-section {
+.svc-section {
   position: relative;
   background: #000000;
   overflow: hidden;
   padding: 7rem 0;
+}
+
+.svc-diff-section {
+  position: relative;
+  background: #000000;
+  overflow: hidden;
+  padding-top: 7rem;
+  padding-bottom: 2.5rem;
 }
 
 .svc-container {
@@ -8792,13 +8802,13 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font-size: 0.55rem;
+  font-size: 0.76rem;
   font-weight: 700;
-  letter-spacing: 0.32em;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   color: rgb(20, 184, 166);
   margin-bottom: 1.1rem;
-  opacity: 0.9;
+  opacity: 0.95;
 }
 
 .svc-eyebrow-line {
@@ -9466,10 +9476,10 @@ body {
   font-size: clamp(4rem, 6vw, 6rem);
   font-weight: 300;
   line-height: 0.95;
-  color: rgba(248, 250, 252, 0.035);
+  color: rgba(20, 184, 166, 0.09);
   user-select: none;
   flex-shrink: 0;
-  width: clamp(60px, 6vw, 80px);
+  width: clamp(70px, 7vw, 90px);
   text-align: right;
   padding-top: 2px;
   letter-spacing: -0.04em;

@@ -32,7 +32,7 @@ export const PKG_AI_VISUALS: PackageProject[] = [
 
   ]),
   ...pkgGroup("#ec4899", "#f59e0b", [
-    { id: 103, title: "Bulgari premium concept", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Bulgari%20premium%20concept.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Bulgari%20premium%20concept.png" },
+    { id: 103, title: "Bulgari premium concept", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Bulgari%20premium%20concept.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/bulll.png" },
   ]),
 ];
 
@@ -88,7 +88,7 @@ export const PKG_PRODUCT_FILM: PackageProject[] = [
     { id: 309, title: "Eyewear Ad (1)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Eyewear%20Ad%20(1).mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Eyewear%20Ad.png" },
     { id: 310, title: "Fashion & Lifestyle - Escale Dubai", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Fashion%20%26%20Lifestyle%20-%20Escale%20Dubai.compressed.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Fashion%20%26%20Lifestyle%20-%20Escale%20Dubai.png" },
     { id: 311, title: "Fashion & Lifestyle - Sweetfeel (1) (1)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Fashion%20%26%20Lifestyle%20-%20Sweetfeel%20(1)%20(1).compressed.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/sweetflee1.png" },
-    { id: 312, title: "Fashion & Lifestyle - Sweetfeel (2)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Fashion%20%26%20Lifestyle%20-%20Sweetfeel%20(2).compressed.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Fashion%20%26%20Lifestyle%20-%20Sweetfeel%20(2).png" },
+    { id: 312, title: "Fashion & Lifestyle - Sweetfeel (2)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Fashion%20%26%20Lifestyle%20-%20Sweetfeel%20(2).compressed.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/sweetflee2.png" },
     { id: 313, title: "Fashion & Lifestyle - Sweetfeel (3)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Fashion%20%26%20Lifestyle%20-%20Sweetfeel%20(3).compressed.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/sweetflee3.png" },
     { id: 314, title: "Fashion & Lifestyle - Sweetfeel (4)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Fashion%20%26%20Lifestyle%20-%20Sweetfeel%20(4).compressed.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Fashion%20%26%20Lifestyle%20-%20Sweetfeel%20(4).png" },
     { id: 315, title: "Fashion & Lifestyle - Women's Dress (2)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Fashion%20%26%20Lifestyle%20-%20Women's%20Dress%20(2).compressed.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Fashion%20%26%20Lifestyle%20-%20Women's%20Dress%20(2).png" },
@@ -117,14 +117,7 @@ export const PKG_PRODUCT_FILM: PackageProject[] = [
   ]),
 ];
 
-export const PKG_BRAND_FILM: PackageProject[] = pkgGroup("#f59e0b", "#ec4899", [
-  {
-    id: 401,
-    title: "UGC trending Avatar (1)",
-    videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/UGC%20trending%20Avatar%20(1)%20(1).compressed.mp4",
-    thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/ugc%20avatar.png"
-  }
-]);
+
 
 
 
@@ -141,5 +134,7 @@ export const PKG_TECH_UI: PackageProject[] = pkgGroup("#10b981", "#3b82f6", [
   { id: 508, title: "Lifestyle - Travel", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/fashion%20%26%20Lifestyle/Lifestyle%20-%20Travel.compressed.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Lifestyle%20-%20Trave.png" },
   { id: 509, title: "Gauddly Music Video", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Gauddly%20Music%20Video.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Gauddly%20Music%20Video.png" }
 ]);
+
+export const PKG_BRAND_FILM: PackageProject[] = [];
 
 export const PKG_EXPERIMENTAL: PackageProject[] = [];

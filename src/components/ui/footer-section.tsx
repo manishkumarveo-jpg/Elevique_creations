@@ -35,48 +35,48 @@ export function Footer() {
                 </svg>
               </div>
               <p className="ft-copyright">
-                © 2026 Asme. All rights reserved.
+                © 2026 Elevique. All rights reserved.
               </p>
             </div>
 
             {/* Right Side: Links Columns Grid */}
             <div className="ft-right">
-              {/* Product */}
+              {/* Services */}
               <div className="ft-col">
                 <h3 className="ft-title">
-                  Product
+                  Services
                 </h3>
                 <ul className="ft-list" role="list">
                   <li>
                     <a
-                      href="#features"
+                      href="/services"
                       className="ft-link"
                     >
-                      Features
+                      AI Video Ads
                     </a>
                   </li>
                   <li>
                     <a
-                      href="#pricing"
+                      href="/portfolio"
                       className="ft-link"
                     >
-                      Pricing
+                      Portfolio
                     </a>
                   </li>
                   <li>
                     <a
-                      href="#testimonials"
+                      href="/process"
                       className="ft-link"
                     >
-                      Testimonials
+                      Our Process
                     </a>
                   </li>
                   <li>
                     <a
-                      href="#integration"
+                      href="/contact"
                       className="ft-link"
                     >
-                      Integration
+                      Start a Project
                     </a>
                   </li>
                 </ul>
@@ -90,15 +90,7 @@ export function Footer() {
                 <ul className="ft-list" role="list">
                   <li>
                     <a
-                      href="#faqs"
-                      className="ft-link"
-                    >
-                      FAQs
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#about"
+                      href="/about"
                       className="ft-link"
                     >
                       About Us
@@ -106,7 +98,15 @@ export function Footer() {
                   </li>
                   <li>
                     <a
-                      href="#privacy"
+                      href="/contact"
+                      className="ft-link"
+                    >
+                      Contact
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
                       className="ft-link"
                     >
                       Privacy Policy
@@ -114,7 +114,7 @@ export function Footer() {
                   </li>
                   <li>
                     <a
-                      href="#terms"
+                      href="#"
                       className="ft-link"
                     >
                       Terms of Services
@@ -131,34 +131,34 @@ export function Footer() {
                 <ul className="ft-list" role="list">
                   <li>
                     <a
-                      href="#blog"
+                      href="/portfolio"
                       className="ft-link"
                     >
-                      Blog
+                      Case Studies
                     </a>
                   </li>
                   <li>
                     <a
-                      href="#changelog"
+                      href="/contact"
                       className="ft-link"
                     >
-                      Changelog
+                      Support & Help
                     </a>
                   </li>
                   <li>
                     <a
-                      href="#brand"
+                      href="/about"
                       className="ft-link"
                     >
-                      Brand
+                      Brand Guidelines
                     </a>
                   </li>
                   <li>
                     <a
-                      href="#help"
+                      href="/contact"
                       className="ft-link"
                     >
-                      Help
+                      FAQs
                     </a>
                   </li>
                 </ul>

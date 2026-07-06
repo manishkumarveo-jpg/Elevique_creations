@@ -86,9 +86,9 @@ function CountUpNumber({ value, suffix = "", duration = 2000, delay = 1000 }: { 
 const STATS = [
   { value: 500, suffix: "+", label: "Brands Served" },
   { value: 2000, suffix: "+", label: "AI Ads Delivered" },
-  { value: 5, suffix: "x", label: "AI Video Ads ROAS" },
+  { value: 10, suffix: "x", label: "AI Video Ads ROAS" },
   { value: 80, suffix: "%", label: "Savings On Production" },
-  { value: 5, suffix: "x", label: "CTR Boost" },
+  { value: 10, suffix: "x", label: "CTR Boost" },
 ];
 
 const statsContainerVariants = {
@@ -232,7 +232,7 @@ export default function HeroSection() {
               animate={{ y: "0%" }}
               transition={{ delay: 0.3, duration: 0.9, ease: EASE_OUT }}
             >
-              AI Visuals That
+              VISUALS THAT
             </motion.span>
           </span>
           <span className="reveal-clip">
@@ -243,7 +243,7 @@ export default function HeroSection() {
               animate={{ y: "0%" }}
               transition={{ delay: 0.42, duration: 0.9, ease: EASE_OUT }}
             >
-              <Typewriter phrases={["Don't Look Like AI", "Cost a Fortune", "Take Weeks"]} />
+              <Typewriter phrases={["Don't cost a fortune", "Do not take weeks", "Don't look like AI"]} />
             </motion.em>
           </span>
         </h1>

@@ -129,7 +129,7 @@ function StepCard({ step, index }: { step: (typeof STEPS)[0]; index: number }) {
   };
 
   return (
-    <div ref={ref} className="relative grid lg:grid-cols-2 gap-0 items-start mb-16 lg:mb-24">
+    <div ref={ref} className="relative grid lg:grid-cols-2 gap-0 items-start mb-8 lg:mb-12">
       <TimelineDot inView={inView} />
 
       {!isRight && <div className="hidden lg:block" />}
@@ -139,12 +139,12 @@ function StepCard({ step, index }: { step: (typeof STEPS)[0]; index: number }) {
         initial="hidden"
         animate={inView ? "visible" : "hidden"}
         transition={{ duration: 0.72, ease: EASE_OUT, delay: 0.05 }}
-        className={`relative group ${isRight ? "lg:pr-16" : "lg:pl-16"}`}
+        className={`relative group ${isRight ? "lg:pr-8" : "lg:pl-8"}`}
       >
         <div className="proc-card">
           <div className="proc-card-glow" aria-hidden="true" />
 
-          <div className="flex items-start justify-between mb-5">
+          <div className="flex items-start justify-between mb-8">
             <motion.div
               className="proc-icon-wrap"
               animate={inView ? { scale: 1, opacity: 1 } : { scale: 0.7, opacity: 0 }}
@@ -236,8 +236,7 @@ export default function ProcessSection() {
             animate={headingInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 14 }}
             transition={{ delay: 0.18, duration: 0.6, ease: EASE_OUT }}
           >
-            A five-stage process refined across 500+ projects — from first brief
-            to final delivery, every step is built for precision and speed.
+            A unified five-stage refined process— from first brief to final delivery, every step is built for precision and speed.
           </motion.p>
         </div>
 

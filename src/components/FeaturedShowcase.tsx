@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef, useCallback, memo } from "react";
 import gsap from "gsap";
 import { motion, useInView } from "framer-motion";
-import { ScrollReveal } from "@/components/shared/ScrollReveal";
 import {
   Play,
   X,
@@ -50,7 +49,7 @@ const PROJECTS: Project[] = [
   { id: 3, title: "Electronics - Cooler Ad (1)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Electronics%20-%20Cooler%20Ad%20(1).mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Electronics%20-%20Cooler%20Ad%20(1).png" },
   { id: 4, title: "Gangsters punjab", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Gangsters%20punjab.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Gangsters%20punjab.png" },
   { id: 5, title: "Gauddly Music Video", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Gauddly%20Music%20Video.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Gauddly%20Music%20Video.png" },
-  { id: 6, title: "Itsme Music Video", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Itsme%20Music%20Video.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Gauddly%20Music%20Video.png" },
+  { id: 6, title: "Itsme Music Video", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Itsme%20Music%20Video.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Itsme%20Music%20Video.png" },
   { id: 7, title: "Kobala (1)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Kobala%20(1).mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Kobala%20(1).png" },
   { id: 8, title: "Mahindra XEV car (1)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Mahindra%20XEV%20car%20(1).mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Mahindra%20XEV%20car%20(1).compressed.png" },
 ];
@@ -732,40 +731,39 @@ const FeaturedCard = memo(function FeaturedCard({ project, isActive, onClick, on
   };
   const handleClick = () => onClick(project);
   return (
-    <ScrollReveal direction="scale" scaleFrom={0.95} amount={0.2} margin="0px -5%" className="shrink-0">
-      <button
-        ref={cardRef}
-        type="button"
-        className={`portfolio-feat-card${isActive ? " portfolio-feat-card--active" : ""}`}
-
-        onClick={handleClick}
-        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { if (e.key === " ") e.preventDefault(); handleClick(); } }}
-        onMouseEnter={onEnter}
-        onMouseLeave={onLeave}
-        aria-label={`Switch to ${project.title}`}
-      >
-        {project.videoSrc && isInView && (
-          <motion.video
-            ref={videoRef}
-            src={project.videoSrc}
-            poster={project.thumbnail || undefined}
-            loop
-            muted
-            playsInline
-            preload="none"
-            className="portfolio-feat-video"
-            aria-hidden="true"
-            tabIndex={-1}
-            variants={imageRevealVariants}
-            transition={{ duration: 0.6, delay: 0.1, ease: EASE_OUT }}
-          />
-        )}
-        <div className="portfolio-feat-overlay" />
-        <div className="portfolio-feat-info">
-          <span className="portfolio-feat-title">{project.title}</span>
-        </div>
-      </button>
-    </ScrollReveal>
+    <button
+      ref={cardRef}
+      type="button"
+      className={`portfolio-feat-card shrink-0${isActive ? " portfolio-feat-card--active" : ""}`}
+      onClick={handleClick}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { if (e.key === " ") e.preventDefault(); handleClick(); } }}
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+      aria-label={`Switch to ${project.title}`}
+    >
+      {project.videoSrc && isInView && (
+        <motion.video
+          ref={videoRef}
+          src={project.videoSrc}
+          poster={project.thumbnail || undefined}
+          loop
+          muted
+          playsInline
+          preload="none"
+          className="portfolio-feat-video"
+          aria-hidden="true"
+          tabIndex={-1}
+          initial="hidden"
+          animate="visible"
+          variants={imageRevealVariants}
+          transition={{ duration: 0.6, delay: 0.1, ease: EASE_OUT }}
+        />
+      )}
+      <div className="portfolio-feat-overlay" />
+      <div className="portfolio-feat-info">
+        <span className="portfolio-feat-title">{project.title}</span>
+      </div>
+    </button>
   );
 });
 
@@ -832,42 +830,42 @@ const GridCard = memo(function GridCard({ project, onEnter, onLeave, onClick, di
   };
   const handleClick = () => onClick(project);
   return (
-    <ScrollReveal direction="scale" scaleFrom={0.95} amount={0.2} margin="0px -5%" className="shrink-0">
-      <button
-        ref={cardRef}
-        type="button"
-        className="portfolio-grid-card"
-        style={{ border: "none", background: "transparent", padding: 0, cursor: "pointer" }}
-        onMouseEnter={handleEnter}
-        onMouseLeave={handleLeave}
-        onClick={handleClick}
-        onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { if (e.key === " ") e.preventDefault(); handleClick(); } }}
-        aria-label={`Play ${project.title}`}
-      >
-        <div className="portfolio-grid-card-inner">
-          {project.videoSrc && isInView && (
-            <motion.video
-              ref={videoRef}
-              src={project.videoSrc}
-              poster={project.thumbnail || undefined}
-              loop
-              muted
-              playsInline
-              preload="none"
-              className="portfolio-grid-video"
-              aria-hidden="true"
-              tabIndex={-1}
-              variants={imageRevealVariants}
-              transition={{ duration: 0.6, delay: 0.1, ease: EASE_OUT }}
-            />
-          )}
-          <div className="portfolio-grid-overlay" />
-        </div>
-        <div className="portfolio-grid-info">
-          <span className="portfolio-grid-title">{project.title}</span>
-        </div>
-      </button>
-    </ScrollReveal>
+    <button
+      ref={cardRef}
+      type="button"
+      className="portfolio-grid-card shrink-0"
+      style={{ border: "none", background: "transparent", padding: 0, cursor: "pointer" }}
+      onMouseEnter={handleEnter}
+      onMouseLeave={handleLeave}
+      onClick={handleClick}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { if (e.key === " ") e.preventDefault(); handleClick(); } }}
+      aria-label={`Play ${project.title}`}
+    >
+      <div className="portfolio-grid-card-inner">
+        {project.videoSrc && isInView && (
+          <motion.video
+            ref={videoRef}
+            src={project.videoSrc}
+            poster={project.thumbnail || undefined}
+            loop
+            muted
+            playsInline
+            preload="none"
+            className="portfolio-grid-video"
+            aria-hidden="true"
+            tabIndex={-1}
+            initial="hidden"
+            animate="visible"
+            variants={imageRevealVariants}
+            transition={{ duration: 0.6, delay: 0.1, ease: EASE_OUT }}
+          />
+        )}
+        <div className="portfolio-grid-overlay" />
+      </div>
+      <div className="portfolio-grid-info">
+        <span className="portfolio-grid-title">{project.title}</span>
+      </div>
+    </button>
   );
 });
 

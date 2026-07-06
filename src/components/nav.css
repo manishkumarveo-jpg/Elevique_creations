@@ -50,7 +50,7 @@
   left: 0;
   right: 0;
   margin-inline: auto;
-  width: min(880px, 88vw);
+  width: min(1080px, 90vw);
   z-index: 1002;
   /* backwards: applies `from` opacity during the 0.1s delay, then CSS cascade
      takes over after animation ends so --nb-wrapper-opacity drives opacity */
@@ -67,8 +67,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 40px;
-  padding: 0 18px;
+  height: 56px;
+  padding: 0 24px;
   border-radius: 100px;
   border: 1px solid var(--nb-border);
   box-shadow:
@@ -189,14 +189,14 @@
 }
 
 .navbar-link {
-  font-size: 0.55rem;
+  font-size: 0.78rem;
   font-weight: 600;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   text-decoration: none;
   color: var(--nb-muted);
   position: relative;
-  padding: 3px 0;
+  padding: 4px 0;
   transition: color 0.3s ease;
 }
 
@@ -233,13 +233,13 @@
 .navbar-login {
   position: relative;
   z-index: 1;
-  font-size: 0.52rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   text-decoration: none;
   color: var(--nb-muted);
-  padding: 4px 10px;
+  padding: 6px 14px;
   border: 1px solid transparent;
   border-radius: 100px;
   transition: all 0.3s var(--nb-ease);
@@ -259,13 +259,13 @@
 .navbar-cta {
   position: relative;
   z-index: 1;
-  font-size: 0.52rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   text-decoration: none;
   color: var(--nb-text);
-  padding: 5px 14px;
+  padding: 8px 18px;
   border: 1px solid var(--nb-border);
   border-radius: 100px;
   background: var(--nb-surface);
@@ -441,6 +441,7 @@
 @media (max-width: 1440px) and (min-width: 769px) {
   .navbar-container {
     padding: 0 clamp(16px, 2vw, 24px);
+    height: 52px;
   }
 
   .navbar-links {
@@ -448,13 +449,13 @@
   }
 
   .navbar-cta {
-    padding: 8px clamp(14px, 1.6vw, 18px);
-    font-size: 0.58rem;
+    padding: 7px clamp(12px, 1.4vw, 16px);
+    font-size: 0.72rem;
   }
 
   .navbar-login {
-    padding: 6px clamp(10px, 1.2vw, 14px);
-    font-size: 0.58rem;
+    padding: 5px clamp(8px, 1vw, 12px);
+    font-size: 0.72rem;
   }
 
   .navbar-logo {
@@ -462,7 +463,7 @@
   }
 
   .navbar-link {
-    font-size: 0.58rem;
+    font-size: 0.72rem;
   }
 }
 
