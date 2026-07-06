@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { StaggerContainer, StaggerItem } from "@/components/shared/StaggerGroup";
 import {
   Video,
@@ -40,21 +40,21 @@ const SERVICES = [
     icon: <Cpu size={36} strokeWidth={1.5} />,
     title: "Graphic Design",
     synopsis:
-      "Our  creative team crafts visually striking graphics that align with your brand identity, ensuring your message stands out and leaves a lasting impression..",
+      "Our creative team crafts visually striking graphics that align with your brand identity, ensuring your message stands out and leaves a lasting impression.",
   },
   {
     id: "brand-strategy",
     icon: <Layers size={36} strokeWidth={1.5} />,
     title: "Lead Generation",
     synopsis:
-      "We design proven strategies to attract, capture , and convert potential customers into qualified leads,helping your business grow faster.",
+      "We design proven strategies to attract, capture, and convert potential customers into qualified leads, helping your business grow faster.",
   },
   {
     id: "ai-photography",
     icon: <Camera size={36} strokeWidth={1.5} />,
     title: "Social Media",
     synopsis:
-      "From planning to publishing, we manage your social media presence to build brand awareness, engage your audiencem, and drive  meaningful interactions.",
+      "From planning to publishing, we manage your social media presence to build brand awareness, engage your audience, and drive meaningful interactions.",
   },
   {
     id: "motion-graphics",
@@ -231,6 +231,11 @@ function InquiryModal({
 
 /* ─── Dot grid SVG overlay ──────────────────────────────────────── */
 function DotGrid() {
+  const uid = useId();
+  const dotsId = `svc-dots${uid}`;
+  const maskGradId = `svc-dot-mask${uid}`;
+  const maskId = `svc-dot-fade${uid}`;
+
   return (
     <svg
       className="svc-dot-grid"
@@ -239,7 +244,7 @@ function DotGrid() {
     >
       <defs>
         <pattern
-          id="svc-dots"
+          id={dotsId}
           x="0"
           y="0"
           width="20"
@@ -248,19 +253,19 @@ function DotGrid() {
         >
           <circle cx="1.5" cy="1.5" r="1.5" fill="currentColor" />
         </pattern>
-        <radialGradient id="svc-dot-mask" cx="50%" cy="50%" r="55%">
+        <radialGradient id={maskGradId} cx="50%" cy="50%" r="55%">
           <stop offset="0%" stopColor="white" stopOpacity="1" />
           <stop offset="100%" stopColor="white" stopOpacity="0" />
         </radialGradient>
-        <mask id="svc-dot-fade">
-          <rect width="100%" height="100%" fill="url(#svc-dot-mask)" />
+        <mask id={maskId}>
+          <rect width="100%" height="100%" fill={`url(#${maskGradId})`} />
         </mask>
       </defs>
       <rect
         width="100%"
         height="100%"
-        fill="url(#svc-dots)"
-        mask="url(#svc-dot-fade)"
+        fill={`url(#${dotsId})`}
+        mask={`url(#${maskId})`}
       />
     </svg>
   );

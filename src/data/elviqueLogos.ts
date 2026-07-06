@@ -1,4 +1,4 @@
-const EXCLUDE_LOGOS = [15, 24, 31, 47, 56];
+const EXCLUDE_LOGOS = [2, 14, 15, 16, 18, 24, 29, 31, 38, 42, 47, 56, 58, 60];
 
 export const ELVIQUE_LOGOS = Array.from(
   { length: 61 },

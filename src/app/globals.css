@@ -2083,8 +2083,8 @@ body {
   background: radial-gradient(circle, rgba(20, 184, 166, 0.04) 0%, transparent 60%);
 }
 
-/* Noise overlay */
-.noise-overlay {
+/* Noise overlay (scoped so it doesn't collide with the site-wide .noise-overlay film grain) */
+.leads-container-outer .noise-overlay {
   position: absolute;
   inset: 0;
   z-index: 0;
@@ -2381,10 +2381,14 @@ body {
 .leads-select-option {
   display: flex;
   align-items: center;
+  width: 100%;
   padding: 7px 10px;
   font-size: 0.8rem;
   font-weight: 300;
   border-radius: 6px;
+  border: none;
+  background: transparent;
+  text-align: left;
   cursor: pointer;
   transition: all 0.18s ease;
   color: rgba(255, 255, 255, 0.85);
@@ -7543,7 +7547,7 @@ body {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 10;
+  z-index: 550;
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -8722,6 +8726,10 @@ body {
   padding: 7rem 0;
 }
 
+#services.svc-section {
+  padding-top: 3rem;
+}
+
 .svc-diff-section {
   position: relative;
   background: #000000;
@@ -8801,20 +8809,20 @@ body {
 .svc-eyebrow {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  font-size: 0.76rem;
+  gap: 14px;
+  font-size: 1.05rem;
   font-weight: 700;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.3em;
   text-transform: uppercase;
   color: rgb(20, 184, 166);
-  margin-bottom: 1.1rem;
+  margin-bottom: 1.3rem;
   opacity: 0.95;
 }
 
 .svc-eyebrow-line {
   display: block;
-  width: 22px;
-  height: 1px;
+  width: 32px;
+  height: 2px;
   background: rgb(20, 184, 166);
   opacity: 0.6;
 }

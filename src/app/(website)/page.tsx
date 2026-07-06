@@ -1,9 +1,16 @@
+import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import FeaturedShowcase from "@/components/FeaturedShowcase";
 import ServicesSection from "@/components/ServicesSection";
 import { ScrollReveal } from "@/components/shared/ScrollReveal";
+
+export const metadata: Metadata = {
+  title: "Elevique | Creative AI Visuals Studio",
+  description:
+    "Elevique is a premium AI visual production studio in India crafting cinematic brand films, AI video ads, and social content for ambitious brands.",
+};
 
 // Below-fold sections loaded only when needed — keeps the initial JS bundle small
 const ProcessSection = dynamic(() => import("@/components/ProcessSection"));

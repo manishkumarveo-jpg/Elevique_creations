@@ -58,6 +58,7 @@ function CountUpNumber({ value, suffix = "", duration = 2000, delay = 1000 }: { 
   useEffect(() => {
     let startTimestamp: number | null = null;
     let timerId: ReturnType<typeof setTimeout>;
+    let rafId: number;
 
     const step = (timestamp: number) => {
       if (!startTimestamp) startTimestamp = timestamp;
@@ -69,15 +70,18 @@ function CountUpNumber({ value, suffix = "", duration = 2000, delay = 1000 }: { 
       setCount(Math.floor(easeProgress * value));
 
       if (progress < 1) {
-        window.requestAnimationFrame(step);
+        rafId = window.requestAnimationFrame(step);
       }
     };
 
     timerId = setTimeout(() => {
-      window.requestAnimationFrame(step);
+      rafId = window.requestAnimationFrame(step);
     }, delay);
 
-    return () => clearTimeout(timerId);
+    return () => {
+      clearTimeout(timerId);
+      window.cancelAnimationFrame(rafId);
+    };
   }, [value, duration, delay]);
 
   return <>{count}{suffix}</>;

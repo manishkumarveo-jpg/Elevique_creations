@@ -104,22 +104,6 @@ export function Footer() {
                       Contact
                     </a>
                   </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="ft-link"
-                    >
-                      Privacy Policy
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="ft-link"
-                    >
-                      Terms of Services
-                    </a>
-                  </li>
                 </ul>
               </div>
 
@@ -145,22 +129,6 @@ export function Footer() {
                       Support & Help
                     </a>
                   </li>
-                  <li>
-                    <a
-                      href="/about"
-                      className="ft-link"
-                    >
-                      Brand Guidelines
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="/contact"
-                      className="ft-link"
-                    >
-                      FAQs
-                    </a>
-                  </li>
                 </ul>
               </div>
 
@@ -172,7 +140,7 @@ export function Footer() {
                 <ul className="ft-list" role="list">
                   <li>
                     <a
-                      href="https://instagram.com"
+                      href="https://www.instagram.com/eleviquecreations/"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="ft-link"
@@ -196,7 +164,7 @@ export function Footer() {
                   </li>
                   <li>
                     <a
-                      href="https://linkedin.com"
+                      href="https://www.linkedin.com/in/elevique-creations-8794b9385/"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="ft-link"
