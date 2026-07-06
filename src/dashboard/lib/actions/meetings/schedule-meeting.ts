@@ -1,19 +1,27 @@
 'use server'
 
-import { requireAdmin } from '@/lib/auth/require-role'
-import { createServerClient } from '@/lib/supabase/server'
-import { logActivity } from '@/lib/actions/activity'
+import { z } from 'zod'
+import { requireAdmin } from '@/dashboard/lib/auth/require-role'
+import { createServerClient } from '@/shared/lib/supabase/server'
+import { logActivity } from '@/dashboard/lib/actions/activity'
 import { revalidatePath } from 'next/cache'
 
-export async function scheduleMeeting(formData: {
-  title: string
-  scheduled_at: string
-  client_id: string | null
-  assigned_team_member_id: string | null
-  project_id: string | null
-  notes: string | null
-}): Promise<{ success: boolean; error?: string }> {
+const ScheduleMeetingSchema = z.object({
+  title: z.string().min(1).max(200),
+  scheduled_at: z.string().min(1),
+  client_id: z.string().uuid().nullable(),
+  assigned_team_member_id: z.string().uuid().nullable(),
+  project_id: z.string().uuid().nullable(),
+  notes: z.string().nullable(),
+})
+
+export async function scheduleMeeting(input: unknown): Promise<{ success: boolean; error?: string }> {
   const user = await requireAdmin()
+  const parseResult = ScheduleMeetingSchema.safeParse(input)
+  if (!parseResult.success) {
+    return { success: false, error: parseResult.error.issues[0]?.message ?? 'Invalid meeting data' }
+  }
+  const formData = parseResult.data
   const supabase = await createServerClient()
 
   const { data, error } = await supabase

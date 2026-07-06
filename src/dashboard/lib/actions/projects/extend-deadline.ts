@@ -1,9 +1,9 @@
 'use server'
 
 import { z } from 'zod'
-import { requireAdmin } from '@/lib/auth/require-role'
-import { createServerClient } from '@/lib/supabase/server'
-import { logActivity } from '@/lib/actions/activity'
+import { requireAdmin } from '@/dashboard/lib/auth/require-role'
+import { createServerClient } from '@/shared/lib/supabase/server'
+import { logActivity } from '@/dashboard/lib/actions/activity'
 import { revalidatePath } from 'next/cache'
 
 const ExtendDeadlineSchema = z.object({

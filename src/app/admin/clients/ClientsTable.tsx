@@ -2,9 +2,9 @@
 
 import { useState, useTransition, useRef, useEffect } from 'react'
 import { ClientAssignmentRow } from './ClientAssignmentRow'
-import { deactivateUser, reactivateUser } from '@/lib/actions/auth/deactivate-user'
-import { Pagination } from '@/components/ui/Pagination'
-import type { ClientWithAssignment } from '@/lib/queries/users'
+import { deactivateUser, reactivateUser } from '@/dashboard/lib/actions/auth/deactivate-user'
+import { Pagination } from '@/dashboard/components/ui/Pagination'
+import type { ClientWithAssignment } from '@/dashboard/lib/queries/users'
 
 const PAGE_SIZE = 10
 

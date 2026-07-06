@@ -1,7 +1,7 @@
 'use client'
 
 import { useTransition } from 'react'
-import type { Database } from '@/lib/types/database'
+import type { Database } from '@/shared/lib/types/database'
 
 type ChecklistItem = Database['public']['Tables']['asset_checklist']['Row']
 

@@ -16,9 +16,16 @@ export function SplineScene({ scene, className, onLoad }: SplineSceneProps) {
   // Kick off the scene file fetch in parallel with the lazy runtime chunk
   // instead of waiting for the chunk to resolve before the network request starts.
   useEffect(() => {
+    let origin: string
+    try {
+      origin = new URL(scene).origin
+    } catch {
+      return
+    }
+
     const preconnect = document.createElement('link')
     preconnect.rel = 'preconnect'
-    preconnect.href = new URL(scene).origin
+    preconnect.href = origin
     preconnect.crossOrigin = 'anonymous'
 
     const preload = document.createElement('link')

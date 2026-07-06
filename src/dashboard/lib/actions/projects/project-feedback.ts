@@ -1,11 +1,11 @@
 'use server'
 
-import { createAdminClient } from '@/lib/supabase/admin'
-import { logActivity } from '@/lib/actions/activity'
+import { createAdminClient } from '@/shared/lib/supabase/admin'
+import { logActivity } from '@/dashboard/lib/actions/activity'
 import { revalidatePath } from 'next/cache'
 
 export async function addRevision(projectId: string, note: string) {
-  const user = await (await import('@/lib/auth/require-role')).requireClient()
+  const user = await (await import('@/dashboard/lib/auth/require-role')).requireClient()
   const supabase = createAdminClient()
 
   const trimmed = note.trim()
@@ -41,7 +41,7 @@ export async function addRevision(projectId: string, note: string) {
 }
 
 export async function resolveRevision(revisionId: string, projectId: string) {
-  const user = await (await import('@/lib/auth/require-role')).requireAdmin()
+  const user = await (await import('@/dashboard/lib/auth/require-role')).requireAdmin()
   const supabase = createAdminClient()
 
   const { error } = await supabase

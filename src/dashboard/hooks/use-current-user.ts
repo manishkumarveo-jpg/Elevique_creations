@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
-import { createClientSupabase } from '@/lib/supabase/client'
-import type { Database } from '@/lib/types/database'
+import { createClientSupabase } from '@/shared/lib/supabase/client'
+import type { Database } from '@/shared/lib/types/database'
 
 type Profile = Database['public']['Tables']['profiles']['Row']
 

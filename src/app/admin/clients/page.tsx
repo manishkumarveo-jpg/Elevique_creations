@@ -1,5 +1,5 @@
-import { createServerClient } from '@/lib/supabase/server'
-import { getClientsWithAssignment, getTeamMembers } from '@/lib/queries/users'
+import { createServerClient } from '@/shared/lib/supabase/server'
+import { getClientsWithAssignment, getTeamMembers } from '@/dashboard/lib/queries/users'
 import { ClientsTable } from './ClientsTable'
 
 export default async function ClientsPage() {

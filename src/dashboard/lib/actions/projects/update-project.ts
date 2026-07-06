@@ -1,8 +1,8 @@
 'use server'
 
 import { z } from 'zod'
-import { requireAdmin } from '@/lib/auth/require-role'
-import { createServerClient } from '@/lib/supabase/server'
+import { requireAdmin } from '@/dashboard/lib/auth/require-role'
+import { createServerClient } from '@/shared/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
 const UpdateProjectSchema = z.object({

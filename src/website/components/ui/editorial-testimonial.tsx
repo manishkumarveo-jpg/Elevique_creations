@@ -330,9 +330,13 @@ export default function TestimonialsEditorial() {
     }
   };
 
-  // Autoplay Logic
+  // Autoplay Logic. Re-entrant navigation is already guarded inside
+  // handleChange via isTransitioning.current — checking it here too would
+  // block the interval from ever restarting after the first transition,
+  // since this effect re-runs (due to the `active` dependency) while that
+  // ref is still true from the transition that just triggered it.
   useEffect(() => {
-    if (isTransitioning.current || isHovered) return;
+    if (isHovered) return;
 
     const duration = 6500; // 6.5 seconds per testimonial
     const intervalTime = 16; // ~60 FPS

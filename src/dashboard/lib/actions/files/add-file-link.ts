@@ -1,16 +1,18 @@
 'use server'
 
 import { z } from 'zod'
-import { createServerClient } from '@/lib/supabase/server'
-import { requireAnyAuth } from '@/lib/auth/require-role'
-import { logActivity } from '@/lib/actions/activity'
+import { createServerClient } from '@/shared/lib/supabase/server'
+import { requireAnyAuth } from '@/dashboard/lib/auth/require-role'
+import { logActivity } from '@/dashboard/lib/actions/activity'
 import { revalidatePath } from 'next/cache'
 
 const AddFileLinkSchema = z.object({
   folder_id: z.string().uuid(),
   project_id: z.string().uuid(),
   file_name: z.string().min(1).max(300),
-  file_url: z.string().url(),
+  file_url: z.string().url().refine((url) => /^https?:\/\//i.test(url), {
+    message: 'File URL must use http or https',
+  }),
   notes: z.string().optional(),
 })
 

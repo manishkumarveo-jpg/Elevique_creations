@@ -1,5 +1,5 @@
 import { cache } from 'react'
-import { createServerClient } from '@/lib/supabase/server'
+import { createServerClient } from '@/shared/lib/supabase/server'
 
 export type MessageWithSender = {
   id: string
@@ -32,25 +32,12 @@ export const getMessagesForProject = cache(async (projectId: string): Promise<Me
   return (data ?? []) as unknown as MessageWithSender[]
 })
 
-export const getConversationsForAdmin = cache(async (): Promise<ConversationSummary[]> => {
-  const supabase = await createServerClient()
-  const { data: projects, error } = await supabase
-    .from('projects')
-    .select('id, name')
-    .eq('is_archived', false)
-    .order('created_at', { ascending: false })
-  if (error) throw error
-  if (!projects || projects.length === 0) return []
-
-  const projectIds = projects.map(p => p.id)
-  const { data: messages } = await supabase
-    .from('messages')
-    .select('project_id, body, created_at')
-    .in('project_id', projectIds)
-    .order('created_at', { ascending: false })
-
+function buildConversationSummaries(
+  projects: { id: string; name: string }[],
+  messages: { project_id: string; body: string; created_at: string }[]
+): ConversationSummary[] {
   const lastMessageMap = new Map<string, { body: string; created_at: string }>()
-  for (const msg of messages ?? []) {
+  for (const msg of messages) {
     if (!lastMessageMap.has(msg.project_id)) {
       lastMessageMap.set(msg.project_id, { body: msg.body, created_at: msg.created_at })
     }
@@ -63,6 +50,27 @@ export const getConversationsForAdmin = cache(async (): Promise<ConversationSumm
     last_message_at: lastMessageMap.get(project.id)?.created_at ?? '',
     unread: false,
   }))
+}
+
+export const getConversationsForAdmin = cache(async (): Promise<ConversationSummary[]> => {
+  const supabase = await createServerClient()
+  const { data: projects, error } = await supabase
+    .from('projects')
+    .select('id, name')
+    .eq('is_archived', false)
+    .order('created_at', { ascending: false })
+  if (error) throw error
+  if (!projects || projects.length === 0) return []
+
+  const projectIds = projects.map(p => p.id)
+  const { data: messages, error: messagesError } = await supabase
+    .from('messages')
+    .select('project_id, body, created_at')
+    .in('project_id', projectIds)
+    .order('created_at', { ascending: false })
+  if (messagesError) throw messagesError
+
+  return buildConversationSummaries(projects, messages ?? [])
 })
 
 export const getConversationsForClient = cache(async (userId: string): Promise<ConversationSummary[]> => {
@@ -77,26 +85,14 @@ export const getConversationsForClient = cache(async (userId: string): Promise<C
   if (!projects || projects.length === 0) return []
 
   const projectIds = projects.map(p => p.id)
-  const { data: messages } = await supabase
+  const { data: messages, error: messagesError } = await supabase
     .from('messages')
     .select('project_id, body, created_at')
     .in('project_id', projectIds)
     .order('created_at', { ascending: false })
+  if (messagesError) throw messagesError
 
-  const lastMessageMap = new Map<string, { body: string; created_at: string }>()
-  for (const msg of messages ?? []) {
-    if (!lastMessageMap.has(msg.project_id)) {
-      lastMessageMap.set(msg.project_id, { body: msg.body, created_at: msg.created_at })
-    }
-  }
-
-  return projects.map(project => ({
-    project_id: project.id,
-    project_name: project.name,
-    last_message: lastMessageMap.get(project.id)?.body ?? '',
-    last_message_at: lastMessageMap.get(project.id)?.created_at ?? '',
-    unread: false,
-  }))
+  return buildConversationSummaries(projects, messages ?? [])
 })
 
 export const getConversationsForTeamMember = cache(async (userId: string): Promise<ConversationSummary[]> => {
@@ -110,33 +106,22 @@ export const getConversationsForTeamMember = cache(async (userId: string): Promi
   const projectIds = (assignments ?? []).map(a => a.project_id)
   if (projectIds.length === 0) return []
 
-  const { data: projects } = await supabase
+  const { data: projects, error: projectsError } = await supabase
     .from('projects')
     .select('id, name')
     .in('id', projectIds)
     .eq('is_archived', false)
+  if (projectsError) throw projectsError
 
   if (!projects || projects.length === 0) return []
 
   const activeProjectIds = projects.map(p => p.id)
-  const { data: messages } = await supabase
+  const { data: messages, error: messagesError } = await supabase
     .from('messages')
     .select('project_id, body, created_at')
     .in('project_id', activeProjectIds)
     .order('created_at', { ascending: false })
+  if (messagesError) throw messagesError
 
-  const lastMessageMap = new Map<string, { body: string; created_at: string }>()
-  for (const msg of messages ?? []) {
-    if (!lastMessageMap.has(msg.project_id)) {
-      lastMessageMap.set(msg.project_id, { body: msg.body, created_at: msg.created_at })
-    }
-  }
-
-  return projects.map(project => ({
-    project_id: project.id,
-    project_name: project.name,
-    last_message: lastMessageMap.get(project.id)?.body ?? '',
-    last_message_at: lastMessageMap.get(project.id)?.created_at ?? '',
-    unread: false,
-  }))
+  return buildConversationSummaries(projects, messages ?? [])
 })

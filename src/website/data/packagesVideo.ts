@@ -2,7 +2,7 @@
 // To add a clip, add `{ id, title, videoSrc, thumbnail }` to the matching
 // color-variant group below (or start a new group if the accent differs).
 
-import { expandWithMeta } from "@/lib/utils";
+import { expandWithMeta } from "@/website/lib/video-utils";
 
 export interface PackageProject {
   id: number;

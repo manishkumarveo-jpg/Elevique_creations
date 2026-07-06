@@ -3,8 +3,8 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
-import { SplineScene } from "@/components/ui/spline";
-import { Spotlight } from "@/components/ui/spotlight";
+import { SplineScene } from "@/website/components/ui/spline";
+import { Spotlight } from "@/website/components/ui/spotlight";
 
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 

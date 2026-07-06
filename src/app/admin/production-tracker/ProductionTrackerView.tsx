@@ -1,9 +1,9 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { Pagination } from '@/components/ui/Pagination'
+import { Pagination } from '@/dashboard/components/ui/Pagination'
 import { ProductionDeliverableRow } from './ProductionDeliverableRow'
-import type { ProductionDeliverable } from '@/lib/queries/production-tracker'
+import type { ProductionDeliverable } from '@/dashboard/lib/queries/production-tracker'
 
 const STATUS_OPTIONS = ['All', 'pending', 'in_progress', 'revision_pending', 'completed', 'paused'] as const
 const PRIORITY_OPTIONS = ['All', 'P1', 'P2', 'P3'] as const

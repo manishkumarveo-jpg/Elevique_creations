@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { addRevision } from '@/lib/actions/projects/project-feedback'
-import type { ProjectRevision } from '@/lib/queries/revisions'
+import { addRevision } from '@/dashboard/lib/actions/projects/project-feedback'
+import type { ProjectRevision } from '@/dashboard/lib/queries/revisions'
 
 interface Props {
   projectId: string

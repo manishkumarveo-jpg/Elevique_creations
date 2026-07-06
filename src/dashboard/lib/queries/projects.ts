@@ -1,5 +1,5 @@
 import { cache } from 'react'
-import { createServerClient } from '@/lib/supabase/server'
+import { createServerClient } from '@/shared/lib/supabase/server'
 
 export const getProjectsForAdmin = cache(async () => {
   const supabase = await createServerClient()
@@ -45,6 +45,8 @@ export const getProjectsWithTeam = cache(async (): Promise<ProjectWithTeam[]> =>
   ])
 
   if (projectsRes.error) throw projectsRes.error
+  if (assignmentsRes.error) throw assignmentsRes.error
+  if (milestonesRes.error) throw milestonesRes.error
 
   const projects = projectsRes.data ?? []
   const assignments = assignmentsRes.data ?? []
@@ -56,7 +58,8 @@ export const getProjectsWithTeam = cache(async (): Promise<ProjectWithTeam[]> =>
 
   const profilesRes = allIds.length > 0
     ? await supabase.from('profiles').select('id, full_name, company_name').in('id', allIds)
-    : { data: [] }
+    : { data: [], error: null }
+  if (profilesRes.error) throw profilesRes.error
 
   const profileMap = new Map((profilesRes.data ?? []).map(p => [p.id, p]))
 
@@ -86,12 +89,12 @@ export const getProjectsWithTeam = cache(async (): Promise<ProjectWithTeam[]> =>
 // Team members: explicit column selection excludes client_deadline
 export const getProjectsForTeam = cache(async (userId: string) => {
   const supabase = await createServerClient()
-  const assignedIds = (
-    await supabase
-      .from('project_assignments')
-      .select('project_id')
-      .eq('user_id', userId)
-  ).data?.map(a => a.project_id) ?? []
+  const assignmentsRes = await supabase
+    .from('project_assignments')
+    .select('project_id')
+    .eq('user_id', userId)
+  if (assignmentsRes.error) throw assignmentsRes.error
+  const assignedIds = assignmentsRes.data?.map(a => a.project_id) ?? []
 
   if (assignedIds.length === 0) return []
 

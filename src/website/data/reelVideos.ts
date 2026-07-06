@@ -1,4 +1,4 @@
-// Reel videos shown in the PortfolioReels carousel (src/components/PortfolioReels.tsx).
+// Reel videos shown in the PortfolioReels carousel (src/website/components/PortfolioReels.tsx).
 // Order here is the literal display order in the carousel.
 // `videoSrc: undefined` means no clip is uploaded yet — the UI falls back to a poster/placeholder for that entry.
 

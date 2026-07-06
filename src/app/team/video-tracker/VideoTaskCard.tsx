@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { toggleVideoTaskCheck, updateVideoTaskStatusTeam } from '@/lib/actions/video-tracker'
-import type { VideoGenerationTask } from '@/lib/queries/video-tracker'
-import { TrackerStatusBadge } from '@/components/shared/StatusBadge'
+import { toggleVideoTaskCheck, updateVideoTaskStatusTeam } from '@/dashboard/lib/actions/video-tracker'
+import type { VideoGenerationTask } from '@/dashboard/lib/queries/video-tracker'
+import { TrackerStatusBadge } from '@/dashboard/components/shared/StatusBadge'
 
 const CHECK_ITEMS = ['Camera angles', 'Lighting', 'Audio quality', 'Brand consistency']
 const STATUS_OPTIONS = ['in_progress', 'revision_pending', 'completed'] as const

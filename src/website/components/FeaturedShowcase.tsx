@@ -11,8 +11,8 @@ import {
   VolumeX,
 } from "lucide-react";
 import PortfolioReels from "./PortfolioReels";
-import { GRID_PROJECTS, type GridProject } from "@/data/gridVideos";
-import { PKG_AI_VISUALS, PKG_EDITORIAL, PKG_PRODUCT_FILM, PKG_BRAND_FILM, PKG_TECH_UI, PKG_EXPERIMENTAL } from "@/data/packagesVideo";
+import { GRID_PROJECTS, type GridProject } from "@/website/data/gridVideos";
+import { PKG_AI_VISUALS, PKG_EDITORIAL, PKG_PRODUCT_FILM, PKG_BRAND_FILM, PKG_TECH_UI, PKG_EXPERIMENTAL } from "@/website/data/packagesVideo";
 
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 const imageRevealVariants = {
@@ -163,7 +163,10 @@ export default function FeaturedShowcase() {
 
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const activePopupProject = useRef<number | null>(null);
+  // Keyed by videoSrc rather than numeric id: PROJECTS (featured row) and
+  // GRID_PROJECTS (category rows) both start their id sequence at 1, so two
+  // different cards can share an id and be mistaken for "already showing".
+  const activePopupProject = useRef<string | null>(null);
 
   /* ── Hero video transition ──────────────────────────────────── */
   const switchProject = useCallback((p: Project) => {
@@ -216,6 +219,15 @@ export default function FeaturedShowcase() {
     );
   }, [videoOverlay]);
 
+  // Real modal semantics (focus trap, top-layer stacking, native a11y) instead
+  // of the `open` attribute, which only makes a <dialog> visually present.
+  useEffect(() => {
+    const el = overlayBgRef.current;
+    if (!videoOverlay || !el) return;
+    if (!el.open) el.showModal();
+    return () => { if (el.open) el.close(); };
+  }, [videoOverlay]);
+
   const closeVideoOverlay = useCallback(() => {
     if (!overlayBgRef.current || !overlayBoxRef.current) return;
     gsap.to(overlayBoxRef.current, { scale: 0.94, opacity: 0, duration: 0.3, ease: "power3.in" });
@@ -243,6 +255,15 @@ export default function FeaturedShowcase() {
       { xPercent: -50, yPercent: -50, scale: 0.9, opacity: 0 },
       { xPercent: -50, yPercent: -50, scale: 1, opacity: 1, duration: 0.48, ease: "power4.out" }
     );
+  }, [bottomSheet]);
+
+  // Real modal semantics (focus trap, top-layer stacking, native a11y) instead
+  // of the `open` attribute, which only makes a <dialog> visually present.
+  useEffect(() => {
+    const el = sheetPanelRef.current;
+    if (!bottomSheet || !el) return;
+    if (!el.open) el.showModal();
+    return () => { if (el.open) el.close(); };
   }, [bottomSheet]);
 
   const closeBottomSheet = useCallback(() => {
@@ -292,8 +313,9 @@ export default function FeaturedShowcase() {
   /* ══ POPUP ══════════════════════════════════════════════════════ */
   const showPopup = useCallback((p: Project, anchor: HTMLElement) => {
     if (leaveTimer.current) { clearTimeout(leaveTimer.current); leaveTimer.current = null; }
-    if (activePopupProject.current === p.id) return;
-    activePopupProject.current = p.id;
+    const key = p.videoSrc ?? String(p.id);
+    if (activePopupProject.current === key) return;
+    activePopupProject.current = key;
     setPopup({ project: p, anchorEl: anchor });
   }, []);
 
@@ -556,10 +578,10 @@ export default function FeaturedShowcase() {
         <dialog
           ref={overlayBgRef}
           className="vo-backdrop"
-          open
           aria-modal="true"
           aria-label={videoOverlay.title}
           tabIndex={-1}
+          onCancel={(e) => { e.preventDefault(); closeVideoOverlay(); }}
           style={{ display: "flex", border: "none", background: "rgba(0, 0, 0, 0.96)", padding: 0 }}
         >
           <button
@@ -636,10 +658,10 @@ export default function FeaturedShowcase() {
           <dialog
             ref={sheetPanelRef}
             className="bs-panel"
-            open
             aria-modal="true"
             aria-label={bottomSheet.title}
             tabIndex={-1}
+            onCancel={(e) => { e.preventDefault(); closeBottomSheet(); }}
             style={{ border: "none", padding: 0 }}
           >
 

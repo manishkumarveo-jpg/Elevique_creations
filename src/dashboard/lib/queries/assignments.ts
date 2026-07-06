@@ -1,6 +1,6 @@
 import { cache } from 'react'
-import { createServerClient } from '@/lib/supabase/server'
-import type { Database } from '@/lib/types/database'
+import { createServerClient } from '@/shared/lib/supabase/server'
+import type { Database } from '@/shared/lib/types/database'
 
 type AssignmentRow = Database['public']['Tables']['project_assignments']['Row']
 

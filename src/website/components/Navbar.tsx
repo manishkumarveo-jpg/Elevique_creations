@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { BorderBeam } from "@/components/ui/border-beam";
+import { BorderBeam } from "@/website/components/ui/border-beam";
 
 const navLinks = [
   { label: "Portfolio", href: "/portfolio" },
@@ -20,7 +20,10 @@ const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [showBeam, setShowBeam] = useState(true);
+  // Default to hidden until the media query confirms desktop — starting
+  // `true` let BorderBeam mount on the first mobile paint before this
+  // effect had a chance to correct it, causing the reported jitter.
+  const [showBeam, setShowBeam] = useState(false);
   const pathname = usePathname();
 
   /* BorderBeam is a decorative, infinitely-looping animation rendered under

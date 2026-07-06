@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { Avatar } from '@/components/ui/Avatar'
-import { Td, Tr } from '@/components/ui/Table'
-import { assignTeamMemberToClient } from '@/lib/actions/users/assign-team-member'
+import { Avatar } from '@/dashboard/components/ui/Avatar'
+import { Td, Tr } from '@/dashboard/components/ui/Table'
+import { assignTeamMemberToClient } from '@/dashboard/lib/actions/users/assign-team-member'
 
 interface TeamMember { id: string; full_name: string; email?: string | null }
 interface Client {

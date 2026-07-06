@@ -1,4 +1,4 @@
-import { createServerClient } from "@/lib/supabase/server";
+import { createServerClient } from "@/shared/lib/supabase/server";
 import { MessageCircle } from "lucide-react";
 import { InquiriesTable } from "./InquiriesTable";
 

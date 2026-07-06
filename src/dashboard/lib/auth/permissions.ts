@@ -1,4 +1,4 @@
-import type { Database } from '@/lib/types/database'
+import type { Database } from '@/shared/lib/types/database'
 
 type UserRole = Database['public']['Enums']['user_role']
 

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { getAllProfiles } from '@/lib/queries/users'
+import { getAllProfiles } from '@/dashboard/lib/queries/users'
 import { UsersTable } from './UsersTable'
 
 export default async function UsersPage() {

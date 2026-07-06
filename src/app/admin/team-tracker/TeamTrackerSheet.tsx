@@ -1,8 +1,8 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { TrackerStatusBadge, TrackerPriorityBadge } from '@/components/shared/StatusBadge'
-import { Pagination } from '@/components/ui/Pagination'
+import { TrackerStatusBadge, TrackerPriorityBadge } from '@/dashboard/components/shared/StatusBadge'
+import { Pagination } from '@/dashboard/components/ui/Pagination'
 
 export type TrackerRow = {
   id: string

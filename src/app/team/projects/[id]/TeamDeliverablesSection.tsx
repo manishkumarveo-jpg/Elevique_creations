@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { DeliverableStatusBadge } from '@/components/shared/StatusBadge'
-import { addDeliverableTeam, markDeliveredTeam } from '@/lib/actions/deliverables/update-deliverable'
-import type { Database } from '@/lib/types/database'
+import { DeliverableStatusBadge } from '@/dashboard/components/shared/StatusBadge'
+import { addDeliverableTeam, markDeliveredTeam } from '@/dashboard/lib/actions/deliverables/update-deliverable'
+import type { Database } from '@/shared/lib/types/database'
 
 type Deliverable = Database['public']['Tables']['deliverables']['Row']
 

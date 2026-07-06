@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { MessageSquareMore, Phone, Mail, CheckCircle } from "lucide-react";
-import { LocationMap } from "@/components/ui/LocationMap";
-import { BorderBeam } from "@/components/ui/border-beam";
-import { ScrollReveal } from "@/components/shared/ScrollReveal";
-import { StaggerContainer, StaggerItem } from "@/components/shared/StaggerGroup";
+import { LocationMap } from "@/website/components/ui/LocationMap";
+import { BorderBeam } from "@/website/components/ui/border-beam";
+import { ScrollReveal } from "@/website/components/ScrollReveal";
+import { StaggerContainer, StaggerItem } from "@/website/components/StaggerGroup";
 
 export default function ContactSection() {
   const [formState, setFormState] = useState({

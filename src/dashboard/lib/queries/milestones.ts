@@ -1,5 +1,5 @@
 import { cache } from 'react'
-import { createServerClient } from '@/lib/supabase/server'
+import { createServerClient } from '@/shared/lib/supabase/server'
 
 export const getMilestonesForProject = cache(async (projectId: string) => {
   const supabase = await createServerClient()

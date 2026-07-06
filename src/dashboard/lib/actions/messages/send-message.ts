@@ -1,6 +1,6 @@
 'use server'
 
-import { createServerClient } from '@/lib/supabase/server'
+import { createServerClient } from '@/shared/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
 export async function sendMessage(projectId: string, body: string) {

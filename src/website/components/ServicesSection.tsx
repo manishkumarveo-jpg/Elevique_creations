@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
-import { StaggerContainer, StaggerItem } from "@/components/shared/StaggerGroup";
+import { StaggerContainer, StaggerItem } from "@/website/components/StaggerGroup";
 import {
   Video,
   PenTool,

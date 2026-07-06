@@ -1,11 +1,11 @@
 'use server'
 
-import { createServerClient } from '@/lib/supabase/server'
-import { logActivity } from '@/lib/actions/activity'
+import { createServerClient } from '@/shared/lib/supabase/server'
+import { logActivity } from '@/dashboard/lib/actions/activity'
 import { revalidatePath } from 'next/cache'
 
 export async function toggleChecklistItem(itemId: string, projectId: string, checked: boolean) {
-  const user = await (await import('@/lib/auth/require-role')).requireClient()
+  const user = await (await import('@/dashboard/lib/auth/require-role')).requireClient()
   const supabase = await createServerClient()
 
   const { error } = await supabase.from('asset_checklist').update({

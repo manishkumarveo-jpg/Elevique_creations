@@ -1,4 +1,4 @@
-import { Badge } from '@/components/ui/Badge'
+import { Badge } from '@/dashboard/components/ui/Badge'
 
 type ProjectStatus = 'briefing' | 'in_progress' | 'final_review' | 'completed' | 'paused'
 type MilestoneStatus = 'pending' | 'in_progress' | 'done'
@@ -47,32 +47,34 @@ const trackerPriorityMap: Record<TrackerPriority, { label: string; variant: 'red
   P3: { label: 'P3', variant: 'gray' },
 }
 
+const FALLBACK_BADGE = { label: 'Unknown', variant: 'gray' as const }
+
 export function ProjectStatusBadge({ status }: { status: ProjectStatus }) {
-  const { label, variant } = projectStatusMap[status]
+  const { label, variant } = projectStatusMap[status] ?? FALLBACK_BADGE
   return <Badge variant={variant}>{label}</Badge>
 }
 
 export function MilestoneStatusBadge({ status }: { status: MilestoneStatus }) {
-  const { label, variant } = milestoneStatusMap[status]
+  const { label, variant } = milestoneStatusMap[status] ?? FALLBACK_BADGE
   return <Badge variant={variant}>{label}</Badge>
 }
 
 export function DeliverableStatusBadge({ status }: { status: DeliverableStatus }) {
-  const { label, variant } = deliverableStatusMap[status]
+  const { label, variant } = deliverableStatusMap[status] ?? FALLBACK_BADGE
   return <Badge variant={variant}>{label}</Badge>
 }
 
 export function RoleBadge({ role }: { role: 'admin' | 'team_member' | 'client' }) {
-  const { label, variant } = roleBadgeMap[role]
+  const { label, variant } = roleBadgeMap[role] ?? FALLBACK_BADGE
   return <Badge variant={variant}>{label}</Badge>
 }
 
 export function TrackerStatusBadge({ status }: { status: TrackerStatus }) {
-  const { label, variant } = trackerStatusMap[status]
+  const { label, variant } = trackerStatusMap[status] ?? FALLBACK_BADGE
   return <Badge variant={variant}>{label}</Badge>
 }
 
 export function TrackerPriorityBadge({ priority }: { priority: TrackerPriority }) {
-  const { label, variant } = trackerPriorityMap[priority]
+  const { label, variant } = trackerPriorityMap[priority] ?? FALLBACK_BADGE
   return <Badge variant={variant}>{label}</Badge>
 }

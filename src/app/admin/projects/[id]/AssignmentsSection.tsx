@@ -1,10 +1,10 @@
 'use client'
 
 import { useState, useEffect, useTransition } from 'react'
-import { Avatar } from '@/components/ui/Avatar'
-import { assignUser, removeAssignment } from '@/lib/actions/assignments/manage-assignments'
-import { createClientSupabase } from '@/lib/supabase/client'
-import type { AssignmentWithUser } from '@/lib/queries/assignments'
+import { Avatar } from '@/dashboard/components/ui/Avatar'
+import { assignUser, removeAssignment } from '@/dashboard/lib/actions/assignments/manage-assignments'
+import { createClientSupabase } from '@/shared/lib/supabase/client'
+import type { AssignmentWithUser } from '@/dashboard/lib/queries/assignments'
 
 type Assignment = AssignmentWithUser
 interface TeamMember { id: string; full_name: string; email: string }

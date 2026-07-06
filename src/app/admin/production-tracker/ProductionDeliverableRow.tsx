@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { updateProductionDeliverable } from '@/lib/actions/production-tracker'
-import type { ProductionDeliverable } from '@/lib/queries/production-tracker'
+import { updateProductionDeliverable } from '@/dashboard/lib/actions/production-tracker'
+import type { ProductionDeliverable } from '@/dashboard/lib/queries/production-tracker'
 
 const STATUS_OPTIONS = ['pending', 'in_progress', 'revision_pending', 'completed', 'paused'] as const
 const PRIORITY_OPTIONS = ['P1', 'P2', 'P3'] as const

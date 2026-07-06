@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { Badge } from '@/components/ui/Badge'
-import { ProgressBar } from '@/components/ui/ProgressBar'
+import { Badge } from '@/dashboard/components/ui/Badge'
+import { ProgressBar } from '@/dashboard/components/ui/ProgressBar'
 
 interface FeaturedProjectCardProps {
   id: string

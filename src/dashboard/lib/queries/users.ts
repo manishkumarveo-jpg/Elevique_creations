@@ -1,6 +1,6 @@
 import { cache } from 'react'
-import { createServerClient } from '@/lib/supabase/server'
-import { createAdminClient } from '@/lib/supabase/admin'
+import { createServerClient } from '@/shared/lib/supabase/server'
+import { createAdminClient } from '@/shared/lib/supabase/admin'
 
 export const getAllProfiles = cache(async () => {
   const supabase = await createServerClient()

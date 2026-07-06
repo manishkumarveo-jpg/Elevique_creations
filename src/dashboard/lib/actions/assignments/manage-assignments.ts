@@ -1,7 +1,7 @@
 'use server'
 
-import { requireAdmin } from '@/lib/auth/require-role'
-import { createServerClient } from '@/lib/supabase/server'
+import { requireAdmin } from '@/dashboard/lib/auth/require-role'
+import { createServerClient } from '@/shared/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
 export async function assignUser(projectId: string, userId: string) {

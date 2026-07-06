@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { posterFromVideoSrc } from "@/lib/utils";
+import { posterFromVideoSrc } from "@/website/lib/video-utils";
 
 function Typewriter({ phrases, speed = 80, delay = 1800, deleteSpeed = 40 }: { phrases: string[]; speed?: number; delay?: number; deleteSpeed?: number }) {
   const [currentPhraseIdx, setCurrentPhraseIdx] = useState(0);
@@ -49,6 +49,8 @@ function Typewriter({ phrases, speed = 80, delay = 1800, deleteSpeed = 40 }: { p
 const VIDEO_SRC =
   "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Gauddly%20Music%20Video.mp4";
 const POSTER_SRC = posterFromVideoSrc(VIDEO_SRC);
+
+const HERO_TYPEWRITER_PHRASES = ["Don't cost a fortune", "Do not take weeks", "Don't look like AI"];
 
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 
@@ -247,7 +249,7 @@ export default function HeroSection() {
               animate={{ y: "0%" }}
               transition={{ delay: 0.42, duration: 0.9, ease: EASE_OUT }}
             >
-              <Typewriter phrases={["Don't cost a fortune", "Do not take weeks", "Don't look like AI"]} />
+              <Typewriter phrases={HERO_TYPEWRITER_PHRASES} />
             </motion.em>
           </span>
         </h1>

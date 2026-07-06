@@ -2,9 +2,9 @@
 
 import { z } from 'zod'
 import Groq from 'groq-sdk'
-import { requireAdmin } from '@/lib/auth/require-role'
-import { createAdminClient } from '@/lib/supabase/admin'
-import { logActivity } from '@/lib/actions/activity'
+import { requireAdmin } from '@/dashboard/lib/auth/require-role'
+import { createAdminClient } from '@/shared/lib/supabase/admin'
+import { logActivity } from '@/dashboard/lib/actions/activity'
 import { revalidatePath } from 'next/cache'
 
 const InputSchema = z.object({

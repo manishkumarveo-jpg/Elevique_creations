@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useTransition } from 'react'
-import { extendDeadline } from '@/lib/actions/projects/extend-deadline'
-import type { DeadlineExtension } from '@/lib/queries/projects'
+import { extendDeadline } from '@/dashboard/lib/actions/projects/extend-deadline'
+import type { DeadlineExtension } from '@/dashboard/lib/queries/projects'
 
 interface Props {
   projectId: string

@@ -17,11 +17,11 @@ const supabase = createClient(url, serviceKey, {
 const BUCKET = 'reel-videos';
 
 const TARGET_FILES = [
-  'src/components/HeroSection.tsx',
-  'src/components/FeaturedShowcase.tsx',
-  'src/data/reelVideos.ts',
-  'src/data/gridVideos.ts',
-  'src/data/packagesVideo.ts',
+  'src/website/components/HeroSection.tsx',
+  'src/website/components/FeaturedShowcase.tsx',
+  'src/website/data/reelVideos.ts',
+  'src/website/data/gridVideos.ts',
+  'src/website/data/packagesVideo.ts',
 ];
 
 // Matches Cloudinary video and image (poster) delivery URLs

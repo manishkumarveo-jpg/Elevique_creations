@@ -1,9 +1,9 @@
 'use server'
 
 import { z } from 'zod'
-import { createServerClient } from '@/lib/supabase/server'
-import { requireAdmin, requireTeamMember } from '@/lib/auth/require-role'
-import { logActivity } from '@/lib/actions/activity'
+import { createServerClient } from '@/shared/lib/supabase/server'
+import { requireAdmin, requireTeamMember } from '@/dashboard/lib/auth/require-role'
+import { logActivity } from '@/dashboard/lib/actions/activity'
 import { revalidatePath } from 'next/cache'
 
 const VideoTaskStatusSchema = z.enum(['pending', 'in_progress', 'revision_pending', 'completed', 'paused'])
@@ -19,6 +19,7 @@ async function applyStatusUpdate(taskId: string, projectId: string, status: unkn
       completed_at: parsedStatus === 'completed' ? new Date().toISOString() : null,
     })
     .eq('id', taskId)
+    .eq('project_id', projectId)
   if (error) throw new Error(error.message)
 
   await logActivity({
@@ -53,6 +54,7 @@ export async function toggleVideoTaskCheck(taskId: string, projectId: string, ch
     .from('video_generation_tasks')
     .select('checks_performed')
     .eq('id', taskId)
+    .eq('project_id', projectId)
     .single()
   if (fetchError) throw new Error(fetchError.message)
 
@@ -64,6 +66,7 @@ export async function toggleVideoTaskCheck(taskId: string, projectId: string, ch
     .from('video_generation_tasks')
     .update({ checks_performed: Array.from(current) })
     .eq('id', taskId)
+    .eq('project_id', projectId)
   if (error) throw new Error(error.message)
 
   await logActivity({

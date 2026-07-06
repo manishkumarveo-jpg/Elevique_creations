@@ -1,6 +1,6 @@
 import { cache } from 'react'
-import { createServerClient } from '@/lib/supabase/server'
-import type { Database } from '@/lib/types/database'
+import { createServerClient } from '@/shared/lib/supabase/server'
+import type { Database } from '@/shared/lib/types/database'
 
 type FileRow = Database['public']['Tables']['files']['Row']
 type FolderRow = Database['public']['Tables']['folders']['Row']
@@ -21,11 +21,13 @@ export const getFoldersForProject = cache(async (projectId: string): Promise<Fol
   return data
 })
 
+const FILE_SELECT = '*, uploader:profiles!files_uploaded_by_fkey(full_name)'
+
 export const getFilesForFolder = cache(async (folderId: string): Promise<FileWithMeta[]> => {
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('files')
-    .select('*')
+    .select(FILE_SELECT)
     .eq('folder_id', folderId)
     .eq('is_deleted', false)
     .order('created_at', { ascending: false })
@@ -37,7 +39,7 @@ export const getFilesForProject = cache(async (projectId: string): Promise<FileW
   const supabase = await createServerClient()
   const { data, error } = await supabase
     .from('files')
-    .select('*')
+    .select(FILE_SELECT)
     .eq('project_id', projectId)
     .eq('is_deleted', false)
     .order('created_at', { ascending: false })

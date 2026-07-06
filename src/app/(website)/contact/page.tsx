@@ -1,6 +1,6 @@
-import Navbar from "@/components/Navbar";
-import ContactSection from "@/components/ContactSection";
-import { Footer } from "@/components/ui/footer-section";
+import Navbar from "@/website/components/Navbar";
+import ContactSection from "@/website/components/ContactSection";
+import { Footer } from "@/website/components/ui/footer-section";
 
 export const metadata = {
   title: "Contact | Elevique",

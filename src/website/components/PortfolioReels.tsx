@@ -11,7 +11,7 @@ import {
   Pause,
   ArrowLeft,
 } from "lucide-react";
-import { REEL_VIDEOS, type ReelVideo } from "@/data/reelVideos";
+import { REEL_VIDEOS, type ReelVideo } from "@/website/data/reelVideos";
 
 // kept for onViewDetails compatibility with parent (FeaturedShowcase passes Project-typed handler)
 type Project = ReelVideo;
@@ -176,6 +176,11 @@ function ReelCard({
 
   const lastTapRef = useRef<number>(0);
   const nextParticleId = useRef<number>(0);
+  const pendingTapTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => () => {
+    if (pendingTapTimer.current) clearTimeout(pendingTapTimer.current);
+  }, []);
 
   // Sync video play/pause with active visibility state
   useEffect(() => {
@@ -289,19 +294,27 @@ function ReelCard({
     }, 1200);
   }, [liked]);
 
-  // Double-tap or click handler
+  // Double-tap or click handler. The single-tap play/pause is deferred until
+  // the double-tap window passes, so a genuine double-tap (like) doesn't also
+  // toggle playback from the first tap.
   const handleVideoInteraction = useCallback(() => {
     const now = Date.now();
     const DOUBLE_TAP_DELAY = 300;
 
     if (now - lastTapRef.current < DOUBLE_TAP_DELAY) {
+      if (pendingTapTimer.current) {
+        clearTimeout(pendingTapTimer.current);
+        pendingTapTimer.current = null;
+      }
       // Double click: Trigger glowing heart pop & like project
       handleLike();
       setShowHeartPop(true);
       setTimeout(() => setShowHeartPop(false), 800);
     } else {
-      // Single click: Play/Pause toggle
-      togglePlayPause();
+      pendingTapTimer.current = setTimeout(() => {
+        togglePlayPause();
+        pendingTapTimer.current = null;
+      }, DOUBLE_TAP_DELAY);
     }
     lastTapRef.current = now;
   }, [handleLike, togglePlayPause]);

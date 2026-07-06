@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { createClientSupabase } from '@/lib/supabase/client'
+import { createClientSupabase } from '@/shared/lib/supabase/client'
 
 export default function LoginPage() {
   const router = useRouter()

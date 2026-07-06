@@ -1,7 +1,7 @@
 'use client'
 
 import { useTransition } from 'react'
-import { deactivateUser, reactivateUser } from '@/lib/actions/auth/deactivate-user'
+import { deactivateUser, reactivateUser } from '@/dashboard/lib/actions/auth/deactivate-user'
 
 export function ToggleActiveButton({ userId, isActive }: { userId: string; isActive: boolean }) {
   const [pending, startTransition] = useTransition()

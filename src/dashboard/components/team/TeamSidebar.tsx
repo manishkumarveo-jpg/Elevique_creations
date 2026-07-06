@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState, startTransition } from 'react'
-import { logoutTeam } from '@/lib/actions/auth/logout-admin'
+import { logoutTeam } from '@/dashboard/lib/actions/auth/logout-admin'
 import {
   LayoutDashboard,
   ClipboardList,

@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import { requireTeamMember } from '@/lib/auth/require-role'
-import { getProjectsForTeam } from '@/lib/queries/projects'
+import { requireTeamMember } from '@/dashboard/lib/auth/require-role'
+import { getProjectsForTeam } from '@/dashboard/lib/queries/projects'
 import { ProjectWorkSheet, type ProjectWorkRow } from './ProjectWorkSheet'
 
 function formatDate(iso: string | null) {

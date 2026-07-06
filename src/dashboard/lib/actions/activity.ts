@@ -1,7 +1,7 @@
 'use server'
 
-import { createAdminClient } from '@/lib/supabase/admin'
-import type { Database, Json } from '@/lib/types/database'
+import { createAdminClient } from '@/shared/lib/supabase/admin'
+import type { Database, Json } from '@/shared/lib/types/database'
 
 type UserRole = Database['public']['Enums']['user_role']
 

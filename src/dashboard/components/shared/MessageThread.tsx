@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useTransition, useRef, useEffect } from 'react'
-import { sendMessage } from '@/lib/actions/messages/send-message'
-import type { MessageWithSender } from '@/lib/queries/messages'
+import { sendMessage } from '@/dashboard/lib/actions/messages/send-message'
+import type { MessageWithSender } from '@/dashboard/lib/queries/messages'
 
 export function MessageThread({
   messages,

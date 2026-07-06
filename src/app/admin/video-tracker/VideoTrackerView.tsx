@@ -1,10 +1,10 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { Avatar } from '@/components/ui/Avatar'
-import { Pagination } from '@/components/ui/Pagination'
+import { Avatar } from '@/dashboard/components/ui/Avatar'
+import { Pagination } from '@/dashboard/components/ui/Pagination'
 import { VideoTaskStatusSelect } from './VideoTaskStatusSelect'
-import type { VideoGenerationTask } from '@/lib/queries/video-tracker'
+import type { VideoGenerationTask } from '@/dashboard/lib/queries/video-tracker'
 
 const STATUS_OPTIONS = ['All', 'pending', 'in_progress', 'revision_pending', 'completed', 'paused'] as const
 const PAGE_SIZE = 10

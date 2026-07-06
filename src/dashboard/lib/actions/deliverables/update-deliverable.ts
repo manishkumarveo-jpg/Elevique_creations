@@ -1,8 +1,8 @@
 'use server'
 
 import { z } from 'zod'
-import { createServerClient } from '@/lib/supabase/server'
-import { logActivity } from '@/lib/actions/activity'
+import { createServerClient } from '@/shared/lib/supabase/server'
+import { logActivity } from '@/dashboard/lib/actions/activity'
 import { revalidatePath } from 'next/cache'
 
 const AddDeliverableSchema = z.object({
@@ -17,7 +17,7 @@ const AddDeliverableSchema = z.object({
 })
 
 export async function addDeliverable(input: unknown) {
-  const user = await (await import('@/lib/auth/require-role')).requireAdmin()
+  const user = await (await import('@/dashboard/lib/auth/require-role')).requireAdmin()
   const parsed = AddDeliverableSchema.parse(input)
   const supabase = await createServerClient()
 
@@ -39,7 +39,7 @@ export async function addDeliverable(input: unknown) {
 }
 
 export async function markDelivered(deliverableId: string, projectId: string) {
-  const user = await (await import('@/lib/auth/require-role')).requireAdmin()
+  const user = await (await import('@/dashboard/lib/auth/require-role')).requireAdmin()
   const supabase = await createServerClient()
 
   const { error } = await supabase.from('deliverables').update({
@@ -64,7 +64,7 @@ export async function markDelivered(deliverableId: string, projectId: string) {
 }
 
 export async function addDeliverableTeam(input: unknown) {
-  const user = await (await import('@/lib/auth/require-role')).requireTeamMember()
+  const user = await (await import('@/dashboard/lib/auth/require-role')).requireTeamMember()
   const parsed = AddDeliverableSchema.parse(input)
   const supabase = await createServerClient()
 
@@ -95,7 +95,7 @@ export async function addDeliverableTeam(input: unknown) {
 }
 
 export async function markDeliveredTeam(deliverableId: string, projectId: string) {
-  const user = await (await import('@/lib/auth/require-role')).requireTeamMember()
+  const user = await (await import('@/dashboard/lib/auth/require-role')).requireTeamMember()
   const supabase = await createServerClient()
 
   const { data: assignment } = await supabase
@@ -129,7 +129,7 @@ export async function markDeliveredTeam(deliverableId: string, projectId: string
 }
 
 export async function approveDeliverable(deliverableId: string, projectId: string) {
-  const user = await (await import('@/lib/auth/require-role')).requireClient()
+  const user = await (await import('@/dashboard/lib/auth/require-role')).requireClient()
   const supabase = await createServerClient()
 
   const { error } = await supabase.from('deliverables').update({
@@ -155,7 +155,7 @@ export async function approveDeliverable(deliverableId: string, projectId: strin
 }
 
 export async function requestRevision(deliverableId: string, projectId: string, note: string) {
-  const user = await (await import('@/lib/auth/require-role')).requireClient()
+  const user = await (await import('@/dashboard/lib/auth/require-role')).requireClient()
   const supabase = await createServerClient()
 
   const trimmedNote = note.trim()

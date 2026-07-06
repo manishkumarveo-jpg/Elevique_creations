@@ -1,11 +1,11 @@
 'use server'
 
 import { z } from 'zod'
-import { createServerClient } from '@/lib/supabase/server'
-import { requireAdmin, requireTeamMember } from '@/lib/auth/require-role'
-import { logActivity } from '@/lib/actions/activity'
+import { createServerClient } from '@/shared/lib/supabase/server'
+import { requireAdmin, requireTeamMember } from '@/dashboard/lib/auth/require-role'
+import { logActivity } from '@/dashboard/lib/actions/activity'
 import { revalidatePath } from 'next/cache'
-import type { Database } from '@/lib/types/database'
+import type { Database } from '@/shared/lib/types/database'
 
 type MilestoneUpdate = Database['public']['Tables']['milestones']['Update']
 
@@ -42,7 +42,7 @@ async function applyMilestoneUpdate(milestoneId: string, projectId: string, inpu
   const update: MilestoneUpdate = {
     ...parsed,
     updated_by: actorId,
-    ...(parsed.status === 'done' ? { completed_date: new Date().toISOString().split('T')[0] } : {}),
+    completed_date: parsed.status === 'done' ? new Date().toISOString().split('T')[0] : null,
   }
 
   const { error } = await supabase.from('milestones').update(update).eq('id', milestoneId)

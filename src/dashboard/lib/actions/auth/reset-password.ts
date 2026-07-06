@@ -1,8 +1,8 @@
 'use server'
 
 import { z } from 'zod'
-import { requireAdmin } from '@/lib/auth/require-role'
-import { createAdminClient } from '@/lib/supabase/admin'
+import { requireAdmin } from '@/dashboard/lib/auth/require-role'
+import { createAdminClient } from '@/shared/lib/supabase/admin'
 
 const ResetPasswordSchema = z.object({
   user_id: z.string().uuid(),

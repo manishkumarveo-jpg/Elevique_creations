@@ -2,9 +2,9 @@
 
 import { z } from 'zod'
 import { Resend } from 'resend'
-import { requireAdmin } from '@/lib/auth/require-role'
-import { createAdminClient } from '@/lib/supabase/admin'
-import { logActivity } from '@/lib/actions/activity'
+import { requireAdmin } from '@/dashboard/lib/auth/require-role'
+import { createAdminClient } from '@/shared/lib/supabase/admin'
+import { logActivity } from '@/dashboard/lib/actions/activity'
 import { revalidatePath } from 'next/cache'
 
 const CreateUserSchema = z.object({
@@ -92,6 +92,15 @@ export async function createUserAccount(input: unknown) {
   return { success: true, userId }
 }
 
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 async function sendWelcomeEmail({
   name, email, password, role,
 }: {
@@ -102,6 +111,9 @@ async function sendWelcomeEmail({
 }) {
   const resend = new Resend(process.env.RESEND_API_KEY)
   const loginUrl = `${process.env.NEXT_PUBLIC_APP_URL}/${role === 'team_member' ? 'team' : 'portal'}/login`
+  const safeName = escapeHtml(name)
+  const safeEmail = escapeHtml(email)
+  const safePassword = escapeHtml(password)
 
   await resend.emails.send({
     from: 'Elevique <hello@elevique.in>',
@@ -109,13 +121,13 @@ async function sendWelcomeEmail({
     subject: 'Welcome to Elevique Portal — Your Login Details',
     html: `
       <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px;">
-        <h2 style="color:#1A1A2E;">Welcome to Elevique, ${name}!</h2>
+        <h2 style="color:#1A1A2E;">Welcome to Elevique, ${safeName}!</h2>
         <p>Your ${role === 'team_member' ? 'team member' : 'client'} account is ready.</p>
         <div style="background:#F7F6F3;border-radius:8px;padding:16px;margin:20px 0;">
           <p style="margin:0 0 8px;"><strong>Login URL:</strong><br>
             <a href="${loginUrl}">${loginUrl}</a></p>
-          <p style="margin:0 0 8px;"><strong>Email:</strong> ${email}</p>
-          <p style="margin:0;color:#D85A30;"><strong>Temporary Password:</strong> ${password}</p>
+          <p style="margin:0 0 8px;"><strong>Email:</strong> ${safeEmail}</p>
+          <p style="margin:0;color:#D85A30;"><strong>Temporary Password:</strong> ${safePassword}</p>
         </div>
         <p style="color:#D85A30;font-size:14px;">⚠️ Please change your password after first login.</p>
         <hr style="border:none;border-top:1px solid #E2E0DA;margin:20px 0;">

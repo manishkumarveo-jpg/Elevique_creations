@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createUserAccount } from '@/lib/actions/auth/create-user'
+import { createUserAccount } from '@/dashboard/lib/actions/auth/create-user'
 
 export default function NewUserPage() {
   const router = useRouter()

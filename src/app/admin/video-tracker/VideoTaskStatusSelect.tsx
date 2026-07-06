@@ -1,7 +1,7 @@
 'use client'
 
 import { useTransition } from 'react'
-import { updateVideoTaskStatus } from '@/lib/actions/video-tracker'
+import { updateVideoTaskStatus } from '@/dashboard/lib/actions/video-tracker'
 
 const STATUS_OPTIONS = ['pending', 'in_progress', 'revision_pending', 'completed', 'paused'] as const
 

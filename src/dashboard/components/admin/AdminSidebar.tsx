@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState, startTransition } from 'react'
-import { logoutAdmin } from '@/lib/actions/auth/logout-admin'
+import { logoutAdmin } from '@/dashboard/lib/actions/auth/logout-admin'
 import {
   LayoutGrid,
   BarChart3,
@@ -81,7 +81,16 @@ export function AdminSidebar({ userName = 'Admin', userInitials = 'A' }: AdminSi
   return (
     <>
       {mobileOpen && (
-        <div className="p-overlay" onClick={() => setMobileOpen(false)} />
+        <div
+          className="p-overlay"
+          onClick={() => setMobileOpen(false)}
+          role="button"
+          tabIndex={0}
+          aria-label="Close sidebar"
+          onKeyDown={(e) => {
+            if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') setMobileOpen(false)
+          }}
+        />
       )}
       <aside className={`p-sidebar${mobileOpen ? ' open' : ''}`}>
         {/* ── Workspace switcher ── */}

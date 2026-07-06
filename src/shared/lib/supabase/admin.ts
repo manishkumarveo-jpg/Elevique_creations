@@ -1,11 +1,12 @@
 // SERVER ONLY — never import this in components or client files
 import { createClient } from '@supabase/supabase-js'
-import type { Database } from '@/lib/types/database'
+import { env } from '@/shared/lib/env'
+import type { Database } from '@/shared/lib/types/database'
 
 export function createAdminClient() {
   return createClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    env.supabaseUrl,
+    env.supabaseServiceRoleKey,
     {
       auth: {
         autoRefreshToken: false,

@@ -1,9 +1,9 @@
 'use server'
 
 import { z } from 'zod'
-import { requireAdmin } from '@/lib/auth/require-role'
-import { createServerClient } from '@/lib/supabase/server'
-import { logActivity } from '@/lib/actions/activity'
+import { requireAdmin } from '@/dashboard/lib/auth/require-role'
+import { createServerClient } from '@/shared/lib/supabase/server'
+import { logActivity } from '@/dashboard/lib/actions/activity'
 import { revalidatePath } from 'next/cache'
 
 const CreateProjectSchema = z.object({
@@ -42,13 +42,14 @@ export async function createProject(input: unknown) {
 
   // Assign team members immediately if provided
   if (team_member_ids.length > 0) {
-    await supabase.from('project_assignments').insert(
+    const { error: assignmentError } = await supabase.from('project_assignments').insert(
       team_member_ids.map(userId => ({
         project_id: data.id,
         user_id: userId,
         assigned_by: user.id,
       }))
     )
+    if (assignmentError) throw new Error(assignmentError.message)
   }
 
   await logActivity({

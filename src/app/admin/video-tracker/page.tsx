@@ -1,5 +1,5 @@
-import { getVideoGenerationTasks } from '@/lib/queries/video-tracker'
-import { StatTile } from '@/components/ui/StatTile'
+import { getVideoGenerationTasks } from '@/dashboard/lib/queries/video-tracker'
+import { StatTile } from '@/dashboard/components/ui/StatTile'
 import { VideoTrackerView } from './VideoTrackerView'
 
 export default async function AdminVideoTrackerPage() {

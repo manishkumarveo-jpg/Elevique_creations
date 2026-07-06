@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
-import { Badge } from '@/components/ui/Badge'
-import { ProjectStatusBadge } from '@/components/shared/StatusBadge'
+import { Badge } from '@/dashboard/components/ui/Badge'
+import { ProjectStatusBadge } from '@/dashboard/components/shared/StatusBadge'
 
 export type ProjectWorkRow = {
   id: string

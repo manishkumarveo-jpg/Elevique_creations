@@ -1,5 +1,5 @@
 import { cache } from 'react'
-import { createServerClient } from '@/lib/supabase/server'
+import { createServerClient } from '@/shared/lib/supabase/server'
 
 export type ProductionDeliverable = {
   id: string
@@ -27,7 +27,8 @@ const SELECT = `
 function flattenAssignees(rows: unknown[]): ProductionDeliverable[] {
   return (rows as Array<Record<string, unknown>>).map(row => {
     const assigneeRows = (row.production_deliverable_assignees ?? []) as Array<{ user: { id: string; full_name: string } | null }>
-    const { production_deliverable_assignees, ...rest } = row
+    const { production_deliverable_assignees, my_assignment, ...rest } = row
+    void my_assignment
     return {
       ...rest,
       assignees: assigneeRows.map(a => a.user).filter((u): u is { id: string; full_name: string } => u !== null),
@@ -53,9 +54,10 @@ export const getProductionDeliverablesForTeamMember = cache(async (userId: strin
     .select(`
       id, project_id, brand_name, deliverable_type, details, assets_location,
       status, comments, pending_with_id, delivery_date, priority, completed_at, created_at,
-      production_deliverable_assignees!inner(user:profiles!production_deliverable_assignees_user_id_fkey(id, full_name))
+      production_deliverable_assignees(user:profiles!production_deliverable_assignees_user_id_fkey(id, full_name)),
+      my_assignment:production_deliverable_assignees!inner(user_id)
     `)
-    .eq('production_deliverable_assignees.user_id', userId)
+    .eq('my_assignment.user_id', userId)
     .order('priority')
     .order('delivery_date')
   if (error) throw error

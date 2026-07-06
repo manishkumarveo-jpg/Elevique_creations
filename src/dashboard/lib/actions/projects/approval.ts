@@ -1,8 +1,8 @@
 'use server'
 
-import { createServerClient } from '@/lib/supabase/server'
-import { requireAdmin, requireTeamMember } from '@/lib/auth/require-role'
-import { logActivity } from '@/lib/actions/activity'
+import { createServerClient } from '@/shared/lib/supabase/server'
+import { requireAdmin, requireTeamMember } from '@/dashboard/lib/auth/require-role'
+import { logActivity } from '@/dashboard/lib/actions/activity'
 import { revalidatePath } from 'next/cache'
 
 function revalidateProject(projectId: string) {
@@ -15,7 +15,7 @@ export async function giveAdminApproval(projectId: string) {
   const user = await requireAdmin()
   const supabase = await createServerClient()
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('projects')
     .update({
       admin_approved: true,
@@ -23,8 +23,11 @@ export async function giveAdminApproval(projectId: string) {
       admin_approved_at: new Date().toISOString(),
     })
     .eq('id', projectId)
+    .eq('status', 'final_review')
+    .select('id')
 
   if (error) throw new Error(error.message)
+  if (!data || data.length === 0) throw new Error('Project is not pending final review')
 
   await logActivity({
     actor_id: user.id,
@@ -101,7 +104,7 @@ export async function adminApproveAndFinalize(projectId: string) {
   const user = await requireAdmin()
   const supabase = await createServerClient()
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('projects')
     .update({
       admin_approved: true,
@@ -110,8 +113,11 @@ export async function adminApproveAndFinalize(projectId: string) {
       status: 'completed',
     })
     .eq('id', projectId)
+    .eq('status', 'final_review')
+    .select('id')
 
   if (error) throw new Error(error.message)
+  if (!data || data.length === 0) throw new Error('Project is not pending final review')
 
   await logActivity({
     actor_id: user.id,

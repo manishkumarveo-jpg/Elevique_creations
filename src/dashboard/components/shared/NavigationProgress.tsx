@@ -12,6 +12,10 @@ export function NavigationProgress() {
   const prevPath = useRef(pathname)
   const doneTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const hideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  // Recovery timer: if a click starts the bar but pathname never changes
+  // (same-page link, cancelled navigation, failed route), force it to finish
+  // instead of leaving it stuck at "running" forever.
+  const stuckTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
 
   // Start bar on any internal link click
   useEffect(() => {
@@ -23,13 +27,23 @@ export function NavigationProgress() {
 
       clearTimeout(doneTimer.current)
       clearTimeout(hideTimer.current)
+      clearTimeout(stuckTimer.current)
       setPhase('running')
       setWidth(0)
       requestAnimationFrame(() => requestAnimationFrame(() => setWidth(65)))
+
+      stuckTimer.current = setTimeout(() => {
+        setPhase('done')
+        setWidth(100)
+        hideTimer.current = setTimeout(() => setPhase('idle'), 500)
+      }, 4000)
     }
 
     document.addEventListener('click', onLinkClick)
-    return () => document.removeEventListener('click', onLinkClick)
+    return () => {
+      document.removeEventListener('click', onLinkClick)
+      clearTimeout(stuckTimer.current)
+    }
   }, [])
 
   // Complete bar when route actually changes
@@ -37,6 +51,7 @@ export function NavigationProgress() {
     if (pathname === prevPath.current) return
     prevPath.current = pathname
 
+    clearTimeout(stuckTimer.current)
     setPhase('done')
     setWidth(100)
 

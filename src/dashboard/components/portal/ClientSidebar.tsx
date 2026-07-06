@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState, startTransition } from 'react'
-import { logoutClient } from '@/lib/actions/auth/logout-admin'
+import { logoutClient } from '@/dashboard/lib/actions/auth/logout-admin'
 import {
   Home,
   Folder,

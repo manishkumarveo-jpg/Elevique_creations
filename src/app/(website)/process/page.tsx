@@ -1,7 +1,7 @@
-import Navbar from "@/components/Navbar";
-import ProcessSection from "@/components/ProcessSection";
-import ContactSection from "@/components/ContactSection";
-import { Footer } from "@/components/ui/footer-section";
+import Navbar from "@/website/components/Navbar";
+import ProcessSection from "@/website/components/ProcessSection";
+import ContactSection from "@/website/components/ContactSection";
+import { Footer } from "@/website/components/ui/footer-section";
 
 export const metadata = {
   title: "Process | Elevique",

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import type { Database } from '@/lib/types/database'
+import type { Database } from '@/shared/lib/types/database'
 import { ExternalLink, Trash2, Link2 } from 'lucide-react'
 
 type FileRow = Database['public']['Tables']['files']['Row']

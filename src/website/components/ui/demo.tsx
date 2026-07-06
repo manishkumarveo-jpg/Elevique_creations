@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import { InfiniteSlider } from '@/components/ui/infinite-slider'
-import { ProgressiveBlur } from '@/components/ui/progressive-blur'
-import { ELVIQUE_LOGOS } from '@/data/elviqueLogos'
+import { InfiniteSlider } from '@/website/components/ui/infinite-slider'
+import { ProgressiveBlur } from '@/website/components/ui/progressive-blur'
+import { ELVIQUE_LOGOS } from '@/website/data/elviqueLogos'
 
 function LogoImage({ src, alt, fill, unoptimized, className, sizes }: any) {
   const [hasWhiteBg, setHasWhiteBg] = useState(true);

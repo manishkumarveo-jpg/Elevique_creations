@@ -1,9 +1,9 @@
 'use server'
 
 import { z } from 'zod'
-import { createServerClient } from '@/lib/supabase/server'
-import { requireAdmin } from '@/lib/auth/require-role'
-import { logActivity } from '@/lib/actions/activity'
+import { createServerClient } from '@/shared/lib/supabase/server'
+import { requireAdmin } from '@/dashboard/lib/auth/require-role'
+import { logActivity } from '@/dashboard/lib/actions/activity'
 import { revalidatePath } from 'next/cache'
 
 const UpdateProductionDeliverableSchema = z.object({
