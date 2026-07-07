@@ -44,15 +44,22 @@ interface Project {
 
 // Titles are pre-filled from each video's file name — edit them freely below.
 const PROJECTS: Project[] = [
-  { id: 1, title: "Animated movie - Hero Cat ", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Animated%20movie%20-%20Hero%20Cat%20(1)%20(1).mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Animated%20movie%20-%20Hero%20Cat%20(1)%20(1).png" },
-  { id: 2, title: "Forbes properties - Real estate - concept", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Forbes%20properties%20-%20Real%20estate%20-%20concept.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Forbes%20properties%20-%20Real%20estate%20-%20concept.png" },
-  { id: 3, title: "Electronics - Cooler Ad (1)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Electronics%20-%20Cooler%20Ad%20(1).mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Electronics%20-%20Cooler%20Ad%20(1).png" },
-  { id: 4, title: "Gangsters punjab", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Gangsters%20punjab.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Gangsters%20punjab.png" },
+  { id: 1, title: "Animated short movie ", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Animated%20movie%20-%20Hero%20Cat%20(1)%20(1).mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Animated%20movie%20-%20Hero%20Cat%20(1)%20(1).png" },
+  { id: 2, title: "Fabluxe by Forbes", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Forbes%20properties%20-%20Real%20estate%20-%20concept.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Forbes%20properties%20-%20Real%20estate%20-%20concept.png" },
+  { id: 3, title: "Tech-Electronics", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Electronics%20-%20Cooler%20Ad%20(1).mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Electronics%20-%20Cooler%20Ad%20(1).png" },
+  { id: 4, title: "Music Video Trailer", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Gangsters%20punjab.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Gangsters%20punjab.png" },
   { id: 5, title: "Gauddly Music Video", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Gauddly%20Music%20Video.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Gauddly%20Music%20Video.png" },
-  { id: 6, title: "Itsme Music Video", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Itsme%20Music%20Video.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Itsme%20Music%20Video.png" },
-  { id: 7, title: "Kobala (1)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Kobala%20(1).mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Kobala%20(1).png" },
-  { id: 8, title: "Mahindra XEV car (1)", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Mahindra%20XEV%20car%20(1).mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Mahindra%20XEV%20car%20(1).compressed.png" },
+  { id: 6, title: "Cosmetics Music Video", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Itsme%20Music%20Video.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Itsme%20Music%20Video.png" },
+  { id: 7, title: "Kobala Teaser", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Kobala%20(1).mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Kobala%20(1).png" },
+  { id: 8, title: "Mahindra EV", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Mahindra%20XEV%20car%20(1).mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Mahindra%20XEV%20car%20(1).compressed.png" },
 ];
+
+const SHOWREEL_PROJECT = {
+  id: 9999,
+  title: "",
+  videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Elevique%20portfolio%20showreel(1)%20(1).mp4",
+  thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/cult%20.png"
+};
 
 interface PopupState {
   project: Project;
@@ -390,7 +397,7 @@ export default function FeaturedShowcase() {
       {viewMode === "grid" && (
         <div className="portfolio-hero">
           {isHeroInView && (
-            <video ref={heroVideoRef} className="portfolio-hero-video" src={active.videoSrc} poster={active.thumbnail || undefined} autoPlay loop muted={heroMuted} playsInline preload="auto" aria-hidden="true" tabIndex={-1} />
+            <video ref={heroVideoRef} className="portfolio-hero-video" src={SHOWREEL_PROJECT.videoSrc} poster={SHOWREEL_PROJECT.thumbnail} autoPlay loop muted={heroMuted} playsInline preload="auto" aria-hidden="true" tabIndex={-1} />
           )}
           <div className="portfolio-hero-gradient-b" />
           <div className="portfolio-hero-gradient-l" />
@@ -408,9 +415,9 @@ export default function FeaturedShowcase() {
             Portfolio Section
           </div>
           <div className="portfolio-hero-content">
-            <h2 className="portfolio-hero-title">{active.title}</h2>
+            <h2 className="portfolio-hero-title">{SHOWREEL_PROJECT.title}</h2>
             <div className="portfolio-hero-actions">
-              <button type="button" className="portfolio-btn-primary" onClick={() => openVideoOverlay(active)}>
+              <button type="button" className="portfolio-btn-primary" onClick={() => openVideoOverlay(SHOWREEL_PROJECT as Project)}>
                 <Play size={15} fill="currentColor" />
                 Watch Full Video
               </button>
@@ -463,12 +470,12 @@ export default function FeaturedShowcase() {
             <div className="svc-grid-overlay" aria-hidden="true" />
             <p className="portfolio-featured-label">Featured Projects</p>
             <div className="portfolio-featured-row">
-              {PROJECTS.slice(0, 6).map((p) => (
+              {PROJECTS.map((p) => (
                 <FeaturedCard
                   key={p.id}
                   project={p}
-                  isActive={active.id === p.id}
-                  onClick={switchProject}
+                  isActive={false}
+                  onClick={(project) => openVideoOverlay(project)}
                   onEnter={onCardEnter}
                   onLeave={onCardLeave}
                 />
