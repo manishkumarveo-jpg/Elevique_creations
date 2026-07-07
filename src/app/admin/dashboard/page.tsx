@@ -1,4 +1,5 @@
 import { createServerClient } from '@/shared/lib/supabase/server'
+import { getCurrentUserAndProfile } from '@/dashboard/lib/auth/require-role'
 import { getRecentActivity } from '@/dashboard/lib/queries/activity'
 import { getProjectsWithTeam } from '@/dashboard/lib/queries/projects'
 import { getUpcomingMeetings, getMissedMeetings } from '@/dashboard/lib/queries/meetings'
@@ -22,11 +23,7 @@ async function getStats() {
 const STATUS_ORDER = ['in_progress', 'final_review', 'briefing', 'paused', 'completed'] as const
 
 export default async function AdminDashboardPage() {
-  const supabase = await createServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  const { data: profile } = user
-    ? await supabase.from('profiles').select('full_name').eq('id', user.id).single()
-    : { data: null }
+  const { profile } = await getCurrentUserAndProfile()
 
   const [stats, projects, activity, upcomingMeetings, missedMeetings] = await Promise.all([
     getStats(),

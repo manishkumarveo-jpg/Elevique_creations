@@ -1,4 +1,5 @@
 import { createServerClient } from '@/shared/lib/supabase/server'
+import { getCurrentUserAndProfile } from '@/dashboard/lib/auth/require-role'
 import { getProjectsForClient } from '@/dashboard/lib/queries/projects'
 import { getUpcomingMeetingsForClient, getMissedMeetingsForClient } from '@/dashboard/lib/queries/meetings'
 import { FeaturedProjectCard } from '@/dashboard/components/shared/FeaturedProjectCard'
@@ -13,11 +14,8 @@ function formatMeetingDate(iso: string) {
 }
 
 export default async function ClientDashboardPage() {
+  const { user, profile } = await getCurrentUserAndProfile()
   const supabase = await createServerClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  const { data: profile } = user
-    ? await supabase.from('profiles').select('full_name, company_name').eq('id', user.id).single()
-    : { data: null }
 
   const [projects, upcomingMeetings, missedMeetings] = await Promise.all([
     user ? getProjectsForClient(user.id) : Promise.resolve([]),
