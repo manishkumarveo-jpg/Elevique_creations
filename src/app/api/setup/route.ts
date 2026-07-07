@@ -3,6 +3,15 @@ import { createAdminClient } from '@/shared/lib/supabase/admin'
 
 export async function POST(request: Request) {
   try {
+    // Kill switch: setup is only reachable when SETUP_TOKEN is explicitly
+    // configured, and the caller must present it. Unset the env var in
+    // production once the first admin account has been created.
+    const setupToken = process.env.SETUP_TOKEN
+    const providedToken = request.headers.get('x-setup-token')
+    if (!setupToken || providedToken !== setupToken) {
+      return NextResponse.json({ error: 'Setup is not available.' }, { status: 403 })
+    }
+
     const { full_name, email, password } = await request.json()
 
     if (!full_name || !email || !password) {
@@ -15,10 +24,15 @@ export async function POST(request: Request) {
     const adminClient = createAdminClient()
 
     // Block setup if any admin already exists
-    const { count } = await adminClient
+    const { count, error: countError } = await adminClient
       .from('profiles')
       .select('id', { count: 'exact', head: true })
       .eq('role', 'admin')
+
+    if (countError) {
+      console.error('[API Setup] Admin count check failed:', countError)
+      return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    }
 
     if (count && count > 0) {
       return NextResponse.json(
@@ -36,7 +50,8 @@ export async function POST(request: Request) {
     })
 
     if (authError) {
-      return NextResponse.json({ error: authError.message }, { status: 400 })
+      console.error('[API Setup] createUser failed:', authError)
+      return NextResponse.json({ error: 'Failed to create admin account.' }, { status: 400 })
     }
 
     // Update the auto-created profile to admin role
@@ -52,12 +67,14 @@ export async function POST(request: Request) {
         .insert({ id: authData.user.id, email, full_name, role: 'admin', is_active: true })
 
       if (insertError) {
-        return NextResponse.json({ error: 'User created but profile failed: ' + insertError.message }, { status: 500 })
+        console.error('[API Setup] Profile creation failed:', insertError)
+        return NextResponse.json({ error: 'User created but profile setup failed.' }, { status: 500 })
       }
     }
 
     return NextResponse.json({ success: true })
-  } catch {
+  } catch (err: unknown) {
+    console.error('[API Setup] Uncaught handler error:', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
