@@ -1,29 +1,39 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 import { createAdminClient } from "@/shared/lib/supabase/admin";
+
+const optionalText = (max: number) =>
+  z.string().trim().max(max).optional().nullable();
+
+const LeadSchema = z.object({
+  full_name: z.string().trim().min(1).max(200),
+  email: z.string().trim().email().max(254),
+  service_type: optionalText(100),
+  videos_count: optionalText(50),
+  budget_per_video: optionalText(50),
+  requirement_brief: optionalText(5000),
+  phone: optionalText(30),
+  city: optionalText(100),
+  company_name: optionalText(200),
+  website: optionalText(300),
+});
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const {
-      service_type,
-      videos_count,
-      budget_per_video,
-      requirement_brief,
-      phone,
-      city,
-      company_name,
-      website,
-    } = body;
+    const parsed = LeadSchema.safeParse(body);
 
-    const full_name = body.full_name?.trim();
-    const email = body.email?.trim();
-
-    if (!full_name || !email) {
+    if (!parsed.success) {
       return NextResponse.json(
-        { ok: false, error: "Name and Email are required fields." },
+        { ok: false, error: parsed.error.issues[0]?.message ?? "Invalid input." },
         { status: 400 }
       );
     }
+
+    const {
+      full_name, email, service_type, videos_count, budget_per_video,
+      requirement_brief, phone, city, company_name, website,
+    } = parsed.data;
 
     const adminClient = createAdminClient();
 
@@ -44,7 +54,7 @@ export async function POST(request: Request) {
     if (error) {
       console.error("[API Leads] Supabase insert error:", error);
       return NextResponse.json(
-        { ok: false, error: "Failed to save lead: " + error.message },
+        { ok: false, error: "Something went wrong. Please try again." },
         { status: 500 }
       );
     }

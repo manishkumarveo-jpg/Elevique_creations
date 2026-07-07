@@ -30,6 +30,23 @@ function useNoHover() {
   return noHover;
 }
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 767px)");
+    setIsMobile(media.matches);
+    const listener = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    if (media.addEventListener) {
+      media.addEventListener("change", listener);
+      return () => media.removeEventListener("change", listener);
+    } else {
+      media.addListener(listener);
+      return () => media.removeListener(listener);
+    }
+  }, []);
+  return isMobile;
+}
+
 /* ─── Data ───────────────────────────────────────────────────── */
 interface Project {
   id: number;
@@ -146,6 +163,11 @@ export default function FeaturedShowcase() {
   const [videoOverlay, setVideoOverlay] = useState<Project | null>(null);
   const [bottomSheet, setBottomSheet] = useState<Project | null>(null);
   const [popup, setPopup] = useState<PopupState | null>(null);
+
+  const isMobile = useIsMobile();
+  const heroVideoSrc = isMobile
+    ? "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/portfolio%20main%20video.mp4"
+    : SHOWREEL_PROJECT.videoSrc;
 
   const [overlayLoading, setOverlayLoading] = useState<boolean>(false);
   const [sheetLoading, setSheetLoading] = useState<boolean>(false);
@@ -397,7 +419,7 @@ export default function FeaturedShowcase() {
       {viewMode === "grid" && (
         <div className="portfolio-hero">
           {isHeroInView && (
-            <video ref={heroVideoRef} className="portfolio-hero-video" src={SHOWREEL_PROJECT.videoSrc} poster={SHOWREEL_PROJECT.thumbnail} autoPlay loop muted={heroMuted} playsInline preload="auto" aria-hidden="true" tabIndex={-1} />
+            <video ref={heroVideoRef} className="portfolio-hero-video" src={heroVideoSrc} poster={SHOWREEL_PROJECT.thumbnail} autoPlay loop muted={heroMuted} playsInline preload="auto" aria-hidden="true" tabIndex={-1} />
           )}
           <div className="portfolio-hero-gradient-b" />
           <div className="portfolio-hero-gradient-l" />
@@ -417,7 +439,7 @@ export default function FeaturedShowcase() {
           <div className="portfolio-hero-content">
             <h2 className="portfolio-hero-title">{SHOWREEL_PROJECT.title}</h2>
             <div className="portfolio-hero-actions">
-              <button type="button" className="portfolio-btn-primary" onClick={() => openVideoOverlay(SHOWREEL_PROJECT as Project)}>
+              <button type="button" className="portfolio-btn-primary" onClick={() => openVideoOverlay({ ...SHOWREEL_PROJECT, videoSrc: heroVideoSrc } as Project)}>
                 <Play size={15} fill="currentColor" />
                 Watch Full Video
               </button>

@@ -20,9 +20,10 @@ export default function SetupPage() {
     setError('')
     setLoading(true)
     try {
+      const setupToken = new URLSearchParams(window.location.search).get('token') ?? ''
       const res = await fetch('/api/setup', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-setup-token': setupToken },
         body: JSON.stringify(form),
       })
       const data = await res.json()
