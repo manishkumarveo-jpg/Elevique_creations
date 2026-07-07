@@ -175,7 +175,8 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className="hero-section" aria-label="Elevique — AI Visuals Studio Hero">
+    <>
+      <section className="hero-section" aria-label="Elevique — AI Visuals Studio Hero">
       <video
         ref={videoRef}
         className="hero-video"
@@ -295,5 +296,54 @@ export default function HeroSection() {
         </motion.div>
       </div>
     </section>
+
+    {/* Mobile-only stats layout appearing below the hero fold */}
+    <div className="block sm:hidden pt-12 pb-6 px-6 bg-[#030303] border-t border-white/5 relative overflow-hidden">
+      
+      {/* Decorative Radial Grid / Mesh Background Glow */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(20,184,166,0.035)_0,transparent_60%)] pointer-events-none" />
+      
+      <div className="relative z-10 flex flex-col gap-6">
+        
+        {/* Header Block */}
+        <div className="mb-2 flex flex-col gap-1.5">
+          <span className="text-[10px] uppercase tracking-[0.25em] text-teal-400 font-bold">
+            Studio Performance
+          </span>
+          <h3 className="text-xl font-extrabold text-white tracking-wide uppercase font-sans">
+            Elevique Metrics
+          </h3>
+        </div>
+
+        <div className="flex flex-col gap-3.5">
+          {STATS.map((stat, idx) => (
+            <motion.div
+              key={stat.label}
+              className="flex flex-row items-center justify-between p-5 rounded-2xl border border-white/[0.06] bg-gradient-to-r from-[#0c0c0f] to-[#060608] hover:border-teal-500/20 transition-colors duration-300 relative overflow-hidden group"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.7, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {/* Card Inner Accent Ambient Highlight */}
+              <div className="absolute right-0 top-0 w-24 h-24 bg-teal-500/[0.02] rounded-full blur-xl pointer-events-none" />
+              
+              <div className="flex flex-row items-center gap-5">
+                <span className="text-2xl font-black bg-gradient-to-r from-white to-neutral-400 bg-clip-text text-transparent font-sans tracking-tight min-w-[80px]">
+                  <CountUpNumber value={stat.value} suffix={stat.suffix} delay={200} />
+                </span>
+                <span className="text-[10px] text-neutral-400 font-semibold uppercase tracking-widest leading-relaxed max-w-[180px]">
+                  {stat.label}
+                </span>
+              </div>
+
+              {/* Decorative clean line on the right */}
+              <div className="w-1 h-8 rounded-full bg-teal-500/10 transition-colors duration-300 group-hover:bg-teal-500/45" />
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </>
   );
 }
