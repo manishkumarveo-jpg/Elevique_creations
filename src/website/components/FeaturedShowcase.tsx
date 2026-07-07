@@ -74,7 +74,7 @@ const PROJECTS: Project[] = [
 const SHOWREEL_PROJECT = {
   id: 9999,
   title: "",
-  videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Elevique%20portfolio%20showreel(1)%20(1).mp4",
+  videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/IMG_8718.mp4",
   thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/cult%20.png"
 };
 
@@ -166,7 +166,7 @@ export default function FeaturedShowcase() {
 
   const isMobile = useIsMobile();
   const heroVideoSrc = isMobile
-    ? "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/portfolio%20main%20video.mp4"
+    ? "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/IMG_8716.mp4"
     : SHOWREEL_PROJECT.videoSrc;
 
   const [overlayLoading, setOverlayLoading] = useState<boolean>(false);

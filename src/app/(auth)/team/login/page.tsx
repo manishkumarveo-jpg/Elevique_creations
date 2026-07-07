@@ -22,7 +22,6 @@ export default function TeamLoginPage() {
       const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
       if (authError) throw authError
       router.push('/team/dashboard')
-      router.refresh()
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Login failed')
     } finally {
