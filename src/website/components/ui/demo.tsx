@@ -66,7 +66,7 @@ export function Demo() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-      className="relative w-full overflow-hidden pt-28 pb-6 md:pt-36 md:pb-8"
+      className="relative w-full overflow-hidden pt-12 pb-6 md:pt-36 md:pb-8"
       style={{ background: "#000000" }}
     >
       {/* SVG filter to key out white background while preserving original logo colors */}

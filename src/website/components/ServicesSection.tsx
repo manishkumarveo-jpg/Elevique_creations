@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
+import { motion } from "framer-motion";
 import { StaggerContainer, StaggerItem } from "@/website/components/StaggerGroup";
 import {
   Video,
@@ -315,11 +316,36 @@ function FlipCard({ svc, onStart }: { svc: (typeof SERVICES)[0]; onStart: () => 
 function ServicesGrid({ onStart }: { onStart: (svc: (typeof SERVICES)[0]) => void }) {
   return (
     <div className="svc-grid" role="list">
-      {SERVICES.map((svc) => (
-        <div key={svc.id} role="listitem">
-          <FlipCard svc={svc} onStart={() => onStart(svc)} />
-        </div>
-      ))}
+      {SERVICES.map((svc, idx) => {
+        const isEven = idx % 2 === 0;
+        return (
+          <motion.div
+            key={svc.id}
+            role="listitem"
+            initial={{ 
+              opacity: 0, 
+              y: 40, 
+              x: isEven ? -25 : 25, 
+              scale: 0.95
+            }}
+            whileInView={{ 
+              opacity: 1, 
+              y: 0, 
+              x: 0, 
+              scale: 1
+            }}
+            viewport={{ once: true, amount: 0.12 }}
+            transition={{ 
+              type: "spring", 
+              stiffness: 70, 
+              damping: 14, 
+              delay: idx * 0.06 
+            }}
+          >
+            <FlipCard svc={svc} onStart={() => onStart(svc)} />
+          </motion.div>
+        );
+      })}
     </div>
   );
 }
@@ -383,13 +409,32 @@ export default function ServicesSection() {
           </div>
 
           {/* Asymmetrical staggered grid — 3 top / 2 bottom */}
-          <StaggerContainer>
-            <div className="svc-diff-grid" role="list">
-              {DIFFERENTIATORS.map((d, i) => (
-                <StaggerItem
+          <div className="svc-diff-grid" role="list">
+            {DIFFERENTIATORS.map((d, i) => {
+              const isEven = i % 2 === 0;
+              return (
+                <motion.div
                   key={d.id}
-                  direction={i < 3 ? "up" : "scale"}
                   className={`svc-diff-card svc-diff-card--${i}`}
+                  initial={{ 
+                    opacity: 0, 
+                    y: 35, 
+                    x: isEven ? -20 : 20, 
+                    scale: 0.96
+                  }}
+                  whileInView={{ 
+                    opacity: 1, 
+                    y: 0, 
+                    x: 0, 
+                    scale: 1
+                  }}
+                  viewport={{ once: true, amount: 0.15 }}
+                  transition={{ 
+                    type: "spring",
+                    stiffness: 75,
+                    damping: 14,
+                    delay: i * 0.06
+                  }}
                 >
                   <div role="listitem" aria-label={d.label}>
                     <DotGrid />
@@ -397,10 +442,10 @@ export default function ServicesSection() {
                     <div className="svc-diff-label">{d.label}</div>
                     <div className="svc-diff-desc">{d.desc}</div>
                   </div>
-                </StaggerItem>
-              ))}
-            </div>
-          </StaggerContainer>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </section>
 

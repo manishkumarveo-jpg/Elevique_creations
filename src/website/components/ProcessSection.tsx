@@ -124,8 +124,18 @@ function StepCard({ step, index }: { step: (typeof STEPS)[0]; index: number }) {
   const isRight = index % 2 === 0;
 
   const variants = {
-    hidden: { opacity: 0, y: 24 },
-    visible: { opacity: 1, y: 0 },
+    hidden: { 
+      opacity: 0, 
+      y: 35, 
+      x: isRight ? 30 : -30, 
+      scale: 0.94
+    },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      x: 0, 
+      scale: 1
+    },
   };
 
   return (
@@ -138,7 +148,13 @@ function StepCard({ step, index }: { step: (typeof STEPS)[0]; index: number }) {
         variants={variants}
         initial="hidden"
         animate={inView ? "visible" : "hidden"}
-        transition={{ duration: 0.72, ease: EASE_OUT, delay: 0.05 }}
+        transition={{ 
+          type: "spring",
+          stiffness: 70,
+          damping: 14,
+          mass: 1,
+          delay: 0.05 
+        }}
         className={`relative group ${isRight ? "lg:pr-8" : "lg:pl-8"}`}
       >
         <div className="proc-card">
