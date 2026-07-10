@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 import { TrackerStatusBadge, TrackerPriorityBadge } from '@/dashboard/components/shared/StatusBadge'
 import { Pagination } from '@/dashboard/components/ui/Pagination'
+import { DownloadCsvButton } from '@/dashboard/components/ui/DownloadCsvButton'
 
 export type TrackerRow = {
   id: string
@@ -14,12 +15,13 @@ export type TrackerRow = {
   detail: string
   status: 'pending' | 'in_progress' | 'revision_pending' | 'completed' | 'paused'
   priority: 'P1' | 'P2' | 'P3' | null
-  date: string | null
+  startDate: string | null
+  finishedDate: string | null
   extra: string
   comments: string
 }
 
-type SortKey = 'teamMemberName' | 'brandName' | 'status' | 'date'
+type SortKey = 'teamMemberName' | 'brandName' | 'status' | 'startDate' | 'finishedDate'
 
 const SOURCE_OPTIONS = ['All', 'Production', 'Video', 'Milestone'] as const
 const STATUS_OPTIONS = ['All', 'pending', 'in_progress', 'revision_pending', 'completed', 'paused'] as const
@@ -93,6 +95,23 @@ export function TeamTrackerSheet({ rows, teamMembers }: { rows: TrackerRow[]; te
         <span style={{ fontSize: '0.78rem', color: 'var(--ds-text-3)', alignSelf: 'center', marginLeft: 'auto' }}>
           {filtered.length} of {rows.length} rows
         </span>
+        <DownloadCsvButton
+          data={filtered}
+          filename="team-tracker"
+          columns={[
+            { label: 'Team Member', value: r => r.teamMemberName },
+            { label: 'Tracker', value: r => r.source },
+            { label: 'Brand', value: r => r.brandName },
+            { label: 'Type', value: r => r.type },
+            { label: 'Detail', value: r => r.detail },
+            { label: 'Status', value: r => r.status },
+            { label: 'Priority', value: r => r.priority },
+            { label: 'Start Date', value: r => r.startDate },
+            { label: 'Finished Date', value: r => r.finishedDate },
+            { label: 'Assets / Checks', value: r => r.extra },
+            { label: 'Comments', value: r => r.comments },
+          ]}
+        />
       </div>
 
       {filtered.length === 0 ? (
@@ -111,7 +130,8 @@ export function TeamTrackerSheet({ rows, teamMembers }: { rows: TrackerRow[]; te
                 <th>Detail</th>
                 <SortableHeader label="Status" sortableKey="status" sortKey={sortKey} sortAsc={sortAsc} onSort={toggleSort} />
                 <th>Priority</th>
-                <SortableHeader label="Date" sortableKey="date" sortKey={sortKey} sortAsc={sortAsc} onSort={toggleSort} />
+                <SortableHeader label="Start Date" sortableKey="startDate" sortKey={sortKey} sortAsc={sortAsc} onSort={toggleSort} />
+                <SortableHeader label="Finished Date" sortableKey="finishedDate" sortKey={sortKey} sortAsc={sortAsc} onSort={toggleSort} />
                 <th>Assets / Checks</th>
                 <th>Comments</th>
               </tr>
@@ -127,7 +147,10 @@ export function TeamTrackerSheet({ rows, teamMembers }: { rows: TrackerRow[]; te
                   <td><TrackerStatusBadge status={row.status} /></td>
                   <td>{row.priority ? <TrackerPriorityBadge priority={row.priority} /> : '—'}</td>
                   <td style={{ color: 'var(--ds-text-3)' }}>
-                    {row.date ? new Date(row.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'}
+                    {row.startDate ? new Date(row.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'}
+                  </td>
+                  <td style={{ color: 'var(--ds-text-3)' }}>
+                    {row.finishedDate ? new Date(row.finishedDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'}
                   </td>
                   <td style={{ maxWidth: 200, color: 'var(--ds-text-3)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row.extra}</td>
                   <td style={{ maxWidth: 160, color: 'var(--ds-text-3)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row.comments}</td>

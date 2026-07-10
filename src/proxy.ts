@@ -75,30 +75,30 @@ export async function proxy(request: NextRequest) {
 
   // Stale or invalid refresh token — clear session and send to login
   // Stale or invalid refresh token — clear session and either return 401 for API routes or redirect to login for pages
-if (authError?.name === 'AuthApiError') {
-  const isApi = pathname.startsWith('/api/')
-  const sbCookies = request.cookies.getAll().filter(c => c.name.startsWith('sb-'))
+  if (authError?.name === 'AuthApiError') {
+    const isApi = pathname.startsWith('/api/')
+    const sbCookies = request.cookies.getAll().filter(c => c.name.startsWith('sb-'))
 
-  if (isApi) {
-    const res = new NextResponse(JSON.stringify({ error: 'Unauthorized' }), {
-      status: 401,
-      headers: { 'Content-Type': 'application/json' },
-    })
-    sbCookies.forEach(c => res.cookies.delete(c.name))
-    return res
+    if (isApi) {
+      const res = new NextResponse(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' },
+      })
+      sbCookies.forEach(c => res.cookies.delete(c.name))
+      return res
+    }
+
+    const loginUrl = new URL('/login', request.url)
+    const redirect = NextResponse.redirect(loginUrl)
+    sbCookies.forEach(c => redirect.cookies.delete(c.name))
+    return redirect
   }
-
-  const loginUrl = new URL('/login', request.url)
-  const redirect = NextResponse.redirect(loginUrl)
-  sbCookies.forEach(c => redirect.cookies.delete(c.name))
-  return redirect
-}
 
   // Coarse-grained auth gate: just ensure a session exists.
   // Fine-grained role/active checks are done inside each page via require-role.ts.
   const isProtected =
     (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) ||
-    (pathname.startsWith('/team')  && !pathname.startsWith('/team/login'))  ||
+    (pathname.startsWith('/team') && !pathname.startsWith('/team/login')) ||
     (pathname.startsWith('/portal') && !pathname.startsWith('/portal/login'))
 
   if (isProtected && !user) {
