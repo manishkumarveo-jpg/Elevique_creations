@@ -630,6 +630,7 @@ export default function FeaturedShowcase() {
               playsInline
               preload="auto"
               className="vo-video"
+              controls
               aria-label={`${videoOverlay.title} full film`}
               onWaiting={() => setOverlayLoading(true)}
               onPlaying={() => setOverlayLoading(false)}

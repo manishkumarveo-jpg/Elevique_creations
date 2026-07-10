@@ -48,6 +48,47 @@
   --ds-ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ─── Marketplace Design System (scoped to .mkt-scope) ───────── */
+.mkt-scope {
+  --mkt-bg: #050505;
+  --mkt-bg-elevated: #0A0A0C;
+  --mkt-surface: #111111;
+  --mkt-surface-2: #17171B;
+  --mkt-border: rgba(255,255,255,.08);
+  --mkt-border-strong: rgba(255,255,255,.16);
+  --mkt-accent: #6C63FF;
+  --mkt-accent-hover: #7C74FF;
+  --mkt-accent-soft: rgba(108,99,255,.12);
+  --mkt-cyan: #7EE8FA;
+  --mkt-success: #2DD4BF;
+  --mkt-warning: #FBBF24;
+  --mkt-danger: #F87171;
+  --mkt-text: #F5F5F7;
+  --mkt-text-2: #C7C7CF;
+  --mkt-muted: #9CA3AF;
+  --mkt-faint: #62636C;
+}
+
+@theme inline {
+  --color-mkt-bg: var(--mkt-bg);
+  --color-mkt-bg-elevated: var(--mkt-bg-elevated);
+  --color-mkt-surface: var(--mkt-surface);
+  --color-mkt-surface-2: var(--mkt-surface-2);
+  --color-mkt-border: var(--mkt-border);
+  --color-mkt-border-strong: var(--mkt-border-strong);
+  --color-mkt-accent: var(--mkt-accent);
+  --color-mkt-accent-hover: var(--mkt-accent-hover);
+  --color-mkt-accent-soft: var(--mkt-accent-soft);
+  --color-mkt-cyan: var(--mkt-cyan);
+  --color-mkt-success: var(--mkt-success);
+  --color-mkt-warning: var(--mkt-warning);
+  --color-mkt-danger: var(--mkt-danger);
+  --color-mkt-text: var(--mkt-text);
+  --color-mkt-text-2: var(--mkt-text-2);
+  --color-mkt-muted: var(--mkt-muted);
+  --color-mkt-faint: var(--mkt-faint);
+}
+
 /* ─── Tokens ────────────────────────────────────────────────── */
 :root {
   --container-max: 1400px;
@@ -7859,6 +7900,11 @@ body {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
+  pointer-events: none;
+}
+
+.vo-info * {
+  pointer-events: auto;
 }
 
 .vo-info-left {
