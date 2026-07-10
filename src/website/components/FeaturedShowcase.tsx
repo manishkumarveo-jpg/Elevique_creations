@@ -631,6 +631,8 @@ export default function FeaturedShowcase() {
               preload="auto"
               className="vo-video"
               controls
+              controlsList="nodownload"
+              onContextMenu={(e) => e.preventDefault()}
               aria-label={`${videoOverlay.title} full film`}
               onWaiting={() => setOverlayLoading(true)}
               onPlaying={() => setOverlayLoading(false)}
