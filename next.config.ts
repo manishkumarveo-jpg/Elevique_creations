@@ -32,6 +32,18 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      // Legacy site paths still indexed by Google — map each to its closest
+      // equivalent on the current site so stale search results 301 forward
+      // instead of 404ing.
+      { source: "/about", destination: "/about-us", permanent: true },
+      { source: "/ai-video", destination: "/portfolio", permanent: true },
+      { source: "/ai-video/:path*", destination: "/portfolio", permanent: true },
+      { source: "/graphic-design", destination: "/services", permanent: true },
+      { source: "/contact-us", destination: "/contact", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;
