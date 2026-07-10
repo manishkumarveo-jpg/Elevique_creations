@@ -18,7 +18,7 @@ const cspHeader = `
   img-src 'self' blob: data: https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev;
   media-src 'self' https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev;
   font-src 'self';
-  connect-src 'self' https://*.supabase.co wss://*.supabase.co https://prod.spline.design;
+  connect-src 'self' https://*.supabase.co wss://*.supabase.co https://gqgzhfsqukqoweceyyhd.supabase.co wss://gqgzhfsqukqoweceyyhd.supabase.co https://prod.spline.design https://unpkg.com;
   object-src 'none';
   base-uri 'self';
   form-action 'self';
