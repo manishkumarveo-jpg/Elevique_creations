@@ -146,7 +146,6 @@ export const PKG_TECH_UI: PackageProject[] = pkgGroup("#10b981", "#3b82f6", [
   { id: 517, title: "Fabluxe by Forbes", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Forbes%20properties%20-%20Real%20estate%20-%20concept.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Forbes%20properties%20-%20Real%20estate%20-%20concept.png" },
   { id: 518, title: "Tech-Electronics", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Electronics%20-%20Cooler%20Ad%20(1).mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Electronics%20-%20Cooler%20Ad%20(1).png" },
 
-  { id: 511, title: "Cosmetics Music Video", videoSrc: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Itsme%20Music%20Video.mp4", thumbnail: "https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev/Food%20%26%20bevrages/Thumbnaile/video_thumbnails/Itsme%20Music%20Video.png" },
 
 ]);
 

@@ -19,6 +19,7 @@ const cspHeader = `
   media-src 'self' https://pub-024f5faf2e2c4757970fbb447e537ac1.r2.dev;
   font-src 'self';
   connect-src 'self' https://*.supabase.co wss://*.supabase.co https://gqgzhfsqukqoweceyyhd.supabase.co wss://gqgzhfsqukqoweceyyhd.supabase.co https://prod.spline.design https://unpkg.com;
+  worker-src 'self';
   object-src 'none';
   base-uri 'self';
   form-action 'self';
@@ -29,6 +30,18 @@ const cspHeader = `
   .trim();
 
 const nextConfig: NextConfig = {
+  // Server Actions check that the request's Origin matches the Host to
+  // prevent CSRF — a VS Code Dev Tunnels URL (or ngrok/cloudflared) is a
+  // different origin from the `localhost:3000` the Next.js process actually
+  // sees, so it fails that check unless explicitly allow-listed. Dev-only:
+  // a deployed build has no legitimate reason to accept a tunnel domain.
+  ...(isDev && {
+    experimental: {
+      serverActions: {
+        allowedOrigins: ["*.devtunnels.ms"],
+      },
+    },
+  }),
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [

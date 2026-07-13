@@ -5,12 +5,6 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { createClientSupabase } from '@/shared/lib/supabase/client'
 
-const ROLE_DASHBOARDS: Record<string, string> = {
-  admin: '/admin/dashboard',
-  team_member: '/team/dashboard',
-  client: '/portal/dashboard',
-}
-
 export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
@@ -25,21 +19,15 @@ export default function LoginPage() {
     setLoading(true)
     try {
       const supabase = createClientSupabase()
-      const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password })
+      const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
       if (authError) throw authError
 
       setRedirecting(true)
-
-      const userId = data.user?.id
-      const { data: profile } = userId
-        ? await supabase.from('profiles').select('role, is_active').eq('id', userId).single()
-        : { data: null }
-
-      if (!profile || !profile.is_active) {
-        router.replace('/unauthorized')
-      } else {
-        router.replace(ROLE_DASHBOARDS[profile.role] ?? '/login')
-      }
+      // Role/active check happens server-side on the next request (see
+      // post-login/page.tsx) rather than here — querying profiles on this
+      // same client immediately after sign-in was intermittently racing
+      // against session propagation.
+      router.replace('/post-login')
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Login failed')
       setLoading(false)

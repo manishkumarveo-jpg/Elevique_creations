@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { createServerClient } from '@/shared/lib/supabase/server'
 import { requireAnyAuth } from '@/dashboard/lib/auth/require-role'
 import { logActivity } from '@/dashboard/lib/actions/activity'
+import { notifyUser, notifyUsers, notifyAdmins } from '@/dashboard/lib/actions/notifications/notify'
 import { revalidatePath } from 'next/cache'
 
 const AddFileLinkSchema = z.object({
@@ -47,6 +48,36 @@ export async function addFileLink(input: unknown) {
     entity_id: data.id,
     entity_name: parsed.file_name,
   })
+
+  const notifyPayload = {
+    actorId,
+    type: 'status_update',
+    title: 'New file added',
+    body: `${parsed.file_name} was added to the project.`,
+    projectId: parsed.project_id,
+    entityType: 'file',
+    entityId: data.id,
+  }
+
+  try {
+    if (actorRole === 'admin') {
+      const { data: assignments } = await supabase.from('project_assignments').select('user_id').eq('project_id', parsed.project_id)
+      await notifyUsers((assignments ?? []).map(a => a.user_id), { ...notifyPayload, link: `/team/projects/${parsed.project_id}` })
+    } else {
+      await notifyAdmins({ ...notifyPayload, link: `/admin/projects/${parsed.project_id}` })
+    }
+
+    if (actorRole === 'admin' || actorRole === 'team_member') {
+      await notifyUser(actorId, {
+        ...notifyPayload,
+        title: 'File added',
+        body: `You added ${parsed.file_name}.`,
+        link: actorRole === 'admin' ? `/admin/projects/${parsed.project_id}` : `/team/projects/${parsed.project_id}`,
+      })
+    }
+  } catch (notifyErr) {
+    console.error('File notification failed (file still added):', notifyErr)
+  }
 
   revalidatePath(`/admin/projects/${parsed.project_id}`)
   revalidatePath(`/team/projects/${parsed.project_id}`)

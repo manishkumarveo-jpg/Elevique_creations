@@ -6,7 +6,12 @@ export type CsvColumn<T> = {
 const BOM = String.fromCharCode(0xfeff)
 
 function escapeCsvField(value: unknown): string {
-  const str = value === null || value === undefined ? '' : String(value)
+  let str = value === null || value === undefined ? '' : String(value)
+  // Neutralize spreadsheet formula injection: a leading =, +, -, or @ is
+  // interpreted as a formula by Excel/Sheets when the CSV is opened there.
+  if (/^[=+\-@]/.test(str)) {
+    str = `'${str}`
+  }
   if (/[",\r\n]/.test(str)) {
     return `"${str.replace(/"/g, '""')}"`
   }

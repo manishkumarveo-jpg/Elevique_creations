@@ -27,6 +27,21 @@ const SOURCE_OPTIONS = ['All', 'Production', 'Video', 'Milestone'] as const
 const STATUS_OPTIONS = ['All', 'pending', 'in_progress', 'revision_pending', 'completed', 'paused'] as const
 const PAGE_SIZE = 10
 
+function formatTrackerDate(value: string | null): string {
+  if (!value) return '—'
+  // scheduled_date/completed_date (milestones) are DATE-only ("YYYY-MM-DD"),
+  // which Date parses as UTC midnight — formatting those in the viewer's local
+  // zone can roll them back a day. created_at/assigned_at/completed_at
+  // (production/video) are full timestamps, so local formatting is correct
+  // and left unchanged.
+  const isDateOnly = /^\d{4}-\d{2}-\d{2}$/.test(value)
+  return new Date(value).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    timeZone: isDateOnly ? 'UTC' : undefined,
+  })
+}
+
 function SortableHeader({ label, sortableKey, sortKey, sortAsc, onSort }: {
   label: string
   sortableKey: SortKey
@@ -146,12 +161,8 @@ export function TeamTrackerSheet({ rows, teamMembers }: { rows: TrackerRow[]; te
                   <td style={{ color: 'var(--ds-text-3)' }}>{row.detail}</td>
                   <td><TrackerStatusBadge status={row.status} /></td>
                   <td>{row.priority ? <TrackerPriorityBadge priority={row.priority} /> : '—'}</td>
-                  <td style={{ color: 'var(--ds-text-3)' }}>
-                    {row.startDate ? new Date(row.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'}
-                  </td>
-                  <td style={{ color: 'var(--ds-text-3)' }}>
-                    {row.finishedDate ? new Date(row.finishedDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '—'}
-                  </td>
+                  <td style={{ color: 'var(--ds-text-3)' }}>{formatTrackerDate(row.startDate)}</td>
+                  <td style={{ color: 'var(--ds-text-3)' }}>{formatTrackerDate(row.finishedDate)}</td>
                   <td style={{ maxWidth: 200, color: 'var(--ds-text-3)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row.extra}</td>
                   <td style={{ maxWidth: 160, color: 'var(--ds-text-3)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row.comments}</td>
                 </tr>

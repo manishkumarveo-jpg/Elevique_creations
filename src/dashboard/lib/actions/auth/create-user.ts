@@ -5,6 +5,7 @@ import { Resend } from 'resend'
 import { requireAdmin } from '@/dashboard/lib/auth/require-role'
 import { createAdminClient } from '@/shared/lib/supabase/admin'
 import { logActivity } from '@/dashboard/lib/actions/activity'
+import { notifyUser } from '@/dashboard/lib/actions/notifications/notify'
 import { revalidatePath } from 'next/cache'
 
 const CreateUserSchema = z.object({
@@ -88,6 +89,36 @@ export async function createUserAccount(input: unknown) {
     metadata: { role: data.role, email: data.email },
   })
 
+  if (data.role === 'team_member') {
+    try {
+      await notifyUser(userId, {
+        actorId: user.id,
+        type: 'assignment',
+        title: 'Welcome to Elevique',
+        body: 'Your team member account is ready.',
+        link: '/team/dashboard',
+        entityType: 'user',
+        entityId: userId,
+      })
+    } catch (notifyErr) {
+      console.error('Welcome notification failed (user still created):', notifyErr)
+    }
+  }
+
+  try {
+    await notifyUser(user.id, {
+      actorId: user.id,
+      type: 'assignment',
+      title: 'User created',
+      body: `You created ${data.role === 'team_member' ? 'a team member' : 'a client'} account for ${data.full_name}.`,
+      link: '/admin/users',
+      entityType: 'user',
+      entityId: userId,
+    })
+  } catch (notifyErr) {
+    console.error('User creation self-notification failed (user still created):', notifyErr)
+  }
+
   revalidatePath('/admin/users')
   return { success: true, userId }
 }
@@ -110,7 +141,7 @@ async function sendWelcomeEmail({
   role: 'team_member' | 'client'
 }) {
   const resend = new Resend(process.env.RESEND_API_KEY)
-  const loginUrl = `${process.env.NEXT_PUBLIC_APP_URL}/${role === 'team_member' ? 'team' : 'portal'}/login`
+  const loginUrl = `${process.env.NEXT_PUBLIC_APP_URL}/login`
   const safeName = escapeHtml(name)
   const safeEmail = escapeHtml(email)
   const safePassword = escapeHtml(password)

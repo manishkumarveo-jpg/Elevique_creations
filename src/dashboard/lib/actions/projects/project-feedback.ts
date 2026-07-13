@@ -2,6 +2,7 @@
 
 import { createAdminClient } from '@/shared/lib/supabase/admin'
 import { logActivity } from '@/dashboard/lib/actions/activity'
+import { notifyAdmins } from '@/dashboard/lib/actions/notifications/notify'
 import { revalidatePath } from 'next/cache'
 
 export async function addRevision(projectId: string, note: string) {
@@ -34,6 +35,20 @@ export async function addRevision(projectId: string, note: string) {
     entity_type: 'project_revision',
     metadata: { note: trimmed },
   })
+
+  try {
+    await notifyAdmins({
+      actorId: user.id,
+      type: 'status_update',
+      title: 'Client revision requested',
+      body: trimmed,
+      link: `/admin/projects/${projectId}`,
+      projectId,
+      entityType: 'project_revision',
+    })
+  } catch (notifyErr) {
+    console.error('Revision notification failed (revision still submitted):', notifyErr)
+  }
 
   revalidatePath(`/portal/projects/${projectId}`)
   revalidatePath(`/admin/projects/${projectId}`)

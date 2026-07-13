@@ -1,7 +1,11 @@
 import { AdminSidebar } from '@/dashboard/components/admin/AdminSidebar'
 import { NavigationProgress } from '@/dashboard/components/shared/NavigationProgress'
 import { MobileHeader } from '@/dashboard/components/shared/MobileHeader'
+import { NotificationBell } from '@/dashboard/components/notifications/NotificationBell'
+import { NotificationProvider } from '@/dashboard/components/notifications/NotificationProvider'
+import { PushPermissionPrompt } from '@/dashboard/components/notifications/PushPermissionPrompt'
 import { requireAdmin, getCurrentUserAndProfile } from '@/dashboard/lib/auth/require-role'
+import { getRecentNotifications, getUnreadCount } from '@/dashboard/lib/queries/notifications'
 
 function getInitials(name: string) {
   return name
@@ -13,7 +17,7 @@ function getInitials(name: string) {
 }
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  await requireAdmin()
+  const adminUser = await requireAdmin()
   const { user, profile } = await getCurrentUserAndProfile()
   let userName = 'Admin'
   let userInitials = 'A'
@@ -27,14 +31,29 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     }
   }
 
+  const [notifications, unreadCount] = await Promise.all([
+    getRecentNotifications(adminUser.id).catch((error) => {
+      console.error('Failed to load recent notifications:', error)
+      return []
+    }),
+    getUnreadCount(adminUser.id).catch((error) => {
+      console.error('Failed to load unread notification count:', error)
+      return 0
+    }),
+  ])
+  const bell = <NotificationBell />
+
   return (
-    <>
+    <NotificationProvider userId={adminUser.id} initialNotifications={notifications} initialUnreadCount={unreadCount} initialNotifySelf={profile?.notify_self ?? true}>
       <NavigationProgress />
-      <MobileHeader roleLabel="Admin Suite" />
+      <MobileHeader roleLabel="Admin Suite" notificationBell={bell} />
       <div className="p-shell">
-        <AdminSidebar userName={userName} userInitials={userInitials} />
-        <main className="p-main">{children}</main>
+        <AdminSidebar userName={userName} userInitials={userInitials} notificationBell={bell} />
+        <main className="p-main">
+          <PushPermissionPrompt />
+          {children}
+        </main>
       </div>
-    </>
+    </NotificationProvider>
   )
 }

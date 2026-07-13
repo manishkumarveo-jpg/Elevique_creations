@@ -4,7 +4,9 @@ import { z } from 'zod'
 import { requireAdmin } from '@/dashboard/lib/auth/require-role'
 import { createServerClient } from '@/shared/lib/supabase/server'
 import { logActivity } from '@/dashboard/lib/actions/activity'
+import { notifyUser } from '@/dashboard/lib/actions/notifications/notify'
 import { revalidatePath } from 'next/cache'
+import { PRODUCT_TIMEZONE } from '@/shared/lib/env'
 
 const ScheduleMeetingSchema = z.object({
   title: z.string().min(1).max(200),
@@ -49,6 +51,36 @@ export async function scheduleMeeting(input: unknown): Promise<{ success: boolea
     entity_name: formData.title,
     metadata: { scheduled_at: formData.scheduled_at },
   })
+
+  if (formData.assigned_team_member_id) {
+    try {
+      await notifyUser(formData.assigned_team_member_id, {
+        actorId: user.id,
+        type: 'assignment',
+        title: 'New meeting scheduled',
+        body: `${formData.title} — ${new Date(formData.scheduled_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: PRODUCT_TIMEZONE })}`,
+        link: '/team/dashboard',
+        entityType: 'meeting',
+        entityId: data.id,
+      })
+    } catch (notifyErr) {
+      console.error('Meeting notification failed (meeting still scheduled):', notifyErr)
+    }
+  }
+
+  try {
+    await notifyUser(user.id, {
+      actorId: user.id,
+      type: 'assignment',
+      title: 'Meeting scheduled',
+      body: `You scheduled "${formData.title}" for ${new Date(formData.scheduled_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', timeZone: PRODUCT_TIMEZONE })}.`,
+      link: '/admin/dashboard',
+      entityType: 'meeting',
+      entityId: data.id,
+    })
+  } catch (notifyErr) {
+    console.error('Meeting self-notification failed (meeting still scheduled):', notifyErr)
+  }
 
   revalidatePath('/admin/dashboard')
   revalidatePath('/team/dashboard')

@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { createServerClient } from '@/shared/lib/supabase/server'
 import { requireAdmin, requireTeamMember } from '@/dashboard/lib/auth/require-role'
 import { logActivity } from '@/dashboard/lib/actions/activity'
+import { notifyUser, notifyUsers, notifyAdmins } from '@/dashboard/lib/actions/notifications/notify'
 import { revalidatePath } from 'next/cache'
 import type { Database } from '@/shared/lib/types/database'
 
@@ -19,14 +20,14 @@ async function applyMilestoneUpdate(milestoneId: string, projectId: string, inpu
   const parsed = UpdateMilestoneSchema.parse(input)
   const supabase = await createServerClient()
 
-  if (parsed.status === 'done') {
-    const { data: current, error: currentError } = await supabase
-      .from('milestones')
-      .select('phase_number')
-      .eq('id', milestoneId)
-      .single()
-    if (currentError) throw new Error(currentError.message)
+  const { data: current, error: currentError } = await supabase
+    .from('milestones')
+    .select('phase_number, phase_name, status')
+    .eq('id', milestoneId)
+    .single()
+  if (currentError) throw new Error(currentError.message)
 
+  if (parsed.status === 'done') {
     const { data: priorPhases, error: priorError } = await supabase
       .from('milestones')
       .select('status')
@@ -56,6 +57,52 @@ async function applyMilestoneUpdate(milestoneId: string, projectId: string, inpu
     entity_type: 'milestone',
     entity_id: milestoneId,
   })
+
+  if (parsed.status !== current.status) {
+    try {
+      const { data: assignments } = await supabase
+        .from('project_assignments')
+        .select('user_id')
+        .eq('project_id', projectId)
+
+      await notifyUsers((assignments ?? []).map(a => a.user_id), {
+        actorId,
+        type: 'status_update',
+        title: 'Milestone updated',
+        body: `${current.phase_name} is now ${parsed.status.replace('_', ' ')}.`,
+        link: `/team/projects/${projectId}`,
+        projectId,
+        entityType: 'milestone',
+        entityId: milestoneId,
+      })
+
+      if (actorRole === 'admin') {
+        await notifyUser(actorId, {
+          actorId,
+          type: 'status_update',
+          title: 'Milestone updated',
+          body: `You marked ${current.phase_name} as ${parsed.status.replace('_', ' ')}.`,
+          link: `/admin/projects/${projectId}`,
+          projectId,
+          entityType: 'milestone',
+          entityId: milestoneId,
+        })
+      } else {
+        await notifyAdmins({
+          actorId,
+          type: 'status_update',
+          title: 'Milestone updated by team',
+          body: `${current.phase_name} is now ${parsed.status.replace('_', ' ')}.`,
+          link: `/admin/projects/${projectId}`,
+          projectId,
+          entityType: 'milestone',
+          entityId: milestoneId,
+        })
+      }
+    } catch (notifyErr) {
+      console.error('Milestone notification failed (milestone still updated):', notifyErr)
+    }
+  }
 
   revalidatePath(`/admin/projects/${projectId}`)
   revalidatePath(`/team/projects/${projectId}`)

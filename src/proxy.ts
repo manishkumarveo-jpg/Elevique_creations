@@ -96,10 +96,13 @@ export async function proxy(request: NextRequest) {
 
   // Coarse-grained auth gate: just ensure a session exists.
   // Fine-grained role/active checks are done inside each page via require-role.ts.
+  // No /admin/login, /team/login, /portal/login exclusions needed — those
+  // pages don't exist anymore, admin/team_member/client all sign in through
+  // the one unified /login page instead.
   const isProtected =
-    (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) ||
-    (pathname.startsWith('/team') && !pathname.startsWith('/team/login')) ||
-    (pathname.startsWith('/portal') && !pathname.startsWith('/portal/login'))
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/team') ||
+    pathname.startsWith('/portal')
 
   if (isProtected && !user) {
     return NextResponse.redirect(new URL('/login', request.url))

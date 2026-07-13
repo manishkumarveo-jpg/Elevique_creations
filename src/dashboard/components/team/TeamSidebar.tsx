@@ -26,9 +26,10 @@ const NAV_GROUPS = [
 interface TeamSidebarProps {
   userName?: string
   userInitials?: string
+  notificationBell?: React.ReactNode
 }
 
-export function TeamSidebar({ userName = 'Team Member', userInitials = 'T' }: TeamSidebarProps) {
+export function TeamSidebar({ userName = 'Team Member', userInitials = 'T', notificationBell }: TeamSidebarProps) {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [wsOpen, setWsOpen] = useState(false)
@@ -83,6 +84,7 @@ export function TeamSidebar({ userName = 'Team Member', userInitials = 'T' }: Te
               </div>
             )}
           </div>
+          {notificationBell}
           <button
             type="button"
             className="p-sidebar-close"

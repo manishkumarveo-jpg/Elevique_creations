@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { createServerClient } from '@/shared/lib/supabase/server'
 import { requireAdmin, requireTeamMember } from '@/dashboard/lib/auth/require-role'
 import { logActivity } from '@/dashboard/lib/actions/activity'
+import { notifyUser } from '@/dashboard/lib/actions/notifications/notify'
 import { revalidatePath } from 'next/cache'
 
 const VideoTaskStatusSchema = z.enum(['pending', 'in_progress', 'revision_pending', 'completed', 'paused'])
@@ -12,7 +13,7 @@ async function applyStatusUpdate(taskId: string, projectId: string, status: unkn
   const parsedStatus = VideoTaskStatusSchema.parse(status)
   const supabase = await createServerClient()
 
-  const { error } = await supabase
+  const { data: task, error } = await supabase
     .from('video_generation_tasks')
     .update({
       status: parsedStatus,
@@ -20,6 +21,8 @@ async function applyStatusUpdate(taskId: string, projectId: string, status: unkn
     })
     .eq('id', taskId)
     .eq('project_id', projectId)
+    .select('brand_name, script_number, assigned_to_id')
+    .single()
   if (error) throw new Error(error.message)
 
   await logActivity({
@@ -31,6 +34,23 @@ async function applyStatusUpdate(taskId: string, projectId: string, status: unkn
     entity_id: taskId,
     metadata: { status: parsedStatus },
   })
+
+  if (task.assigned_to_id) {
+    try {
+      await notifyUser(task.assigned_to_id, {
+        actorId,
+        type: 'status_update',
+        title: 'Video task updated',
+        body: `${task.brand_name} script #${task.script_number} is now ${parsedStatus.replace('_', ' ')}.`,
+        link: '/team/video-tracker',
+        projectId,
+        entityType: 'video_generation_task',
+        entityId: taskId,
+      })
+    } catch (notifyErr) {
+      console.error('Video task notification failed (status still updated):', notifyErr)
+    }
+  }
 
   revalidatePath('/admin/video-tracker')
   revalidatePath('/team/video-tracker')

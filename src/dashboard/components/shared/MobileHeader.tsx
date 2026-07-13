@@ -2,9 +2,10 @@
 
 interface Props {
   roleLabel: string
+  notificationBell?: React.ReactNode
 }
 
-export function MobileHeader({ roleLabel }: Props) {
+export function MobileHeader({ roleLabel, notificationBell }: Props) {
   function openSidebar() {
     window.dispatchEvent(new CustomEvent('p:open-sidebar'))
   }
@@ -21,10 +22,12 @@ export function MobileHeader({ roleLabel }: Props) {
         <span className="p-sidebar-logo-letter" style={{ fontSize: '0.72rem' }}>E</span>
       </div>
 
-      <div>
+      <div style={{ flex: 1, minWidth: 0 }}>
         <p className="p-sidebar-brand-name" style={{ fontSize: '0.825rem' }}>Elevique</p>
         <p className="p-sidebar-role-tag">{roleLabel}</p>
       </div>
+
+      {notificationBell}
     </header>
   )
 }

@@ -11,11 +11,20 @@ const getUserAndProfile = cache(async () => {
 
   if (!user) return { user: null, profile: null }
 
-  const { data: profile } = await supabase
+  const { data: profile, error } = await supabase
     .from('profiles')
-    .select('role, is_active, full_name, email, company_name')
+    .select('role, is_active, full_name, email, company_name, notify_self')
     .eq('id', user.id)
     .single()
+
+  // Fail closed (profile stays null, every requireX() below still denies
+  // access) but LOUDLY — a swallowed query error here previously looked
+  // identical to "no profile exists," which made every account intermittently
+  // "wrong role" whenever the profiles select referenced a column that didn't
+  // exist yet (e.g. a merged migration not applied to this database).
+  if (error) {
+    console.error('[getUserAndProfile] profiles query failed for user', user.id, ':', error.message)
+  }
 
   return { user, profile }
 })

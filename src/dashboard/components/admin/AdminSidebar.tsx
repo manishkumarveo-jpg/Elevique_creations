@@ -63,9 +63,10 @@ const NAV_GROUPS = [
 interface AdminSidebarProps {
   userName?: string
   userInitials?: string
+  notificationBell?: React.ReactNode
 }
 
-export function AdminSidebar({ userName = 'Admin', userInitials = 'A' }: AdminSidebarProps) {
+export function AdminSidebar({ userName = 'Admin', userInitials = 'A', notificationBell }: AdminSidebarProps) {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [wsOpen, setWsOpen] = useState(false)
@@ -120,6 +121,7 @@ export function AdminSidebar({ userName = 'Admin', userInitials = 'A' }: AdminSi
               </div>
             )}
           </div>
+          {notificationBell}
           <button
             type="button"
             className="p-sidebar-close"

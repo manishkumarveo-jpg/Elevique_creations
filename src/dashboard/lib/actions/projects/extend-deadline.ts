@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { requireAdmin } from '@/dashboard/lib/auth/require-role'
 import { createServerClient } from '@/shared/lib/supabase/server'
 import { logActivity } from '@/dashboard/lib/actions/activity'
+import { notifyUser, notifyUsers } from '@/dashboard/lib/actions/notifications/notify'
 import { revalidatePath } from 'next/cache'
 
 const ExtendDeadlineSchema = z.object({
@@ -71,6 +72,34 @@ export async function extendDeadline(projectId: string, input: unknown) {
     entity_id: projectId,
     metadata: { deadline_type, old_date: old_date ?? null, new_date },
   })
+
+  try {
+    const { data: assignments, error: assignmentsError } = await supabase.from('project_assignments').select('user_id').eq('project_id', projectId)
+    if (assignmentsError) throw new Error(assignmentsError.message)
+
+    await notifyUsers((assignments ?? []).map(a => a.user_id), {
+      actorId: user.id,
+      type: 'status_update',
+      title: 'Deadline extended',
+      body: `The ${deadline_type} deadline moved to ${new Date(new_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}.`,
+      link: `/team/projects/${projectId}`,
+      projectId,
+      entityType: 'project',
+      entityId: projectId,
+    })
+    await notifyUser(user.id, {
+      actorId: user.id,
+      type: 'status_update',
+      title: 'Deadline extended',
+      body: `You moved the ${deadline_type} deadline to ${new Date(new_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}.`,
+      link: `/admin/projects/${projectId}`,
+      projectId,
+      entityType: 'project',
+      entityId: projectId,
+    })
+  } catch (notifyErr) {
+    console.error('Deadline extension notification failed (deadline still extended):', notifyErr)
+  }
 
   revalidatePath(`/admin/projects/${projectId}`)
 }

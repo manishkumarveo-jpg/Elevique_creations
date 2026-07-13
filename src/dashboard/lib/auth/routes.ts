@@ -1,17 +1,20 @@
+// admin/team_member/client all sign in through the one unified /login page,
+// which looks up the account's role after auth and redirects to its
+// dashboard — see src/app/(auth)/login/page.tsx.
 export const ROLE_ROUTES = {
   admin: {
     home: '/admin/dashboard',
-    login: '/admin/login',
+    login: '/login',
     prefix: '/admin',
   },
   team_member: {
     home: '/team/dashboard',
-    login: '/team/login',
+    login: '/login',
     prefix: '/team',
   },
   client: {
     home: '/portal/dashboard',
-    login: '/portal/login',
+    login: '/login',
     prefix: '/portal',
   },
 } as const

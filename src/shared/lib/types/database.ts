@@ -1,5 +1,5 @@
 // Auto-generated placeholder — replace with:
-// npx supabase gen types typescript --project-id YOUR_PROJECT_ID > src/lib/types/database.ts
+// npx supabase gen types typescript --project-id YOUR_PROJECT_ID > src/shared/lib/types/database.ts
 
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
@@ -19,6 +19,7 @@ export type Database = {
           created_by: string | null
           last_login: string | null
           assigned_team_member_id: string | null
+          notify_self: boolean
           created_at: string
           updated_at: string
         }
@@ -34,6 +35,7 @@ export type Database = {
           created_by?: string | null
           last_login?: string | null
           assigned_team_member_id?: string | null
+          notify_self?: boolean
           created_at?: string
           updated_at?: string
         }
@@ -49,6 +51,7 @@ export type Database = {
           created_by?: string | null
           last_login?: string | null
           assigned_team_member_id?: string | null
+          notify_self?: boolean
           created_at?: string
           updated_at?: string
         }
@@ -762,6 +765,81 @@ export type Database = {
           checks_performed?: string[]
           created_at?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          id: string
+          recipient_id: string
+          actor_id: string | null
+          type: string
+          title: string
+          body: string
+          link: string | null
+          project_id: string | null
+          entity_type: string | null
+          entity_id: string | null
+          read_at: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          recipient_id: string
+          actor_id?: string | null
+          type: string
+          title: string
+          body: string
+          link?: string | null
+          project_id?: string | null
+          entity_type?: string | null
+          entity_id?: string | null
+          read_at?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          recipient_id?: string
+          actor_id?: string | null
+          type?: string
+          title?: string
+          body?: string
+          link?: string | null
+          project_id?: string | null
+          entity_type?: string | null
+          entity_id?: string | null
+          read_at?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
+      push_subscriptions: {
+        Row: {
+          id: string
+          user_id: string
+          endpoint: string
+          p256dh: string
+          auth: string
+          user_agent: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          endpoint: string
+          p256dh: string
+          auth: string
+          user_agent?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          endpoint?: string
+          p256dh?: string
+          auth?: string
+          user_agent?: string | null
+          created_at?: string
         }
         Relationships: []
       }
